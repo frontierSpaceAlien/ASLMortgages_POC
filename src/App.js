@@ -6,6 +6,7 @@ import {
   Routes
 } from "react-router-dom";
 import Browse from "./pages/Browse";
+import Borrowers from "./pages/Borrower";
 import AddLoan from "./pages/AddLoan";
 import logo from "./assets/logo/image01.png"
 
@@ -35,6 +36,7 @@ remove this comment when done */}
                 <Routes>
                   <Route exact path="/" element={<Browse />} />
                   <Route exact path="/AddLoan" element={<AddLoan />} />
+                  <Route exact path="/Borrowers" element={<Borrowers />} />
                 </Routes>
               </div>
           </div>
