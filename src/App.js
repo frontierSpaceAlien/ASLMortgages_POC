@@ -6,6 +6,7 @@ import {
   Routes
 } from "react-router-dom";
 import Browse from "./pages/Browse";
+import AddLoan from "./pages/AddLoan";
 import logo from "./assets/logo/image01.png"
 
 const App = () =>  {
@@ -24,15 +25,16 @@ const App = () =>  {
 remove this comment when done */}
               </li>
                 <li><NavLink to = "/">Home</NavLink></li>
-                <li><NavLink to = "/TVShows">TV Shows</NavLink></li>
-                <li><NavLink to = "/Movies">Movies</NavLink></li>
-                <li><NavLink to = "/NewPopular">New & Popular</NavLink></li>
-                <li><NavLink to = "/List">My List</NavLink></li>
-                <li><NavLink to = "/Language">Browse by Languages</NavLink></li>
+                <li><NavLink to = "/Investors">Investors</NavLink></li>
+                <li><NavLink to = "/Borrowers">Borrowers</NavLink></li>
+                <li><NavLink to = "/AddLoan ">Add Loan</NavLink></li>
+                <li><NavLink to = "/Schedule">Payment Schedule</NavLink></li>
+                <li><NavLink to = "/Loans">Loans</NavLink></li>
               </ul>
               <div className="content">
                 <Routes>
                   <Route exact path="/" element={<Browse />} />
+                  <Route exact path="/AddLoan" element={<AddLoan />} />
                 </Routes>
               </div>
           </div>
