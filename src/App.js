@@ -1,19 +1,19 @@
-import React from "react";
+import * as React from "react";
 import {
   Route,
   NavLink,
   BrowserRouter as Router,
-  Routes
+  Routes,
 } from "react-router-dom";
+import Button from '@mui/material/Button';
 import Browse from "./pages/Browse";
 import Borrowers from "./pages/Borrower";
 import AddLoan from "./pages/AddLoan";
 import logo from "./assets/logo/image01.png"
 
-const App = () =>  {
-
+const App = () =>  { 
   return (
-        <Router basename="/Browse">
+        <Router>
           <div>
               <ul className="header">
               <li>
@@ -25,12 +25,12 @@ const App = () =>  {
 {/* Remember to change the header names to appropriate tab names
 remove this comment when done */}
               </li>
-                <li><NavLink to = "/">Home</NavLink></li>
-                <li><NavLink to = "/Investors">Investors</NavLink></li>
-                <li><NavLink to = "/Borrowers">Borrowers</NavLink></li>
-                <li><NavLink to = "/AddLoan ">Add Loan</NavLink></li>
-                <li><NavLink to = "/Schedule">Payment Schedule</NavLink></li>
-                <li><NavLink to = "/Loans">Loans</NavLink></li>
+                <li><NavLink to = "/"><Button sx={{ color: 'black'}}>Home</Button></NavLink></li>
+                <li><NavLink to ="/Investors"><Button sx={{ color: 'black'}}>Investors</Button></NavLink></li>
+                <li><NavLink to ="/Borrowers"><Button sx={{ color: 'black'}}>Borrowers</Button></NavLink></li>
+                <li><NavLink to = "/AddLoan "><Button sx={{ color: 'black'}}>Add Loan</Button></NavLink></li>
+                <li><NavLink to = "/Schedule"><Button sx={{ color: 'black'}}>Payment Schedule</Button></NavLink></li>
+                <li><NavLink to = "/Loans"><Button sx={{ color: 'black'}}>Loans</Button></NavLink></li>
               </ul>
               <div className="content">
                 <Routes>
