@@ -10,6 +10,7 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -26,12 +27,12 @@ function createData(name, startDate, endDate, dayIntDue, intRate, price) {
     history: [
       {
         date: '2020-01-05',
-        customerId: '11091700',
+        loanId: '11091700',
         amount: 3,
       },
       {
         date: '2020-01-02',
-        customerId: 'Anonymous',
+        loanId: '12736711',
         amount: 1,
       },
     ],
@@ -83,7 +84,7 @@ function Row(props) {
                 <TableHead>
                   <TableRow>
                     <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
+                    <TableCell>Loan</TableCell>
                     <TableCell align="right">Amount</TableCell>
                     <TableCell align="right">Total price ($)</TableCell>
                   </TableRow>
@@ -94,7 +95,7 @@ function Row(props) {
                       <TableCell component="th" scope="row">
                         {historyRow.date}
                       </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
+                      <TableCell>{historyRow.loanId}</TableCell>
                       <TableCell align="right">{historyRow.amount}</TableCell>
                       <TableCell align="right">
                         {Math.round(historyRow.amount * row.price * 100) / 100}
@@ -119,7 +120,7 @@ Row.propTypes = {
     history: PropTypes.arrayOf(
       PropTypes.shape({
         amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
+        loanId: PropTypes.string.isRequired,
         date: PropTypes.string.isRequired,
       }),
     ).isRequired,
@@ -129,6 +130,8 @@ Row.propTypes = {
   }).isRequired,
 };
 
+/** DUMMY DATA **/
+// Never have duplicate borrower ids. Duplicate borrower ids will cause the table to break.
 const rows = [
   createData('Borrower 1', 159, 6.0, 10, 14.95, 3.99),
   createData('Borrower 2', 237, 9.0, 13, 15.95, 4.99),
@@ -136,10 +139,59 @@ const rows = [
   createData('Borrower 4', 305, 3.7, 19, 12.95, 2.5),
   createData('Borrower 5', 356, 16.0, 25, 13.95, 1.5),
   createData('Borrower 6', 356, 16.0, 1, 15.00, 1.5),
+  createData('Borrower 7', 159, 6.0, 10, 14.95, 3.99),
+  createData('Borrower 8', 237, 9.0, 13, 15.95, 4.99),
+  createData('Borrower 9', 262, 16.0, 6, 15.00, 3.79),
+  createData('Borrower 10', 305, 3.7, 19, 12.95, 2.5),
+  createData('Borrower 11', 356, 16.0, 25, 13.95, 1.5),
+  createData('Borrower 12', 356, 16.0, 1, 15.00, 1.5),
+  createData('Borrower 13', 159, 6.0, 10, 14.95, 3.99),
+  createData('Borrower 14', 237, 9.0, 13, 15.95, 4.99),
+  createData('Borrower 15', 262, 16.0, 6, 15.00, 3.79),
+  createData('Borrower 16', 305, 3.7, 19, 12.95, 2.5),
+  createData('Borrower 17', 356, 16.0, 25, 13.95, 1.5),
+  createData('Borrower 18', 356, 16.0, 1, 15.00, 1.5),
+  createData('Borrower 19', 159, 6.0, 10, 14.95, 3.99),
+  createData('Borrower 20', 237, 9.0, 13, 15.95, 4.99),
+  createData('Borrower 21', 262, 16.0, 6, 15.00, 3.79),
+  createData('Borrower 22', 305, 3.7, 19, 12.95, 2.5),
+  createData('Borrower 23', 356, 16.0, 25, 13.95, 1.5),
+  createData('Borrower 24', 356, 16.0, 1, 15.00, 1.5),
+  createData('Borrower 25', 159, 6.0, 10, 14.95, 3.99),
+  createData('Borrower 26', 237, 9.0, 13, 15.95, 4.99),
+  createData('Borrower 27', 262, 16.0, 6, 15.00, 3.79),
+  createData('Borrower 28', 305, 3.7, 19, 12.95, 2.5),
+  createData('Borrower 29', 356, 16.0, 25, 13.95, 1.5),
+  createData('Borrower 30', 356, 16.0, 1, 15.00, 1.5),
+  createData('Borrower 31', 159, 6.0, 10, 14.95, 3.99),
+  createData('Borrower 32', 237, 9.0, 13, 15.95, 4.99),
+  createData('Borrower 33', 262, 16.0, 6, 15.00, 3.79),
+  createData('Borrower 34', 305, 3.7, 19, 12.95, 2.5),
+  createData('Borrower 35', 356, 16.0, 25, 13.95, 1.5),
+  createData('Borrower 36', 356, 16.0, 1, 15.00, 1.5),
 ]
 
 export default function CollapsibleTable() {
-return (
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const currentRows = rows.filter((r, ind) => {
+    return ind >= rowsPerPage * page && ind < rowsPerPage * (page + 1);
+  });
+
+  const emptyRows =
+  page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  return (
   <div className = "tableView">
     <Paper elevation={6} style={{ height: "100%", paddingLeft: 100, paddingRight:100}}>
         <TableContainer>
@@ -156,13 +208,28 @@ return (
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {currentRows.map((row) => (
                 <Row key={row.name} row={row} />
                 ))}
+              {emptyRows > 0 && (
+            <TableRow style={{ height: 53 * emptyRows }}>
+              <TableCell colSpan={6} />
+            </TableRow>
+          )}
             </TableBody>
           </Table>
-        </TableContainer>
+          <TablePagination
+          rowsPerPageOptions={[5, 10, 15]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+      </TableContainer>
     </Paper>
+
   </div>
   );
 }
