@@ -6,3 +6,4 @@ Proof-of-concept Loan Management website made for ASL Mortgages. Repository will
 git clone https://github.com/frontierSpaceAlien/ASLMortgages_POC
 npm install
 ```
+Remember to ``` git checkout ``` whichever branch you are working on.
