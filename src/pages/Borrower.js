@@ -193,7 +193,7 @@ export default function CollapsibleTable() {
 
   return (
   <div className = "tableView">
-    <Paper elevation={6} style={{ height: "100%", paddingLeft: 100, paddingRight:100}}>
+    <Paper elevation={0} style={{ height: "100%", paddingLeft: 100, paddingRight:100}}>
         <TableContainer>
           <h2>Borrower Information</h2>
           <Table  aria-label="collapsible table" size='small'>

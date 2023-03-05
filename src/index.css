@@ -5,7 +5,7 @@
   }
 
 body {
-  background-color:  whitesmoke ;
+  background-color:  white ;
   margin: 0;
 }
 h1, h2, p, ul, li, input{
@@ -75,6 +75,6 @@ ul.header li a {
   margin-left: 5%;
 }
 .tableView{
-  height: 100vh;
+  height: 100%;
 }
 
