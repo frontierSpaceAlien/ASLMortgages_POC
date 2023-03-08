@@ -10,7 +10,6 @@ body {
 }
 h1, h2, p, ul, li, input{
   font-family: 'NetflixSans';
-  
 }
 ul.header {
   margin: 0;
@@ -77,4 +76,8 @@ ul.header li a {
 .tableView{
   height: 100%;
 }
-
+.Button {
+    color: black;
+    font-family: 'NetflixSans';
+    text-transform: capitalize;
+}

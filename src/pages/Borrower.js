@@ -13,6 +13,7 @@ import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
@@ -196,6 +197,13 @@ export default function CollapsibleTable() {
     <Paper elevation={0} style={{ height: "100%", paddingLeft: 100, paddingRight:100}}>
         <TableContainer>
           <h2>Borrower Information</h2>
+          <Button
+            className="Button"
+            sx={{ color: "black", fontWeight: 'bold', textTransform: 'capitalize' }}
+            onClick={console.log("hello")}
+           >
+           Add Borrower
+           </Button>  
           <Table  aria-label="collapsible table" size='small'>
             <TableHead>
               <TableRow>
