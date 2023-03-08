@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -16,6 +16,28 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import NetflixSansReg from '../fonts/NetflixSans-Regular.ttf';
+import AddIcon from '@mui/icons-material/Add';
+
+const theme = createTheme({
+    typography: {
+        fontFamily: 'NetflixSans',
+    },
+    components: {
+        MuiCssBaseline: {
+        styleOverrides: `
+        @font-face {
+          font-family: 'NetflixSans';
+          font-style: normal;
+          font-display: swap;
+          font-weight: 400;
+          src: local('NetflixSans'), url(${NetflixSansReg}) format('truetype');
+          unicodeRange: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF;
+        }
+      `,
+        },
+    },
+});
 
 function createData(name, startDate, endDate, dayIntDue, intRate, price) {
   return {
@@ -196,14 +218,18 @@ export default function CollapsibleTable() {
   <div className = "tableView">
     <Paper elevation={0} style={{ height: "100%", paddingLeft: 100, paddingRight:100}}>
         <TableContainer>
-          <h2>Borrower Information</h2>
-          <Button
-            className="Button"
-            sx={{ color: "black", fontWeight: 'bold', textTransform: 'capitalize' }}
-            onClick={console.log("hello")}
-           >
-           Add Borrower
-           </Button>  
+        <h3>Borrower Information</h3>
+        <ThemeProvider theme={theme}>
+            <div className = "align-row">
+                <Button
+                    endIcon={<AddIcon />}
+                    sx={{ color: "black", textTransform: 'capitalize' }}
+                    onClick={console.log("hello")}
+                >
+                Add Borrower
+                </Button>  
+            </div>
+        </ThemeProvider>
           <Table  aria-label="collapsible table" size='small'>
             <TableHead>
               <TableRow>

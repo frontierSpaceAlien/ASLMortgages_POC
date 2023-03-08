@@ -8,7 +8,7 @@ body {
   background-color:  white ;
   margin: 0;
 }
-h1, h2, p, ul, li, input{
+h1, h2, h3, p, ul, li, input{
   font-family: 'NetflixSans';
 }
 ul.header {
@@ -76,8 +76,10 @@ ul.header li a {
 .tableView{
   height: 100%;
 }
-.Button {
-    color: black;
-    font-family: 'NetflixSans';
-    text-transform: capitalize;
+.align-right {
+    justify-content: right ;
+}
+.align-row{
+    display: flex;
+    flex-direction: row;
 }
