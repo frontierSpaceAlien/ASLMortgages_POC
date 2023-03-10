@@ -17,24 +17,24 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Button from '@mui/material/Button';
 
 
-function createData(name, calories, fat, carbs, protein, price) {
+function createData(name, Investors, Borrowers, carbs, protein, price) {
   return {
     name,
-    calories,
-    fat,
+    Investors,
+    Borrowers,
     carbs,
     protein,
     price,
     history: [
       {
-        date: '2020-01-05',
-        customerId: '11091700',
-        amount: 3,
+        Net_Adanve: '200',
+        Interest_Rate: '10%',
+        Broker_Fee: 300,
       },
       {
-        date: '2020-01-02',
-        customerId: 'Anonymous',
-        amount: 1,
+        Net_Adanve: '200',
+        Interest_Rate: '10%',
+        Broker_Fee: 100,
       },
     ],
   };
@@ -59,8 +59,8 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
+        <TableCell align="right">{row.Investors}</TableCell>
+        <TableCell align="right">{row.Borrowers}</TableCell>
         <TableCell align="right">{row.carbs}</TableCell>
         <TableCell align="right">{row.protein}</TableCell>
       </TableRow>
@@ -82,14 +82,14 @@ function Row(props) {
                 </TableHead>
                 <TableBody>
                   {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
+                    <TableRow key={historyRow.Net_Adanve}>
                       <TableCell component="th" scope="row">
-                        {historyRow.date}
+                        {historyRow.Net_Adanve}
                       </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
+                      <TableCell>{historyRow.Interest_Rate}</TableCell>
+                      <TableCell align="right">{historyRow.Broker_Fee}</TableCell>
                       <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
+                        {Math.round(historyRow.Broker_Fee * row.price * 100) / 100}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -105,14 +105,14 @@ function Row(props) {
 
 Row.propTypes = {
   row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
+    Investors: PropTypes.number.isRequired,
     carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
+    Borrowers: PropTypes.number.isRequired,
     history: PropTypes.arrayOf(
       PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
+        Broker_Fee: PropTypes.number.isRequired,
+        Interest_Rate: PropTypes.string.isRequired,
+        Net_Adanve: PropTypes.string.isRequired,
       }),
     ).isRequired,
     name: PropTypes.string.isRequired,
@@ -123,11 +123,11 @@ Row.propTypes = {
 
 const rows = [
   
-  createData('getLoanName()', 'getname（sudo）', 'getname（sudo）', 'getDate()', 'getDate()', 3.99),
-  createData('getLoanName()', 'getname（sudo）', 'getname（sudo）', 'getDate()', 'getDate()', 4.99),
-  createData('getLoanName()', 'getname（sudo）', 'getname（sudo）', 'getDate()', 'getDate()', 3.79),
-  createData('getLoanName()', 'getname（sudo）', 'getname（sudo）', 'getDate()', 'getDate()', 2.5),
-  createData('getLoanName()', 'getname（sudo）', 'getname（sudo）', 'getDate()', 'getDate()', 1.5),
+  createData('getLoanName()+route(Infor)', 'getname（sudo）', 'getname（sudo）', 'getDate()', 'getDate()', 3.99),
+  createData('getLoanName()+route(Infor)', 'getname（sudo）', 'getname（sudo）', 'getDate()', 'getDate()', 4.99),
+  createData('getLoanName()+route(Infor)', 'getname（sudo）', 'getname（sudo）', 'getDate()', 'getDate()', 3.79),
+  createData('getLoanName()+route(Infor)', 'getname（sudo）', 'getname（sudo）', 'getDate()', 'getDate()', 2.5),
+  createData('getLoanName()+route(Infor)', 'getname（sudo）', 'getname（sudo）', 'getDate()', 'getDate()', 1.5),
 ];
 
 export default function CollapsibleTable() {
