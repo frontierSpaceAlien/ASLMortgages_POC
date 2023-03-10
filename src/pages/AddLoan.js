@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -16,6 +16,26 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Button from '@mui/material/Button';
 
+import PopupForm from './AddLoanWindow';
+
+export const AddLoan=()=> {
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleOpenPopup = () => {
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
+return (
+  <div className="App">
+    <button onClick={handleOpenPopup}>Open Popup</button>
+    {showPopup && <PopupForm onClose={handleClosePopup} />}
+  </div>
+);
+}
 
 function createData(name, Investors, Borrowers, carbs, protein, price) {
   return {
@@ -130,7 +150,7 @@ const rows = [
   createData('getLoanName()+route(Infor)', 'getname（sudo）', 'getname（sudo）', 'getDate()', 'getDate()', 1.5),
 ];
 
-export default function CollapsibleTable() {
+export default function CollapsibleTable(){
   return (
     <TableContainer component={Paper}>
 
@@ -143,7 +163,7 @@ export default function CollapsibleTable() {
     />
     {/*Add A New Loan button */}
     <Button variant="contained">Add a Loan</Button>
-
+  
 
       <Table aria-label="collapsible table">
         <TableHead>
