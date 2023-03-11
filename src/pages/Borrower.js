@@ -221,11 +221,11 @@ export default function CollapsibleTable() {
   };
 
   return (
-  <div className = "tableView">
+    <div className = "tableView">
+    <ThemeProvider theme={theme}>
     <Paper elevation={0} style={{ height: "100%", paddingLeft: 100, paddingRight:100}}>
         <TableContainer>
         <h3>Borrower Information</h3>
-        <ThemeProvider theme={theme}>
             <div className = "align-row">
                 <Button
                     endIcon={<AddIcon />}
@@ -235,7 +235,6 @@ export default function CollapsibleTable() {
                 Add Borrower
                 </Button>  
             </div>
-        </ThemeProvider>
           <Table  aria-label="collapsible table" size='small'>
             <TableHead>
               <TableRow>
@@ -253,7 +252,7 @@ export default function CollapsibleTable() {
                 <Row key={row.name} row={row} />
                 ))}
               {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
+                <TableRow style={{ height: 53 * emptyRows }}>
               <TableCell colSpan={6} />
             </TableRow>
           )}
@@ -270,7 +269,7 @@ export default function CollapsibleTable() {
           />
       </TableContainer>
     </Paper>
-
+  </ThemeProvider>
   </div>
   );
 }
