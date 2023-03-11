@@ -18,6 +18,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import NetflixSansReg from '../fonts/NetflixSans-Regular.ttf';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+
 
 const theme = createTheme({
     typography: {
@@ -78,13 +80,14 @@ function Row(props) {
 
   return (
     <React.Fragment>
+      <ThemeProvider theme={theme}>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
             onClick={() => setOpen(!open)}
-          >
+            >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -95,9 +98,10 @@ function Row(props) {
         <TableCell align="right">{row.endDate}</TableCell>
         <TableCell align="right">{row.dayIntDue}</TableCell>
         <TableCell align="right">{row.intRate}</TableCell>
+        <TableCell align="right"><IconButton><EditIcon/></IconButton></TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <h3>Borrower Info here</h3>
@@ -108,7 +112,7 @@ function Row(props) {
                 <TableHead>
                   <TableRow>
                     <TableCell>Date</TableCell>
-                                      <TableCell>Loan</TableCell>
+                    <TableCell>Loan</TableCell>
                     <TableCell align="right">Amount</TableCell>
                     <TableCell align="right">Total price ($)</TableCell>
                   </TableRow>
@@ -132,6 +136,7 @@ function Row(props) {
           </Collapse>
         </TableCell>
       </TableRow>
+    </ThemeProvider>
     </React.Fragment>
   );
 }
@@ -240,6 +245,7 @@ export default function CollapsibleTable() {
                 <StyledTableCell align="right">End Date</StyledTableCell>
                 <StyledTableCell align="right">Day Interest Due</StyledTableCell>
                 <StyledTableCell align="right">Interest Rate %</StyledTableCell>
+                <StyledTableCell align="right"></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
