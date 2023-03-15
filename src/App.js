@@ -44,8 +44,6 @@ const App = () =>  {
                       <img className="logo" src={logo} alt=""/>
                     </a>
                   </NavLink>
-{/* Remember to change the header names to appropriate tab names
-remove this comment when done */}
                   </li>
                   <ThemeProvider theme={theme}>
                       <li><NavLink to="/"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Home</Button></NavLink></li>
