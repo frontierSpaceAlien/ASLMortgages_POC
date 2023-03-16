@@ -23,6 +23,11 @@ import { Tooltip } from '@mui/material';
 import Link from '@mui/material/Link';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const theme = createTheme({
     typography: {
@@ -125,21 +130,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 
-export default function CollapsibleTable() {
+function ExpandRow({children, expandComponent, ...otherProps}){
+  const { row } = otherProps;
   const [open, setOpen] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [rowData, setRowData] = React.useState(rows);
-  
-  const currentRows = rowData.filter((r, ind) => {
-    return ind >= rowsPerPage * page && ind < rowsPerPage * (page + 1);
-  });
 
   const handleClick = () => {
     setOpenSnack(true);
     console.log(openSnack);
-    navigator.clipboard.writeText(rowData.email)
+    navigator.clipboard.writeText(rows.email)
   };
 
   const handleClose = (event, reason) => {
@@ -148,6 +147,88 @@ export default function CollapsibleTable() {
     }
     setOpenSnack(false);
   };
+
+  return (
+    <React.Fragment>
+    <ThemeProvider theme={theme}>
+    <TableRow key={row.borrowerID}  {...otherProps}>
+      <TableCell>
+        <IconButton
+          aria-label="expand row"
+          size="small"
+          onClick={() => setOpen(!open)}
+          >
+          {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+        </IconButton>
+      </TableCell>
+      {children}
+    </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout= {"auto"} unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
+                  Borrower Contact Details
+                </Typography>
+                  <p>Phone Number-02222222</p>
+                  <p>Email-   
+                    <Tooltip title="Copy">
+                      <Link variant = "body2" underline ="hover" component ="button" onClick={handleClick}>
+                        {row.email}
+                      </Link>
+                    </Tooltip>       
+                  <Snackbar open = {openSnack} autoHideDuration={2000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    Copied!
+                    </Alert>
+                  </Snackbar>
+                  </p>
+                  <Typography variant="h6" gutterBottom component="div">
+                      History
+                  </Typography>
+                  <Table size="small" aria-label="purchases">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Date</TableCell>
+                        <TableCell>Loan</TableCell>
+                        <TableCell align="right">Loan Amount</TableCell>
+                        <TableCell align="right">Active</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {row.history.map((historyRow) => (
+                      <TableRow key={historyRow.date}>
+                        <TableCell component="th" scope="row">
+                        {historyRow.date}
+                        </TableCell>
+                        <TableCell>{historyRow.loanId}</TableCell>
+                        <TableCell align="right">${historyRow.amount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
+                        <TableCell align="right">{historyRow.active}</TableCell>
+                      </TableRow>
+              ))}
+              </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+  </ThemeProvider>
+    </React.Fragment>
+  )
+}
+
+var indexData = 0;
+
+export default function CollapsibleTable() {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowData, setRowData] = React.useState(rows);
+  const [modal, setModal] = React.useState(false);
+
+  
+  const currentRows = rowData.filter((r, ind) => {
+    return ind >= rowsPerPage * page && ind < rowsPerPage * (page + 1);
+  });
 
   const emptyRows =
   page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowData.length) : 0;
@@ -161,9 +242,22 @@ export default function CollapsibleTable() {
     setPage(0);
   };
 
-  const handleDelete = (index) => {
-    console.log("hello")
+  const handleModalClose = () =>{
+    setModal(false)
+  };
+
+  const handleDeletePopup = () =>{
+    setRowData((prevData) =>
+      prevData.filter((_, index) => index !== indexData)
+    );
+    setModal(false)
   }
+
+  const handlePopup = (dataIndex) =>{
+    indexData = dataIndex
+    setModal(true)
+  }
+
   
   return (
     <div className = "tableView">
@@ -191,24 +285,15 @@ export default function CollapsibleTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {currentRows.map((row) => (
+              {currentRows.map((row, dataIndex) => (
                 <React.Fragment>
                   <ThemeProvider theme={theme}>
-                    <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                      <TableCell>
-                        <IconButton
-                          aria-label="expand row"
-                          size="small"
-                          onClick={() => setOpen(!open)}
-                          >
-                          {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                        </IconButton>
-                      </TableCell>
-                      <TableCell component="th" scope="row">
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="right">${row.loanAmount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
-                      <TableCell align="right">{row.intRate}%</TableCell>
+                    <ExpandRow row ={row}>
+                    <TableCell component="th" scope="row">
+                      {row.name}
+                    </TableCell>
+                    <TableCell align="right">${row.loanAmount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
+                    <TableCell align="right">{row.intRate}%</TableCell>
                       <TableCell align="right"> 
                         <Tooltip title="Edit">
                           <IconButton>
@@ -216,61 +301,33 @@ export default function CollapsibleTable() {
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Delete">
-                          <IconButton value={row.borrowerID} onClick={(e) => console.log(e.currentTarget.value)}>
+                          <IconButton value={row.borrowerID} onClick={() => handlePopup(dataIndex)}>
                             <DeleteIcon color = "error"/>
                           </IconButton>
                         </Tooltip>
+                      <Dialog
+                        open={modal}
+                        onClose={handleModalClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                      >
+                        <DialogTitle id="alert-dialog-title">
+                          {"Delete"}
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText id="alert-dialog-description">
+                            Are you sure you want delete this borrower?
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleModalClose}>Disagree</Button>
+                          <Button onClick={handleDeletePopup} autoFocus>
+                            Agree
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
                       </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
-                        <Collapse in={open} timeout="auto" unmountOnExit>
-                          <Box sx={{ margin: 1 }}>
-                          <Typography variant="h6" gutterBottom component="div">
-                              Borrower Contact Details
-                            </Typography>
-                            <p>Phone Number-02222222</p>
-                            <p>Email-   
-                              <Tooltip title="Copy">
-                                <Link variant = "body2" underline ="hover" component ="button" onClick={handleClick}>
-                                  {row.email}
-                                </Link>
-                              </Tooltip>       
-                              <Snackbar open = {openSnack} autoHideDuration={2000} onClose={handleClose}>
-                                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                                  Copied!
-                                </Alert>
-                              </Snackbar>
-                            </p>
-                            <Typography variant="h6" gutterBottom component="div">
-                              History
-                            </Typography>
-                            <Table size="small" aria-label="purchases">
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell>Date</TableCell>
-                                  <TableCell>Loan</TableCell>
-                                  <TableCell align="right">Loan Amount</TableCell>
-                                  <TableCell align="right">Active</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {row.history.map((historyRow) => (
-                                  <TableRow key={historyRow.date}>
-                                    <TableCell component="th" scope="row">
-                                      {historyRow.date}
-                                    </TableCell>
-                                    <TableCell>{historyRow.loanId}</TableCell>
-                                    <TableCell align="right">${historyRow.amount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
-                                    <TableCell align="right">{historyRow.active}</TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </Box>
-                        </Collapse>
-                      </TableCell>
-                    </TableRow>
+                    </ExpandRow>
                   </ThemeProvider>
                 </React.Fragment>
               ))}
