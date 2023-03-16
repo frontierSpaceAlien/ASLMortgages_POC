@@ -5,7 +5,7 @@ class Browse extends Component {
 
     return (
       <div className="slideView">
-        <h2>hello</h2>
+        <h2>hello 123</h2>
       </div>
     );
   }

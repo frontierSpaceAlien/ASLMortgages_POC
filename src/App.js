@@ -10,6 +10,7 @@ import Browse from "./pages/Browse";
 import Borrowers from "./pages/Borrower";
 import AddLoan from "./pages/AddLoan";
 import logo from "./assets/logo/image01.png"
+import Investors from "./pages/Investor";
 
 const App = () =>  { 
   return (
@@ -37,6 +38,7 @@ remove this comment when done */}
                   <Route exact path="/" element={<Browse />} />
                   <Route exact path="/AddLoan" element={<AddLoan />} />
                   <Route exact path="/Borrowers" element={<Borrowers />} />
+                  <Route exact path="/Investors" element={<Investors />} />
                 </Routes>
               </div>
           </div>
