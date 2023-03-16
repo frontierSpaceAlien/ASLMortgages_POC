@@ -1,6 +1,5 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -13,31 +12,107 @@ import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import NetflixSansReg from '../fonts/NetflixSans-Regular.ttf';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Tooltip } from '@mui/material';
+import Link from '@mui/material/Link';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
-function createData(name, startDate, endDate, dayIntDue, intRate, price) {
+const theme = createTheme({
+    typography: {
+        fontFamily: 'NetflixSans',
+    },
+    components: {
+        MuiCssBaseline: {
+        styleOverrides: `
+        @font-face {
+          font-family: 'NetflixSans';
+          font-style: normal;
+          font-display: swap;
+          font-weight: 400;
+          src: local('NetflixSans'), url(${NetflixSansReg}) format('truetype');
+          unicodeRange: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF;
+        }
+      `,
+        },
+    },
+});
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+function createData(borrowerID, name, loanAmount, intRate, price) {
   return {
+    borrowerID,
     name,
-    startDate,
-    endDate,
-    dayIntDue,
+    loanAmount,
     intRate,
     price,
+    email: "test@test.com",
     history: [
       {
         date: '2020-01-05',
-        loanId: '11091700',
-        amount: 3,
+        loanId: 'Borrower123',
+        amount: 395632.05,
+        active: "No"
       },
       {
         date: '2020-01-02',
-        loanId: '12736711',
-        amount: 1,
+        loanId: 'Borrower321',
+        amount: 156798.18,
+        active: "No"
       },
     ],
   };
 }
+
+/** DUMMY DATA **/
+// Never have duplicate borrower ids. Duplicate borrower ids will cause the table to break.
+const rows = [
+  createData(0,'Borrower 1', 359066.74, 16.95, 3.99),
+  createData(1,'Borrower 2', 421500.00, 15.95, 4.99),
+  createData(2,'Borrower 3', 1107549.91, 16.95, 3.79),
+  createData(3,'Borrower 4', 1627000.04, 14.95,  2.5),
+  createData(4,'Borrower 5', 83172.63, 15.0,  1.5),
+  createData(5,'Borrower 6', 363300.00, 15.0, 1.5),
+  createData(6,'Borrower 7', 985263.96, 6.0, 3.99),
+  createData(7,'Borrower 8', 389421.50, 9.0, 4.99),
+  createData(8,'Borrower 9', 954231.17, 16.0, 3.79),
+  createData(9,'Borrower 10', 305987.60, 3.7, 2.5),
+  createData(10,'Borrower 11', 592953.41, 16.0, 1.5),
+  createData(11,'Borrower 12', 356956.80, 16.0, 1.5),
+  createData(12,'Borrower 13', 159481.40, 6.0, 3.99),
+  createData(13,'Borrower 14', 237597.30, 9.0, 4.99),
+  createData(14,'Borrower 15', 262956.26, 16.0, 3.79),
+  createData(15,'Borrower 16', 305654.11, 3.7, 2.5),
+  createData(16,'Borrower 17', 356123.95, 16.0, 1.5),
+  createData(17,'Borrower 18', 356897.65, 16.0, 1.5),
+  createData(18,'Borrower 19', 159463.99, 6.0, 3.99),
+  createData(19,'Borrower 20', 237956.64, 9.0, 4.99),
+  createData(20,'Borrower 21', 262123.00, 16.0, 3.79),
+  createData(21,'Borrower 22', 305144.05, 3.7, 2.5),
+  createData(22,'Borrower 23', 356789.15, 16.0, 1.5),
+  createData(23,'Borrower 24', 356753.46, 16.0, 1.5),
+  createData(24,'Borrower 25', 159159.05, 6.0, 3.99),
+  createData(25,'Borrower 26', 237879.12, 9.0, 4.99),
+  createData(26,'Borrower 27', 2621595.77, 16.0, 3.79),
+  createData(27,'Borrower 28', 3056652.94, 3.7, 2.5),
+  createData(28,'Borrower 29', 3565563.80, 16.0, 1.5),
+  createData(29,'Borrower 30', 356957.78, 16.0, 1.5),
+  createData(30,'Borrower 31', 159897.63, 6.0, 3.99),
+  createData(31,'Borrower 32', 237485.99, 9.0, 4.99),
+  createData(32,'Borrower 33', 26265.45, 16.0, 3.79),
+  createData(33,'Borrower 34', 305323.12, 3.7, 2.5),
+  createData(34,'Borrower 35', 356222.65, 16.0, 1.5),
+  createData(35,'Borrower 36', 356154.00, 16.0, 1.5),
+]
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -49,170 +124,158 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-function Row(props) {
-  const { row } = props;
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <React.Fragment>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell component="th" scope="row">
-          {row.name}
-        </TableCell>
-        <TableCell align="right">{row.startDate}</TableCell>
-        <TableCell align="right">{row.endDate}</TableCell>
-        <TableCell align="right">{row.dayIntDue}</TableCell>
-        <TableCell align="right">{row.intRate}</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                History
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Loan</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.date}
-                      </TableCell>
-                      <TableCell>{historyRow.loanId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
-}
-
-Row.propTypes = {
-  row: PropTypes.shape({
-    startDate: PropTypes.number.isRequired,
-    endDate: PropTypes.number.isRequired,
-    dayIntDue: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        loanId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      }),
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    intRate: PropTypes.number.isRequired,
-  }).isRequired,
-};
-
-/** DUMMY DATA **/
-// Never have duplicate borrower ids. Duplicate borrower ids will cause the table to break.
-const rows = [
-  createData('Borrower 1', 159, 6.0, 10, 14.95, 3.99),
-  createData('Borrower 2', 237, 9.0, 13, 15.95, 4.99),
-  createData('Borrower 3', 262, 16.0, 6, 15.00, 3.79),
-  createData('Borrower 4', 305, 3.7, 19, 12.95, 2.5),
-  createData('Borrower 5', 356, 16.0, 25, 13.95, 1.5),
-  createData('Borrower 6', 356, 16.0, 1, 15.00, 1.5),
-  createData('Borrower 7', 159, 6.0, 10, 14.95, 3.99),
-  createData('Borrower 8', 237, 9.0, 13, 15.95, 4.99),
-  createData('Borrower 9', 262, 16.0, 6, 15.00, 3.79),
-  createData('Borrower 10', 305, 3.7, 19, 12.95, 2.5),
-  createData('Borrower 11', 356, 16.0, 25, 13.95, 1.5),
-  createData('Borrower 12', 356, 16.0, 1, 15.00, 1.5),
-  createData('Borrower 13', 159, 6.0, 10, 14.95, 3.99),
-  createData('Borrower 14', 237, 9.0, 13, 15.95, 4.99),
-  createData('Borrower 15', 262, 16.0, 6, 15.00, 3.79),
-  createData('Borrower 16', 305, 3.7, 19, 12.95, 2.5),
-  createData('Borrower 17', 356, 16.0, 25, 13.95, 1.5),
-  createData('Borrower 18', 356, 16.0, 1, 15.00, 1.5),
-  createData('Borrower 19', 159, 6.0, 10, 14.95, 3.99),
-  createData('Borrower 20', 237, 9.0, 13, 15.95, 4.99),
-  createData('Borrower 21', 262, 16.0, 6, 15.00, 3.79),
-  createData('Borrower 22', 305, 3.7, 19, 12.95, 2.5),
-  createData('Borrower 23', 356, 16.0, 25, 13.95, 1.5),
-  createData('Borrower 24', 356, 16.0, 1, 15.00, 1.5),
-  createData('Borrower 25', 159, 6.0, 10, 14.95, 3.99),
-  createData('Borrower 26', 237, 9.0, 13, 15.95, 4.99),
-  createData('Borrower 27', 262, 16.0, 6, 15.00, 3.79),
-  createData('Borrower 28', 305, 3.7, 19, 12.95, 2.5),
-  createData('Borrower 29', 356, 16.0, 25, 13.95, 1.5),
-  createData('Borrower 30', 356, 16.0, 1, 15.00, 1.5),
-  createData('Borrower 31', 159, 6.0, 10, 14.95, 3.99),
-  createData('Borrower 32', 237, 9.0, 13, 15.95, 4.99),
-  createData('Borrower 33', 262, 16.0, 6, 15.00, 3.79),
-  createData('Borrower 34', 305, 3.7, 19, 12.95, 2.5),
-  createData('Borrower 35', 356, 16.0, 25, 13.95, 1.5),
-  createData('Borrower 36', 356, 16.0, 1, 15.00, 1.5),
-]
 
 export default function CollapsibleTable() {
+  const [open, setOpen] = React.useState(false);
+  const [openSnack, setOpenSnack] = React.useState(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  const currentRows = rows.filter((r, ind) => {
+  const [rowData, setRowData] = React.useState(rows);
+  
+  const currentRows = rowData.filter((r, ind) => {
     return ind >= rowsPerPage * page && ind < rowsPerPage * (page + 1);
   });
 
-  const emptyRows =
-  page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const handleClick = () => {
+    setOpenSnack(true);
+    console.log(openSnack);
+    navigator.clipboard.writeText(rowData.email)
+  };
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnack(false);
+  };
+
+  const emptyRows =
+  page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowData.length) : 0;
+  
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
+  
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
+  const handleDelete = (index) => {
+    console.log("hello")
+  }
+  
   return (
-  <div className = "tableView">
+    <div className = "tableView">
+    <ThemeProvider theme={theme}>
     <Paper elevation={0} style={{ height: "100%", paddingLeft: 100, paddingRight:100}}>
         <TableContainer>
-          <h2>Borrower Information</h2>
+        <h3>Borrowers</h3>
+            <div className = "align-row">
+                <Button
+                    endIcon={<AddIcon />}
+                    sx={{ color: "black", textTransform: 'capitalize' }}
+                    onClick={(e)=> console.log(e.target.value)}
+                    >
+                Add Borrower
+                </Button>  
+            </div>
           <Table  aria-label="collapsible table" size='small'>
             <TableHead>
               <TableRow>
                 <StyledTableCell />
                 <StyledTableCell>Borrower</StyledTableCell>
-                <StyledTableCell align="right">Start Date</StyledTableCell>
-                <StyledTableCell align="right">End Date</StyledTableCell>
-                <StyledTableCell align="right">Day Interest Due</StyledTableCell>
-                <StyledTableCell align="right">Interest Rate %</StyledTableCell>
+                <StyledTableCell align="right">Loan Amount</StyledTableCell>
+                <StyledTableCell align="right">Interest Rate</StyledTableCell>
+                <StyledTableCell align="right"></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {currentRows.map((row) => (
-                <Row key={row.name} row={row} />
-                ))}
+                <React.Fragment>
+                  <ThemeProvider theme={theme}>
+                    <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                      <TableCell>
+                        <IconButton
+                          aria-label="expand row"
+                          size="small"
+                          onClick={() => setOpen(!open)}
+                          >
+                          {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                        </IconButton>
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {row.name}
+                      </TableCell>
+                      <TableCell align="right">${row.loanAmount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
+                      <TableCell align="right">{row.intRate}%</TableCell>
+                      <TableCell align="right"> 
+                        <Tooltip title="Edit">
+                          <IconButton>
+                            <EditIcon/>
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                          <IconButton value={row.borrowerID} onClick={(e) => console.log(e.currentTarget.value)}>
+                            <DeleteIcon color = "error"/>
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                        <Collapse in={open} timeout="auto" unmountOnExit>
+                          <Box sx={{ margin: 1 }}>
+                          <Typography variant="h6" gutterBottom component="div">
+                              Borrower Contact Details
+                            </Typography>
+                            <p>Phone Number-02222222</p>
+                            <p>Email-   
+                              <Tooltip title="Copy">
+                                <Link variant = "body2" underline ="hover" component ="button" onClick={handleClick}>
+                                  {row.email}
+                                </Link>
+                              </Tooltip>       
+                              <Snackbar open = {openSnack} autoHideDuration={2000} onClose={handleClose}>
+                                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                                  Copied!
+                                </Alert>
+                              </Snackbar>
+                            </p>
+                            <Typography variant="h6" gutterBottom component="div">
+                              History
+                            </Typography>
+                            <Table size="small" aria-label="purchases">
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell>Date</TableCell>
+                                  <TableCell>Loan</TableCell>
+                                  <TableCell align="right">Loan Amount</TableCell>
+                                  <TableCell align="right">Active</TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {row.history.map((historyRow) => (
+                                  <TableRow key={historyRow.date}>
+                                    <TableCell component="th" scope="row">
+                                      {historyRow.date}
+                                    </TableCell>
+                                    <TableCell>{historyRow.loanId}</TableCell>
+                                    <TableCell align="right">${historyRow.amount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
+                                    <TableCell align="right">{historyRow.active}</TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </Box>
+                        </Collapse>
+                      </TableCell>
+                    </TableRow>
+                  </ThemeProvider>
+                </React.Fragment>
+              ))}
               {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
+                <TableRow style={{ height: 53 * emptyRows }}>
               <TableCell colSpan={6} />
             </TableRow>
           )}
@@ -221,7 +284,7 @@ export default function CollapsibleTable() {
           <TablePagination
           rowsPerPageOptions={[5, 10, 15]}
           component="div"
-          count={rows.length}
+          count={rowData.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -229,7 +292,7 @@ export default function CollapsibleTable() {
           />
       </TableContainer>
     </Paper>
-
+  </ThemeProvider>
   </div>
   );
 }
