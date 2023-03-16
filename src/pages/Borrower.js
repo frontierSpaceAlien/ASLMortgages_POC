@@ -224,6 +224,7 @@ export default function CollapsibleTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rowData, setRowData] = React.useState(rows);
   const [modal, setModal] = React.useState(false);
+  const [openSnack, setOpenSnack] = React.useState(false);
 
   
   const currentRows = rowData.filter((r, ind) => {
@@ -251,12 +252,20 @@ export default function CollapsibleTable() {
       prevData.filter((_, index) => index !== indexData)
     );
     setModal(false)
+    setOpenSnack(true);
   }
 
   const handlePopup = (dataIndex) =>{
     indexData = dataIndex
     setModal(true)
   }
+
+  const handleSnackClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnack(false);
+  };
 
   
   return (
@@ -310,6 +319,10 @@ export default function CollapsibleTable() {
                         onClose={handleModalClose}
                         aria-labelledby="alert-dialog-title"
                         aria-describedby="alert-dialog-description"
+                        PaperProps={{
+                          elevation: 3,
+                        }}
+                        BackdropProps={{style: {backgroundColor: 'rgba(0,0,0,0.1)', boxShadow: 'none'}}}
                       >
                         <DialogTitle id="alert-dialog-title">
                           {"Delete"}
@@ -320,12 +333,17 @@ export default function CollapsibleTable() {
                           </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                          <Button onClick={handleModalClose}>Disagree</Button>
-                          <Button onClick={handleDeletePopup} autoFocus>
-                            Agree
+                          <Button sx={{ color: 'red'}} onClick={handleModalClose}>Cancel</Button>
+                          <Button sx={{ color: 'black'}} onClick={handleDeletePopup} autoFocus>
+                            Yes
                           </Button>
                         </DialogActions>
                       </Dialog>
+                        <Snackbar open = {openSnack} autoHideDuration={3000} onClose={handleSnackClose}>
+                          <Alert onClose={handleSnackClose} severity="error" sx={{ width: '100%' }}>
+                            Deleted Borrower
+                          </Alert>
+                        </Snackbar>
                       </TableCell>
                     </ExpandRow>
                   </ThemeProvider>
