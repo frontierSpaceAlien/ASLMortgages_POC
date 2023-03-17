@@ -30,6 +30,12 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 const theme = createTheme({
     typography: {
@@ -207,7 +213,7 @@ function ExpandRow({children, expandComponent, ...otherProps}){
                         <TableCell align="right">${historyRow.amount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
                         <TableCell align="right">{historyRow.active}</TableCell>
                       </TableRow>
-              ))}
+                  ))}
               </TableBody>
               </Table>
             </Box>
@@ -221,6 +227,7 @@ function ExpandRow({children, expandComponent, ...otherProps}){
 
 var indexData = 0;
 
+
 export default function CollapsibleTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -228,7 +235,12 @@ export default function CollapsibleTable() {
   const [modal, setModal] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
   const [openAdd, setAdd] = React.useState(false);
+  const [openCheckbox, setCheckbox] = React.useState([]);
+  const [active, setActive] = React.useState('');
 
+  const handleActiveChange = (event) => {
+    setActive(event.target.value);
+  };
   
   const currentRows = rowData.filter((r, ind) => {
     return ind >= rowsPerPage * page && ind < rowsPerPage * (page + 1);
@@ -276,9 +288,18 @@ export default function CollapsibleTable() {
 
   const handleAddClose = () => {
     setAdd(false);
+    setCheckbox([])
+    setActive('')
   }
 
-  
+  const handleCheckboxClick = (event) =>{
+    if (event.target.checked === true){
+      setCheckbox([...openCheckbox, ""])
+    }else{
+      setCheckbox([])
+    }
+  }
+
   return (
     <div className = "tableView">
     <ThemeProvider theme={theme}>
@@ -324,6 +345,51 @@ export default function CollapsibleTable() {
                     sx={{ m: 1}}
                     variant="standard"
                   />
+                  <div>
+                    <Typography variant ="caption" sx={{ color : "grey"}}>
+                      <FormGroup>
+                        <FormControlLabel control ={
+                        <Checkbox onChange={handleCheckboxClick}/>
+                        } label = "Does this borrower have a history with ASL Mortgages?"/>
+                      </FormGroup>
+                    </Typography>
+                  </div>
+                  {openCheckbox.map((index) => (
+                    <Box key={index}>
+                      <p style={{color: 'red'}}>**probably change these text fields to drop 
+                          down menus and pull data from loans page. Currently will not save the information below - Just testing for now**</p>
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="outlined-required"
+                        label="Date"
+                        type="name"
+                        fullWidth
+                        variant="standard"
+                        />
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="outlined-number"
+                        label="Loan Amount"
+                        variant="standard"
+                        fullWidth
+                        />
+                      <FormControl sx={{ mt: 2.5 }} fullWidth>
+                        <InputLabel>Active?</InputLabel>
+                        <Select
+                          value={active}
+                          label="Active"
+                          onChange={handleActiveChange}
+                          fullWidth
+                          sx={{ color: 'black'}}
+                        >
+                          <MenuItem value={10}>Yes</MenuItem>
+                          <MenuItem value={20}>No</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  ))}
               </DialogContent>
               <DialogActions>
                 <Button sx={{ color: 'red'}} onClick={handleAddClose}>Cancel</Button>
