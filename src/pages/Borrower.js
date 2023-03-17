@@ -146,11 +146,11 @@ function ExpandRow({children, expandComponent, ...otherProps}){
   const handleClick = () => {
     setOpenSnack(true);
     console.log(openSnack);
-    navigator.clipboard.writeText(rows.email)
+    navigator.clipboard.writeText(row.email)
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setOpenSnack(false);
