@@ -28,6 +28,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
 
 const theme = createTheme({
     typography: {
@@ -81,42 +83,42 @@ function createData(borrowerID, name, loanAmount, intRate, price) {
 /** DUMMY DATA **/
 // Never have duplicate borrower ids. Duplicate borrower ids will cause the table to break.
 const rows = [
-  createData(0,'Borrower 1', 359066.74, 16.95, 3.99),
-  createData(1,'Borrower 2', 421500.00, 15.95, 4.99),
-  createData(2,'Borrower 3', 1107549.91, 16.95, 3.79),
-  createData(3,'Borrower 4', 1627000.04, 14.95,  2.5),
-  createData(4,'Borrower 5', 83172.63, 15.0,  1.5),
-  createData(5,'Borrower 6', 363300.00, 15.0, 1.5),
-  createData(6,'Borrower 7', 985263.96, 6.0, 3.99),
-  createData(7,'Borrower 8', 389421.50, 9.0, 4.99),
-  createData(8,'Borrower 9', 954231.17, 16.0, 3.79),
-  createData(9,'Borrower 10', 305987.60, 3.7, 2.5),
-  createData(10,'Borrower 11', 592953.41, 16.0, 1.5),
-  createData(11,'Borrower 12', 356956.80, 16.0, 1.5),
-  createData(12,'Borrower 13', 159481.40, 6.0, 3.99),
-  createData(13,'Borrower 14', 237597.30, 9.0, 4.99),
-  createData(14,'Borrower 15', 262956.26, 16.0, 3.79),
-  createData(15,'Borrower 16', 305654.11, 3.7, 2.5),
-  createData(16,'Borrower 17', 356123.95, 16.0, 1.5),
-  createData(17,'Borrower 18', 356897.65, 16.0, 1.5),
-  createData(18,'Borrower 19', 159463.99, 6.0, 3.99),
-  createData(19,'Borrower 20', 237956.64, 9.0, 4.99),
-  createData(20,'Borrower 21', 262123.00, 16.0, 3.79),
-  createData(21,'Borrower 22', 305144.05, 3.7, 2.5),
-  createData(22,'Borrower 23', 356789.15, 16.0, 1.5),
-  createData(23,'Borrower 24', 356753.46, 16.0, 1.5),
-  createData(24,'Borrower 25', 159159.05, 6.0, 3.99),
-  createData(25,'Borrower 26', 237879.12, 9.0, 4.99),
-  createData(26,'Borrower 27', 2621595.77, 16.0, 3.79),
-  createData(27,'Borrower 28', 3056652.94, 3.7, 2.5),
-  createData(28,'Borrower 29', 3565563.80, 16.0, 1.5),
-  createData(29,'Borrower 30', 356957.78, 16.0, 1.5),
-  createData(30,'Borrower 31', 159897.63, 6.0, 3.99),
-  createData(31,'Borrower 32', 237485.99, 9.0, 4.99),
-  createData(32,'Borrower 33', 26265.45, 16.0, 3.79),
-  createData(33,'Borrower 34', 305323.12, 3.7, 2.5),
-  createData(34,'Borrower 35', 356222.65, 16.0, 1.5),
-  createData(35,'Borrower 36', 356154.00, 16.0, 1.5),
+  createData(0,'Borrower 1', 359066.74, 16.95),
+  createData(1,'Borrower 2', 421500.00, 15.95),
+  createData(2,'Borrower 3', 1107549.91, 16.95),
+  createData(3,'Borrower 4', 1627000.04, 14.95),
+  createData(4,'Borrower 5', 83172.63, 15.0),
+  createData(5,'Borrower 6', 363300.00, 15.0),
+  createData(6,'Borrower 7', 985263.96, 6.0),
+  createData(7,'Borrower 8', 389421.50, 9.0),
+  createData(8,'Borrower 9', 954231.17, 16.0),
+  createData(9,'Borrower 10', 305987.60, 3.7),
+  createData(10,'Borrower 11', 592953.41, 16.0),
+  createData(11,'Borrower 12', 356956.80, 16.0),
+  createData(12,'Borrower 13', 159481.40, 6.0),
+  createData(13,'Borrower 14', 237597.30, 9.0),
+  createData(14,'Borrower 15', 262956.26, 16.0),
+  createData(15,'Borrower 16', 305654.11, 3.7),
+  createData(16,'Borrower 17', 356123.95, 16.0),
+  createData(17,'Borrower 18', 356897.65, 16.0),
+  createData(18,'Borrower 19', 159463.99, 6.0),
+  createData(19,'Borrower 20', 237956.64, 9.0),
+  createData(20,'Borrower 21', 262123.00, 16.0),
+  createData(21,'Borrower 22', 305144.05, 3.7),
+  createData(22,'Borrower 23', 356789.15, 16.0),
+  createData(23,'Borrower 24', 356753.46, 16.0),
+  createData(24,'Borrower 25', 159159.05, 6.0),
+  createData(25,'Borrower 26', 237879.12, 9.0),
+  createData(26,'Borrower 27', 2621595.77, 16.0),
+  createData(27,'Borrower 28', 3056652.94, 3.7),
+  createData(28,'Borrower 29', 3565563.80, 16.0),
+  createData(29,'Borrower 30', 356957.78, 16.0),
+  createData(30,'Borrower 31', 159897.63, 6.0),
+  createData(31,'Borrower 32', 237485.99, 9.0),
+  createData(32,'Borrower 33', 26265.45, 16.0),
+  createData(33,'Borrower 34', 305323.12, 3.7),
+  createData(34,'Borrower 35', 356222.65, 16.0),
+  createData(35,'Borrower 36', 356154.00, 16.0),
 ]
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -225,6 +227,7 @@ export default function CollapsibleTable() {
   const [rowData, setRowData] = React.useState(rows);
   const [modal, setModal] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
+  const [openAdd, setAdd] = React.useState(false);
 
   
   const currentRows = rowData.filter((r, ind) => {
@@ -243,7 +246,7 @@ export default function CollapsibleTable() {
     setPage(0);
   };
 
-  const handleModalClose = () =>{
+  const handlePopupClose = () =>{
     setModal(false)
   };
 
@@ -267,6 +270,14 @@ export default function CollapsibleTable() {
     setOpenSnack(false);
   };
 
+  const handleAdd = () =>{
+    setAdd(true)
+  }
+
+  const handleAddClose = () => {
+    setAdd(false);
+  }
+
   
   return (
     <div className = "tableView">
@@ -278,11 +289,47 @@ export default function CollapsibleTable() {
                 <Button
                     endIcon={<AddIcon />}
                     sx={{ color: "black", textTransform: 'capitalize' }}
-                    onClick={(e)=> console.log(e.target.value)}
+                    onClick={handleAdd}
                     >
                 Add Borrower
                 </Button>  
             </div>
+            <Dialog open={openAdd} onClose={handleAddClose}>
+              <DialogTitle>Add Borrower</DialogTitle>
+              <DialogContent>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="outlined-required"
+                    label="Borrower Name"
+                    type="name"
+                    fullWidth
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="outlined-number"
+                    label="Email"
+                    sx={{
+                      '& .MuiTextField-root': { m: 1, width: '25ch' },
+                    }}
+                    variant="standard"
+                  />
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="outlined-number"
+                    label="Phone Number"
+                    sx={{ m: 1}}
+                    variant="standard"
+                  />
+              </DialogContent>
+              <DialogActions>
+                <Button sx={{ color: 'red'}} onClick={handleAddClose}>Cancel</Button>
+                <Button sx={{ color: 'black'}} onClick={handleAddClose}>Add</Button>
+              </DialogActions>
+            </Dialog>
           <Table  aria-label="collapsible table" size='small'>
             <TableHead>
               <TableRow>
@@ -301,7 +348,7 @@ export default function CollapsibleTable() {
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">${row.loanAmount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
+                    <TableCell align="right">${row.loanAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</TableCell>
                     <TableCell align="right">{row.intRate}%</TableCell>
                       <TableCell align="right"> 
                         <Tooltip title="Edit">
@@ -316,7 +363,7 @@ export default function CollapsibleTable() {
                         </Tooltip>
                       <Dialog
                         open={modal}
-                        onClose={handleModalClose}
+                        onClose={handlePopupClose}
                         aria-labelledby="alert-dialog-title"
                         aria-describedby="alert-dialog-description"
                         PaperProps={{
@@ -333,7 +380,7 @@ export default function CollapsibleTable() {
                           </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                          <Button sx={{ color: 'red'}} onClick={handleModalClose}>Cancel</Button>
+                          <Button sx={{ color: 'red'}} onClick={handlePopupClose}>Cancel</Button>
                           <Button sx={{ color: 'black'}} onClick={handleDeletePopup} autoFocus>
                             Yes
                           </Button>
@@ -351,8 +398,8 @@ export default function CollapsibleTable() {
               ))}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
+                <TableCell colSpan={6} />
+              </TableRow>
           )}
             </TableBody>
           </Table>
