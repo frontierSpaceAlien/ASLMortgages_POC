@@ -28,6 +28,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useState } from 'react';
+import TextField from '@mui/material/TextField';
 
 const theme = createTheme({
     typography: {
@@ -83,41 +85,7 @@ function createData(borrowerID, name, loanAmount, intRate, dailyInterest, totalP
 // Never have duplicate borrower ids. Duplicate borrower ids will cause the table to break.
 const rows = [
   createData(0,'Investor 1', 359066.74, 16.95, 100, 200000),
-  createData(1,'Investor 2', 421500.00, 15.95),
-  createData(2,'Investor 3', 1107549.91, 16.95),
-  createData(3,'Investor 4', 1627000.04, 14.95),
-  createData(4,'Investor 5', 83172.63, 15.0),
-  createData(5,'Investor 6', 363300.00, 15.0),
-  createData(6,'Investor 7', 985263.96, 6.0),
-  createData(7,'Investor 8', 389421.50, 9.0),
-  createData(8,'Investor 9', 954231.17, 16.0),
-  createData(9,'Investor 10', 305987.60, 3.7),
-  createData(10,'Investor 11', 592953.41, 16.0),
-  createData(11,'Investor 12', 356956.80, 16.0),
-  createData(12,'Investor 13', 159481.40, 6.0),
-  createData(13,'Investor 14', 237597.30, 9.0),
-  createData(14,'Investor 15', 262956.26, 16.0),
-  createData(15,'Investor 16', 305654.11, 3.7),
-  createData(16,'Investor 17', 356123.95, 16.0),
-  createData(17,'Investor 18', 356897.65, 16.0),
-  createData(18,'Investor 19', 159463.99, 6.0),
-  createData(19,'Investor 20', 237956.64, 9.0),
-  createData(20,'Investor 21', 262123.00, 16.0),
-  createData(21,'Investor 22', 305144.05, 3.7),
-  createData(22,'Investor 23', 356789.15, 16.0),
-  createData(23,'Investor 24', 356753.46, 16.0),
-  createData(24,'Investor 25', 159159.05, 6.0),
-  createData(25,'Investor 26', 237879.12, 9.0),
-  createData(26,'Investor 27', 2621595.77, 16.0),
-  createData(27,'Investor 28', 3056652.94, 3.7),
-  createData(28,'Investor 29', 3565563.80, 16.0),
-  createData(29,'Investor 30', 356957.78, 16.0),
-  createData(30,'Investor 31', 159897.63, 6.0),
-  createData(31,'Investor 32', 237485.99, 9.0),
-  createData(32,'Investor 33', 26265.45, 16.0),
-  createData(33,'Investor 34', 305323.12, 3.7),
-  createData(34,'Investor 35', 356222.65, 16.0),
-  createData(35,'Investor 36', 356154.00, 16.0),
+
 ]
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -226,6 +194,32 @@ export default function CollapsibleTable() {
   const [rowData, setRowData] = React.useState(rows);
   const [modal, setModal] = React.useState(false);
 
+  const handleAddInvestorModalOpen = () => {
+    setAddInvestorModal(true);
+  };
+
+  const handleAddInvestorModalClose = () => {
+    setAddInvestorModal(false);
+  };
+
+const handleAddInvestor = () => {
+  const dailyInterest = investorAmount * interestRate / 100;
+  const totalPrice = parseFloat(investorAmount) + dailyInterest;
+
+  const newInvestor = {
+    borrowerID: rowData.length,
+    name: investorName,
+    loanAmount: parseFloat(investorAmount),
+    intRate: parseFloat(interestRate),
+    dailyInterest: dailyInterest,
+    totalPrice: totalPrice,
+    history: [],
+  };
+
+  // Add the new investor object to your data source (e.g., rowData)
+  setRowData([...rowData, newInvestor]);
+  setAddInvestorModal(false);
+};
   
   const currentRows = rowData.filter((r, ind) => {
     return ind >= rowsPerPage * page && ind < rowsPerPage * (page + 1);
@@ -258,8 +252,23 @@ export default function CollapsibleTable() {
     indexData = dataIndex
     setModal(true)
   }
-
   
+  const [addInvestorModal, setAddInvestorModal] = useState(false);
+
+   
+    // Add the new investor object to your data source (e.g., rowData)
+
+
+const [investorName, setInvestorName] = useState('');
+const [investorAmount, setInvestorAmount] = useState('');
+const [interestRate, setInterestRate] = useState('');
+
+// Calculate daily interest and total price
+const dailyInterest = investorAmount * interestRate / 100;
+const totalPrice = parseFloat(investorAmount) + dailyInterest;
+  
+
+
   return (
     <div className = "tableView">
     <ThemeProvider theme={theme}>
@@ -270,10 +279,42 @@ export default function CollapsibleTable() {
                 <Button
                     endIcon={<AddIcon />}
                     sx={{ color: "black", textTransform: 'capitalize' }}
-                    onClick={(e)=> console.log(e.target.value)}
+                    onClick={handleAddInvestorModalOpen}
                     >
                 Add Investor
-                </Button>  
+                </Button>
+                <Dialog
+                open={addInvestorModal}
+                onClose={handleAddInvestorModalClose}
+                aria-labelledby="add-investor-dialog-title"
+                aria-describedby="add-investor-dialog-description"
+              >
+                <DialogTitle id="add-investor-dialog-title">Add Investor</DialogTitle>
+                <DialogContent>
+                  <TextField
+                    label="Investor"
+                    value={investorName}
+                    onChange={(e) => setInvestorName(e.target.value)}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Investor Amount"
+                    value={investorAmount}
+                    onChange={(e) => setInvestorAmount(e.target.value)}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Interest Rate"
+                    value={interestRate}
+                    onChange={(e) => setInterestRate(e.target.value)}
+                    fullWidth
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleAddInvestorModalClose}>Cancel</Button>
+                  <Button onClick={handleAddInvestor}>Add</Button>
+                </DialogActions>
+              </Dialog>
             </div>
           <Table  aria-label="collapsible table" size='small'>
             <TableHead>
