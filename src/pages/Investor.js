@@ -348,6 +348,7 @@ const [interestRate, setInterestRate] = useState('');
                 <StyledTableCell align="right">Interest Rate</StyledTableCell>
                 <StyledTableCell align="right">Daily Interest</StyledTableCell>
                 <StyledTableCell align="right">Total Price</StyledTableCell>
+                <StyledTableCell align="right">Edit/Cancel</StyledTableCell>        
               </TableRow>
             </TableHead>
             <TableBody>
