@@ -211,6 +211,7 @@ export default function CollapsibleTable() {
       loanAmount: parseFloat(investorAmount),
       intRate: parseFloat(interestRate),
       dailyInterest: parseFloat(investorAmount) * parseFloat(interestRate) / 100,
+      totalPrice: parseFloat(investorAmount) + (parseFloat(investorAmount) * parseFloat(interestRate) / 100),
     };
   
     const updatedRowData = [...rowData];
