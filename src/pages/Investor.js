@@ -205,13 +205,17 @@ export default function CollapsibleTable() {
   };
 
   const handleUpdateInvestor = () => {
+    
+    var resultToString = parseFloat(investorAmount) + (parseFloat(investorAmount) * parseFloat(interestRate) / 100);
+    var dailyInt = parseFloat(investorAmount) * parseFloat(interestRate) / 100
+
     const updatedInvestor = {
       ...rowData[editInvestorIndex],
       name: investorName,
       loanAmount: parseFloat(investorAmount),
       intRate: parseFloat(interestRate),
-      dailyInterest: parseFloat(investorAmount) * parseFloat(interestRate) / 100,
-      totalPrice: parseFloat(investorAmount) + (parseFloat(investorAmount) * parseFloat(interestRate) / 100),
+      dailyInterest: dailyInt.toLocaleString(undefined, {maximumFractionDigits:2}),
+      totalPrice: resultToString.toLocaleString(undefined, {maximumFractionDigits:2}),
     };
   
     const updatedRowData = [...rowData];
@@ -362,8 +366,8 @@ const [interestRate, setInterestRate] = useState('');
                     </TableCell>
                     <TableCell align="right">${row.loanAmount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
                     <TableCell align="right">{row.intRate}%</TableCell>
-                    <TableCell align="right">{row.dailyInterest}</TableCell>
-                    <TableCell align="right">{row.totalPrice}</TableCell>
+                    <TableCell align="right">${row.dailyInterest}</TableCell>
+                    <TableCell align="right">${row.totalPrice}</TableCell>
                     <TableCell align="right">
                         <Tooltip title="Edit">
                         <IconButton onClick={() => handleEditInvestorModalOpen(dataIndex)}>
