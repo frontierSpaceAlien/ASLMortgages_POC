@@ -201,6 +201,7 @@ export default function CollapsibleTable() {
     setInvestorName(rowData[index].name);
     setInvestorAmount(rowData[index].loanAmount);
     setInterestRate(rowData[index].intRate);
+    setInvestorDate(rowData[index].date);
     setEditInvestorModal(true);
   };
 
@@ -214,6 +215,7 @@ export default function CollapsibleTable() {
       name: investorName,
       loanAmount: parseFloat(investorAmount),
       intRate: parseFloat(interestRate),
+      date: investorDate,
       dailyInterest: dailyInt.toLocaleString(undefined, {maximumFractionDigits:2}),
       totalPrice: resultToString.toLocaleString(undefined, {maximumFractionDigits:2}),
     };
@@ -245,6 +247,7 @@ const handleAddInvestor = () => {
     name: investorName,
     loanAmount: parseFloat(investorAmount),
     intRate: parseFloat(interestRate),
+    date: investorDate,
     dailyInterest: dailyInterest,
     totalPrice: totalPrice,
     history: [],
@@ -296,6 +299,7 @@ const handleAddInvestor = () => {
 const [investorName, setInvestorName] = useState('');
 const [investorAmount, setInvestorAmount] = useState('');
 const [interestRate, setInterestRate] = useState('');
+const [investorDate, setInvestorDate] = useState('');
 
   return (
     <div className = "tableView">
@@ -337,6 +341,12 @@ const [interestRate, setInterestRate] = useState('');
                     onChange={(e) => setInterestRate(e.target.value)}
                     fullWidth
                   />
+                  <TextField
+                  label="Date"
+                  value={investorDate}
+                  onChange={(e) => setInvestorDate(e.target.value)}
+                  fullWidth
+                  />
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleAddInvestorModalClose}>Cancel</Button>
@@ -348,6 +358,7 @@ const [interestRate, setInterestRate] = useState('');
             <TableHead>
               <TableRow>
                 <StyledTableCell />
+                <StyledTableCell>Date</StyledTableCell>
                 <StyledTableCell>Investor</StyledTableCell>
                 <StyledTableCell align="right">Investor Amount</StyledTableCell>
                 <StyledTableCell align="right">Interest Rate</StyledTableCell>
@@ -361,6 +372,9 @@ const [interestRate, setInterestRate] = useState('');
                 <React.Fragment>
                   <ThemeProvider theme={theme}>
                     <ExpandRow row ={row}>
+                    <TableCell component="th" scope="row">
+                       {row.date}
+                  </TableCell>  
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
@@ -399,6 +413,12 @@ const [interestRate, setInterestRate] = useState('');
                               value={interestRate}
                               onChange={(e) => setInterestRate(e.target.value)}
                               fullWidth
+                            />
+                            <TextField
+                                label="Date"
+                                value={investorDate}
+                                onChange={(e) => setInvestorDate(e.target.value)}
+                                fullWidth
                             />
                           </DialogContent>
                           <DialogActions>
@@ -459,7 +479,6 @@ const [interestRate, setInterestRate] = useState('');
   </div>
   );
 }
-
 
 
 
