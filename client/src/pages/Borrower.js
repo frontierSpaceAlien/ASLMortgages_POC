@@ -1,4 +1,5 @@
 import * as React from 'react';
+import BorrowerFinder from "../api/BorrowerFinder";
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
@@ -36,6 +37,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { BorrowersContextProvider } from '../context/BorrowersContext';
 
 const theme = createTheme({
     typography: {
@@ -63,12 +65,12 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 function createData(borrowerID, name, loanAmount, intRate, price) {
   return {
-    borrowerID,
-    name,
-    loanAmount,
-    intRate,
-    price,
-    email: "test@test.com",
+      borrowerID,
+      name,
+      loanAmount,
+      intRate,
+      price,
+      email: "test@test.com",
     history: [
       {
         date: '2020-01-05',
@@ -228,6 +230,8 @@ function ExpandRow({children, expandComponent, ...otherProps}){
 var indexData = 0;
 
 
+
+
 export default function CollapsibleTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -237,6 +241,35 @@ export default function CollapsibleTable() {
   const [openAdd, setAdd] = React.useState(false);
   const [openCheckbox, setCheckbox] = React.useState([]);
   const [active, setActive] = React.useState('');
+ 
+// const data = async() => 
+//   React.useEffect(() => {
+//     const fetchData = async () => {
+//         try {
+//             const response = await fetch("http://localhost:3006/borrower");
+//             const jsonData = await response.json();
+//             const data = jsonData.data.borrower;
+//             console.log(data);
+
+//             setRowData(data);
+//             console.log(rowData)
+//             // const response = await BorrowerFinder.get("/");
+//             // const temp = response.data.data.borrower;
+//             // setRowData(response.data);
+//             // console.log(response);
+//             // console.log(rowData);           
+//              // .then((response) =>{
+
+//           //  })
+//             //setRowData(...rowData, response.data.data.borrower);
+//             // setRowData(...rowData,temp[0]);
+//         } catch (err) {
+//             console.error(err);
+//         }
+//     }
+//     fetchData();
+//   },[]);
+
 
   const handleActiveChange = (event) => {
     setActive(event.target.value);
@@ -414,7 +447,7 @@ export default function CollapsibleTable() {
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">${row.loanAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</TableCell>
+                    <TableCell align="right">$5</TableCell>
                     <TableCell align="right">{row.intRate}%</TableCell>
                       <TableCell align="right"> 
                         <Tooltip title="Edit">
@@ -484,3 +517,93 @@ export default function CollapsibleTable() {
   </div>
   );
 }
+
+
+// import React, {Fragment, useState} from "react";
+
+// const Borrower = () => {
+//     const [inputs, setInputs] = useState({
+//         borrowerFirstName: "",
+//         borrowerLastName: "",
+//         borrowerStreetAddress: "",
+//         borrowerContactNumber: ""
+//     })
+
+//     const { borrowerFirstName, borrowerLastName, borrowerStreetAddress, borrowerContactNumber } = inputs; 
+//     const onChange = (e) => {
+//         setInputs ({...inputs, [e.target.name] : e.target.value});
+//     }; 
+
+//     const onSubmitForm = async (e) =>{
+//         e.preventDefault();
+//         try {
+//             console.log("It made it to submit form");
+
+//             const body = {borrowerFirstName, borrowerLastName, borrowerStreetAddress, borrowerContactNumber}
+           
+//             const response = await fetch("http://localhost:3006/borrower", {
+//                 method: "POST",
+//                 headers: {"Content-Type" : "application/json"},
+//                 body: JSON.stringify(body)
+//             });
+//             console.log("It made it to here");
+
+//             const parseRes = await response.json()
+//             console.log(parseRes);
+           
+//         } catch (err) {
+//             console.error(err.message);
+//         }
+//     }
+//     return(
+//         <Fragment>
+//             <h1 className="text-centre my-5">Create a Borrower</h1>
+//             <form onSubmit={onSubmitForm}>
+//                 <input 
+//                     type="borrowerFirstName" 
+//                     name="borrowerFirstName" 
+//                     placeholder="firstName" 
+//                     className="form-control my-3"
+//                     value = {borrowerFirstName}
+//                     onChange = {e => onChange(e)}
+//                 />
+//                 <input 
+//                     type="borrowerLastName" 
+//                     name="borrowerLastName" 
+//                     placeholder="lastName"
+//                     className="form-control my-3"
+//                     value = {borrowerLastName}
+//                     onChange = {e => onChange(e)}
+//                 />
+//                 <input 
+//                     type="borrowerStreetAddress" 
+//                     name="borrowerStreetAddress" 
+//                     placeholder="streetAddress"
+//                     className="form-control my-3"
+//                     value = {borrowerStreetAddress}
+//                     onChange = {e => onChange(e)}
+//                 />
+//                 <input 
+//                     type="borrowerContactNumber" 
+//                     name="borrowerContactNumber" 
+//                     placeholder="contactNumber"
+//                     className="form-control my-3"
+//                     value = {borrowerContactNumber}
+//                     onChange = {e => onChange(e)}
+//                 />
+//                 <button className ="btn btn-success btn-block"> Submit</button>
+//             </form>
+//          </Fragment>
+
+//     );
+// };
+// export default Borrower;
+
+
+/*
+borrower_id SERIAL PRIMARY KEY,
+    borrowerFirstName VARCHAR(255),
+    borrowerLastName VARCHAR(255),
+    BorrowerStreetAddress VARCHAR(255),
+    borrowerContactNumber VARCHAR(255)
+*/
