@@ -5,7 +5,7 @@ CREATE TABLE borrower(
     borrowerFirstName VARCHAR(255),
     borrowerLastName VARCHAR(255),
     BorrowerStreetAddress VARCHAR(255),
-    borrowerContactNumber VARCHAR(255)
+    borrowerContactNumber VARCHAR(255),
     borrowerEmailAddress VARCHAR(255)
 );
 

@@ -148,7 +148,7 @@ function ExpandRow({children, expandComponent, ...otherProps}){
   const handleClick = () => {
     setOpenSnack(true);
     console.log(openSnack);
-    navigator.clipboard.writeText(row.email)
+    navigator.clipboard.writeText(row.borroweremailaddress)
   };
 
   const handleClose = (event, reason) => {
@@ -180,11 +180,11 @@ function ExpandRow({children, expandComponent, ...otherProps}){
               <Typography variant="h6" gutterBottom component="div">
                   Borrower Contact Details
                 </Typography>
-                  <p>Phone Number-02222222</p>
-                  <p>Email-   
+                  <p>Phone Number- {row.borrowercontactnumber}</p>
+                  <p>Email- 
                     <Tooltip title="Copy">
                       <Link variant = "body2" underline ="hover" component ="button" onClick={handleClick}>
-                        {row.email}
+                        {row.borroweremailaddress}
                       </Link>
                     </Tooltip>       
                   <Snackbar open = {openSnack} autoHideDuration={2000} onClose={handleClose}>
@@ -206,7 +206,8 @@ function ExpandRow({children, expandComponent, ...otherProps}){
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                    {row.history.map((historyRow) => (
+                    {/* need to figure out how to map through the history of loans for each borrower  */}
+                    {/* {row.history.map((historyRow) => (
                       <TableRow key={historyRow.date}>
                         <TableCell component="th" scope="row">
                         {historyRow.date}
@@ -215,7 +216,7 @@ function ExpandRow({children, expandComponent, ...otherProps}){
                         <TableCell align="right">${historyRow.amount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
                         <TableCell align="right">{historyRow.active}</TableCell>
                       </TableRow>
-                  ))}
+                  ))} */}
               </TableBody>
               </Table>
             </Box>
@@ -229,51 +230,35 @@ function ExpandRow({children, expandComponent, ...otherProps}){
 
 var indexData = 0;
 
-
-
-
 export default function CollapsibleTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [rowData, setRowData] = React.useState(rows);
+  const [rowData, setRowData] = React.useState([]);
   const [modal, setModal] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
   const [openAdd, setAdd] = React.useState(false);
   const [openCheckbox, setCheckbox] = React.useState([]);
   const [active, setActive] = React.useState('');
  
-// const data = async() => 
-//   React.useEffect(() => {
-//     const fetchData = async () => {
-//         try {
-//             const response = await fetch("http://localhost:3006/borrower");
-//             const jsonData = await response.json();
-//             const data = jsonData.data.borrower;
-//             console.log(data);
 
-//             setRowData(data);
-//             console.log(rowData)
-//             // const response = await BorrowerFinder.get("/");
-//             // const temp = response.data.data.borrower;
-//             // setRowData(response.data);
-//             // console.log(response);
-//             // console.log(rowData);           
-//              // .then((response) =>{
-
-//           //  })
-//             //setRowData(...rowData, response.data.data.borrower);
-//             // setRowData(...rowData,temp[0]);
-//         } catch (err) {
-//             console.error(err);
-//         }
-//     }
-//     fetchData();
-//   },[]);
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try{
+        const response = await BorrowerFinder.get("/");
+        setRowData(response.data.data.borrower)
+      }catch (err){
+        
+      }
+    }
+    
+    fetchData();
+  },[]);
 
 
   const handleActiveChange = (event) => {
     setActive(event.target.value);
   };
+  
   
   const currentRows = rowData.filter((r, ind) => {
     return ind >= rowsPerPage * page && ind < rowsPerPage * (page + 1);
@@ -317,6 +302,7 @@ export default function CollapsibleTable() {
 
   const handleAdd = () =>{
     setAdd(true)
+    console.log(rowData)
   }
 
   const handleAddClose = () => {
@@ -445,9 +431,9 @@ export default function CollapsibleTable() {
                   <ThemeProvider theme={theme}>
                     <ExpandRow row ={row}>
                     <TableCell component="th" scope="row">
-                      {row.name}
+                      {row.borrowerfirstname+" "+row.borrowerlastname}
                     </TableCell>
-                    <TableCell align="right">$5</TableCell>
+                    <TableCell align="right">$</TableCell>
                     <TableCell align="right">{row.intRate}%</TableCell>
                       <TableCell align="right"> 
                         <Tooltip title="Edit">
