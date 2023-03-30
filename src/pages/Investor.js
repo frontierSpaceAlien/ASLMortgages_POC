@@ -243,7 +243,7 @@ const handleAddInvestor = () => {
   const newInvestor = {
     borrowerID: rowData.length,
     name: investorName,
-    bankAccount: parseFloat(InterestBankAccount),
+    bankAccount: InterestBankAccount,
     rwtRate: parseFloat(RwtRate),
     ird: IrdNumber,
     dob: Dob,
@@ -391,7 +391,7 @@ const [Country, setCountry] = useState('');
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">${row.bankAccount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
+                    <TableCell align="right">{row.bankAccount}</TableCell>
                     <TableCell align="right">{row.rwtRate}%</TableCell>
                     <TableCell align="right">{row.dob}</TableCell>
                     <TableCell align="right">{row.country}</TableCell>
