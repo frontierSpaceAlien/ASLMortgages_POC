@@ -9,7 +9,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Browse from "./pages/Browse";
 import Borrowers from "./pages/Borrower";
-import AddLoan from "./pages/AddLoan";
+import Loan from "./pages/AddLoan";
 import logo from "./assets/logo/image01.png"
 
 import Investors from "./pages/Investor";
@@ -53,15 +53,14 @@ const App = () =>  {
                       <li><NavLink to="/"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Home</Button></NavLink></li>
                       <li><NavLink to="/Investors"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Investors</Button></NavLink></li>
                       <li><NavLink to="/Borrowers"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Borrowers</Button></NavLink></li>
-                      <li><NavLink to="/AddLoan "><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Add Loan</Button></NavLink></li>
+                      <li><NavLink to="/Loans "><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Loans</Button></NavLink></li>
                       <li><NavLink to="/Schedule"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Payment Schedule</Button></NavLink></li>
-                      <li><NavLink to="/Loans"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Loans</Button></NavLink></li>
                  </ThemeProvider>
               </ul>
               <div className="content">
                 <Routes>
                   <Route exact path="/" element={<Browse />} />
-                  <Route exact path="/AddLoan" element={<AddLoan />} />
+                  <Route exact path="/Loan" element={<Loan />} />
                   <Route exact path="/Borrowers" element={<Borrowers />} />
                   <Route exact path="/Investors" element={<Investors />} />
                 </Routes>
