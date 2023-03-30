@@ -242,6 +242,8 @@ export default function CollapsibleTable() {
   const [lastName, setLastName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [phone, setPhone] = React.useState("");
+  const [errorFirst, setErrorFirst] = React.useState(false);
+  const [errorLast, setErrorLast] = React.useState(false);
  
 
   React.useEffect(() => {
@@ -250,13 +252,59 @@ export default function CollapsibleTable() {
         const response = await BorrowerFinder.get("/");
         setRowData(response.data.data.borrower)
       }catch (err){
-        
+        console.error(err)
       }
     }
     
     fetchData();
   },[]);
+  
+  const handleAddSubmit = async (e) => {
+    e.preventDefault();
+    if (firstName === "" && lastName === ""){
+      setErrorFirst(true)
+      setErrorLast(true)
+    }else if (firstName === ""){
+      setErrorFirst(true)
+    }else if (lastName === ""){
+      setErrorLast(true)
+    }else{
+      try{
+        const response = await BorrowerFinder.post("/", {
+          borrowerFirstName: firstName,
+          borrowerLastName: lastName,
+          borrowerEmailAddress: email,
+          borrowerContactNumber: phone
+        });
+        setRowData([...rowData, response.data.data.borrower])
+      }catch (err){
+        console.log(err)
+      }
+      setFirstName("")
+      setLastName("")
+      setEmail("")
+      setPhone("")
+      setAdd(false)
+    }
+  }
 
+  const handleDeletePopup = async () =>{
+    try{
+      const response = await BorrowerFinder.delete(`/${indexData}`);
+      setRowData(rowData.filter(row => {
+        return row.borrower_id !== indexData
+      }))
+    }catch (err){
+      console.error(err);
+    }
+
+    // setRowData((prevData) =>
+    //   prevData.filter((_, index) => index !== indexData)
+    // );
+    // console.log(rowData)
+    setModal(false)
+    setOpenSnack(true);
+  }
 
   const handleActiveChange = (event) => {
     setActive(event.target.value);
@@ -283,13 +331,6 @@ export default function CollapsibleTable() {
     setModal(false)
   };
 
-  const handleDeletePopup = () =>{
-    setRowData((prevData) =>
-      prevData.filter((_, index) => index !== indexData)
-    );
-    setModal(false)
-    setOpenSnack(true);
-  }
 
   const handlePopup = (dataIndex) =>{
     indexData = dataIndex
@@ -309,6 +350,10 @@ export default function CollapsibleTable() {
   }
 
   const handleAddClose = () => {
+    setFirstName("")
+    setLastName("")
+    setEmail("")
+    setPhone("")
     setAdd(false);
     setCheckbox([])
     setActive('')
@@ -322,29 +367,16 @@ export default function CollapsibleTable() {
     }
   }
 
-  const handleAddSubmit = async (e) => {
-    e.preventDefault();
-    if (firstName === "" && lastName === "" && email === "" && phone === ""){
-
-    }else{
-      try{
-        const response = await BorrowerFinder.post("/", {
-          borrowerFirstName: firstName,
-          borrowerLastName: lastName,
-          borrowerEmailAddress: email,
-          borrowerContactNumber: phone
-        });
-        setRowData([...rowData, response.data.data.borrower])
-      }catch (err){
-        console.log(err)
-      }
-      setFirstName("")
-      setLastName("")
-      setEmail("")
-      setPhone("")
-      setAdd(false)
-    }
+  const onChangeFirstName = (e) =>{
+    setFirstName(e.target.value)
+    setErrorFirst(false)
   }
+
+  const onChangeLastName = (e) =>{
+    setLastName(e.target.value)
+    setErrorLast(false)
+  }
+
 
   return (
     <div className = "tableView">
@@ -364,9 +396,14 @@ export default function CollapsibleTable() {
             <Dialog open={openAdd} onClose={handleAddClose}>
               <DialogTitle>Add Borrower</DialogTitle>
               <DialogContent>
+                <Typography sx={{ color: "gray", fontSize: 15}}>
+                  * Required Fields
+                </Typography>
                   <TextField
                     value = {firstName}
-                    onChange = {(e) => setFirstName(e.target.value)}
+                    error = {errorFirst}
+                    required
+                    onChange = {(e) => onChangeFirstName(e)}
                     autoFocus
                     margin="dense"
                     id="outlined-required"
@@ -377,7 +414,9 @@ export default function CollapsibleTable() {
                   />
                   <TextField
                     value = {lastName}
-                    onChange = {(e) => setLastName(e.target.value)}
+                    error = {errorLast}
+                    required
+                    onChange = {(e) => onChangeLastName(e)}
                     autoFocus
                     margin="dense"
                     id="outlined-required"
@@ -486,7 +525,7 @@ export default function CollapsibleTable() {
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Delete">
-                          <IconButton value={row.borrowerID} onClick={() => handlePopup(dataIndex)}>
+                          <IconButton value={row.borrowerID} onClick={() => handlePopup(row.borrower_id)}>
                             <DeleteIcon color = "error"/>
                           </IconButton>
                         </Tooltip>
