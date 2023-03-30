@@ -237,6 +237,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
+<<<<<<< HEAD
 function createData(InvestorID, name, loanAmount, intRate, dailyInterest, totalPrice) {
   return {
     InvestorID,
@@ -246,6 +247,17 @@ function createData(InvestorID, name, loanAmount, intRate, dailyInterest, totalP
     dailyInterest,
     totalPrice,
     //subrow data insert
+=======
+function createData(borrowerID, ird, name, bankAccount, rwtRate, dob, country) {
+  return {
+    borrowerID,
+    ird,
+    name,
+    bankAccount,
+    rwtRate,
+    dob,
+    country,
+>>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
     email: "test@test.com",
     history: [
       {
@@ -287,11 +299,25 @@ function ExpandRow({children, expandComponent, ...otherProps}){
   const { row } = otherProps;
   const [open, setOpen] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [email, setEmail] = React.useState(row.email);
+  const [phone, setPhone] = React.useState('02222222');
+  const [history, setHistory] = React.useState(JSON.stringify(row.history));
+
+  // open dialog function
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  // close dialog function
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   const handleClick = () => {
     setOpenSnack(true);
     console.log(openSnack);
-    navigator.clipboard.writeText(rows.email)
+    navigator.clipboard.writeText(row.email)
   };
 
   const handleClose = (event, reason) => {
@@ -301,6 +327,25 @@ function ExpandRow({children, expandComponent, ...otherProps}){
     setOpenSnack(false);
   };
 
+<<<<<<< HEAD
+=======
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePhoneChange = (event) => {
+    setPhone(event.target.value);
+  };
+
+  const handleHistoryChange = (event) => {
+    setHistory(event.target.value);
+  };
+
+  const handleSave = () => {
+    setOpenDialog(false);
+    setHistory(history);  
+  };
+>>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
 
 
   return (
@@ -316,7 +361,50 @@ function ExpandRow({children, expandComponent, ...otherProps}){
           {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
         </IconButton>
       </TableCell>
+<<<<<<< HEAD
       {children}    
+=======
+      {children}
+      <TableCell>
+            <Button variant="contained" onClick={handleOpenDialog}>
+              Update (Det)
+            </Button>
+      </TableCell>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <DialogTitle>Update Contact Details</DialogTitle>
+      <DialogContent>
+        <TextField
+          margin="dense"
+          label="Email"
+          type="email"
+          fullWidth
+          value={email}
+          onChange={handleEmailChange}
+        />
+        <TextField
+          margin="dense"
+          label="Phone Number"
+          type="tel"
+          fullWidth
+          value={phone}
+          onChange={handlePhoneChange}
+        />
+        <TextField
+          margin="dense"
+          label="History"
+          fullWidth
+          multiline
+          rows={4}
+          value={history}
+          onChange={handleHistoryChange}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCloseDialog}>Cancel</Button>
+        <Button onClick={handleSave}>Save</Button>
+      </DialogActions>
+    </Dialog>
+>>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
     </TableRow>
 
       <TableRow>
@@ -326,16 +414,32 @@ function ExpandRow({children, expandComponent, ...otherProps}){
               <Typography variant="h6" gutterBottom component="div">
                   Investor Contact Details
                 </Typography>
+<<<<<<< HEAD
                   <p>Phone Number-02222222</p>
                   
                   <p>Email-   
+=======
+                  <p>Phone Number: {phone}</p>
+                  <p>Email: 
+>>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
                     <Tooltip title="Copy">
-                      <Link variant = "body2" underline ="hover" component ="button" onClick={handleClick}>
-                        {row.email}
-                      </Link>
+                    <Link
+                      variant="body2"
+                      underline="hover"
+                      component="button"
+                      onClick={handleClick}
+                    >
+                     {email}   
+                    </Link>
                     </Tooltip>       
-                  <Snackbar open = {openSnack} autoHideDuration={2000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    <Snackbar open = {openSnack} 
+                            autoHideDuration={2000} 
+                            onClose={handleClose}
+                    >
+                    <Alert onClose={handleClose} 
+                           severity="success" 
+                           sx={{ width: '100%' }}
+                    >
                     Copied!
                     </Alert>
                   </Snackbar>
@@ -344,6 +448,7 @@ function ExpandRow({children, expandComponent, ...otherProps}){
                   <Typography variant="h6" gutterBottom component="div">
                     More Information
                   </Typography>
+<<<<<<< HEAD
 
                   <Table size="small" aria-label="purchases">
                     <TableHead>
@@ -372,6 +477,9 @@ function ExpandRow({children, expandComponent, ...otherProps}){
                       ))}
                       </TableBody>
             </Table>
+=======
+                  <p>{history}</p>
+>>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
             </Box>
           </Collapse>
         </TableCell>
@@ -397,25 +505,24 @@ export default function CollapsibleTable() {
   const handleEditInvestorModalOpen = (index) => {
     setEditInvestorIndex(index);
     setInvestorName(rowData[index].name);
-    setInvestorAmount(rowData[index].loanAmount);
-    setInterestRate(rowData[index].intRate);
-    setInvestorDate(rowData[index].date);
+    setInterestBankAccount(rowData[index].bankAccount);
+    setRwtRate(rowData[index].rwtRate);
+    setIrdNumber(rowData[index].ird);
+    setDob(rowData[index].dob);
+    setCountry(rowData[index].country);
     setEditInvestorModal(true);
   };
 
   const handleUpdateInvestor = () => {
     
-    var resultToString = parseFloat(investorAmount) + (parseFloat(investorAmount) * parseFloat(interestRate) / 100);
-    var dailyInt = parseFloat(investorAmount) * parseFloat(interestRate) / 100
-
     const updatedInvestor = {
       ...rowData[editInvestorIndex],
       name: investorName,
-      loanAmount: parseFloat(investorAmount),
-      intRate: parseFloat(interestRate),
-      date: investorDate,
-      dailyInterest: dailyInt.toLocaleString(undefined, {maximumFractionDigits:2}),
-      totalPrice: resultToString.toLocaleString(undefined, {maximumFractionDigits:2}),
+      bankAccount: parseFloat(InterestBankAccount),
+      rwtRate: parseFloat(RwtRate),
+      ird: IrdNumber,
+      dob: Dob.toLocaleString(undefined, {maximumFractionDigits:2}),
+      country: Country.toLocaleString(undefined, {maximumFractionDigits:2}),
     };
   
     const updatedRowData = [...rowData];
@@ -437,17 +544,15 @@ export default function CollapsibleTable() {
   };
 
 const handleAddInvestor = () => {
-  const dailyInterest = investorAmount * interestRate / 100;
-  const totalPrice = parseFloat(investorAmount) + dailyInterest;
 
   const newInvestor = {
     InvestorID: rowData.length,
     name: investorName,
-    loanAmount: parseFloat(investorAmount),
-    intRate: parseFloat(interestRate),
-    date: investorDate,
-    dailyInterest: dailyInterest,
-    totalPrice: totalPrice,
+    bankAccount: InterestBankAccount,
+    rwtRate: parseFloat(RwtRate),
+    ird: IrdNumber,
+    dob: Dob,
+    country: Country,
     history: [],
   };
 
@@ -495,9 +600,11 @@ const handleAddInvestor = () => {
 // Add the new investor object to your data source (e.g., rowData)
 
 const [investorName, setInvestorName] = useState('');
-const [investorAmount, setInvestorAmount] = useState('');
-const [interestRate, setInterestRate] = useState('');
-const [investorDate, setInvestorDate] = useState('');
+const [InterestBankAccount, setInterestBankAccount] = useState('');
+const [RwtRate, setRwtRate] = useState('');
+const [IrdNumber, setIrdNumber] = useState('');
+const [Dob, setDob] = useState('');
+const [Country, setCountry] = useState('');
 
   return (
     <div className = "tableView">
@@ -523,19 +630,26 @@ const [investorDate, setInvestorDate] = useState('');
                 
                 <DialogContent>
                   <TextField
+                  label="IRD Number"
+                  value={IrdNumber}
+                  onChange={(e) => setIrdNumber(e.target.value)}
+                  fullWidth
+                  />
+                  <TextField
                     label="Investor"
                     value={investorName}
                     onChange={(e) => setInvestorName(e.target.value)}
                     fullWidth
                   />
                   <TextField
-                    label="Investor Amount"
-                    value={investorAmount}
-                    onChange={(e) => setInvestorAmount(e.target.value)}
+                    label="Interest Bank Account"
+                    value={InterestBankAccount}
+                    onChange={(e) => setInterestBankAccount(e.target.value)}
                     fullWidth
                   />
                   <TextField
                     label="RWT Rate"
+<<<<<<< HEAD
                     value={interestRate}
                     onChange={(e) => setInterestRate(e.target.value)}
                     fullWidth
@@ -545,7 +659,25 @@ const [investorDate, setInvestorDate] = useState('');
                   value={investorDate}
                   onChange={(e) => setInvestorDate(e.target.value)}
                   fullWidth
+=======
+                    value={RwtRate}
+                    onChange={(e) => setRwtRate(e.target.value)}
+                    fullWidth
                   />
+                  <TextField
+                    label="DOB"
+                    value={Dob}
+                    onChange={(e) => setDob(e.target.value)}
+                    fullWidth
+>>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
+                  />
+                  <TextField
+                    label="Country"
+                    value={Country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    fullWidth
+                  />
+
                 </DialogContent>
 
 
@@ -561,6 +693,7 @@ const [investorDate, setInvestorDate] = useState('');
             <TableHead>
               <TableRow>
                 <StyledTableCell />
+<<<<<<< HEAD
                 <StyledTableCell>ID</StyledTableCell>
                 <StyledTableCell>Investors Name</StyledTableCell>
                 <StyledTableCell align="right">Start Date</StyledTableCell>
@@ -568,6 +701,16 @@ const [investorDate, setInvestorDate] = useState('');
                 <StyledTableCell align="right">RWT Rate</StyledTableCell>
                 <StyledTableCell align="right">Invest Count</StyledTableCell>
                 <StyledTableCell align="right">Edit/Cancel</StyledTableCell>        
+=======
+                <StyledTableCell>IRD Number</StyledTableCell>
+                <StyledTableCell>Investor</StyledTableCell>
+                <StyledTableCell align="right">Interest Bank Account</StyledTableCell>
+                <StyledTableCell align="right">RWT Rate</StyledTableCell>
+                <StyledTableCell align="right">DOB</StyledTableCell>
+                <StyledTableCell align="right">Country</StyledTableCell>
+                <StyledTableCell align="right">Edit/Cancel</StyledTableCell>
+                <StyledTableCell align="right"></StyledTableCell>        
+>>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
               </TableRow>
             </TableHead>
             <TableBody>
@@ -579,15 +722,15 @@ const [investorDate, setInvestorDate] = useState('');
                   <ThemeProvider theme={theme}>
                     <ExpandRow row ={row}>
                     <TableCell component="th" scope="row">
-                       {row.date}
+                       {row.ird}
                   </TableCell>  
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">${row.loanAmount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
-                    <TableCell align="right">{row.intRate}%</TableCell>
-                    <TableCell align="right">${row.dailyInterest}</TableCell>
-                    <TableCell align="right">${row.totalPrice}</TableCell>
+                    <TableCell align="right">{row.bankAccount}</TableCell>
+                    <TableCell align="right">{row.rwtRate}%</TableCell>
+                    <TableCell align="right">{row.dob}</TableCell>
+                    <TableCell align="right">{row.country}</TableCell>
                     <TableCell align="right">
                         <Tooltip title="Edit">
                         <IconButton onClick={() => handleEditInvestorModalOpen(dataIndex)}>
@@ -603,29 +746,42 @@ const [investorDate, setInvestorDate] = useState('');
                           <DialogTitle id="edit-investor-dialog-title">Edit Investor</DialogTitle>
                           <DialogContent>
                             <TextField
+                              label="IRD Number"
+                              value={IrdNumber}
+                              onChange={(e) => setIrdNumber(e.target.value)}
+                              fullWidth
+                            />
+                            <TextField
                               label="Investor"
                               value={investorName}
                               onChange={(e) => setInvestorName(e.target.value)}
                               fullWidth
                             />
                             <TextField
-                              label="Investor Amount"
-                              value={investorAmount}
-                              onChange={(e) => setInvestorAmount(e.target.value)}
+                              label="Interest Bank Account"
+                              value={InterestBankAccount}
+                              onChange={(e) => setInterestBankAccount(e.target.value)}
                               fullWidth
                             />
                             <TextField
-                              label="Interest Rate"
-                              value={interestRate}
-                              onChange={(e) => setInterestRate(e.target.value)}
+                              label="RWT Rate"
+                              value={RwtRate}
+                              onChange={(e) => setRwtRate(e.target.value)}
                               fullWidth
                             />
                             <TextField
-                                label="Date"
-                                value={investorDate}
-                                onChange={(e) => setInvestorDate(e.target.value)}
-                                fullWidth
+                              label="DOB"
+                              value={Dob}
+                              onChange={(e) => setDob(e.target.value)}
+                              fullWidth
                             />
+                            <TextField
+                              label="Country"
+                              value={Country}
+                              onChange={(e) => setCountry(e.target.value)}
+                              fullWidth
+                            />
+
                           </DialogContent>
                           <DialogActions>
                             <Button onClick={handleEditInvestorModalClose}>Cancel</Button>
