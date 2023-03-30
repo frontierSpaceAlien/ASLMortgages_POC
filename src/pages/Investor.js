@@ -104,11 +104,25 @@ function ExpandRow({children, expandComponent, ...otherProps}){
   const { row } = otherProps;
   const [open, setOpen] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [email, setEmail] = React.useState(row.email);
+  const [phone, setPhone] = React.useState('02222222');
+  const [history, setHistory] = React.useState(JSON.stringify(row.history));
+
+  // open dialog function
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  // close dialog function
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   const handleClick = () => {
     setOpenSnack(true);
     console.log(openSnack);
-    navigator.clipboard.writeText(rows.email)
+    navigator.clipboard.writeText(row.email)
   };
 
   const handleClose = (event, reason) => {
@@ -117,6 +131,24 @@ function ExpandRow({children, expandComponent, ...otherProps}){
     }
     setOpenSnack(false);
   };
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePhoneChange = (event) => {
+    setPhone(event.target.value);
+  };
+
+  const handleHistoryChange = (event) => {
+    setHistory(event.target.value);
+  };
+
+  const handleSave = () => {
+    setOpenDialog(false);
+    setHistory(history);  
+  };
+
 
   return (
     <React.Fragment>
@@ -132,6 +164,45 @@ function ExpandRow({children, expandComponent, ...otherProps}){
         </IconButton>
       </TableCell>
       {children}
+      <TableCell>
+            <Button variant="contained" onClick={handleOpenDialog}>
+              Update (Det)
+            </Button>
+      </TableCell>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <DialogTitle>Update Contact Details</DialogTitle>
+      <DialogContent>
+        <TextField
+          margin="dense"
+          label="Email"
+          type="email"
+          fullWidth
+          value={email}
+          onChange={handleEmailChange}
+        />
+        <TextField
+          margin="dense"
+          label="Phone Number"
+          type="tel"
+          fullWidth
+          value={phone}
+          onChange={handlePhoneChange}
+        />
+        <TextField
+          margin="dense"
+          label="History"
+          fullWidth
+          multiline
+          rows={4}
+          value={history}
+          onChange={handleHistoryChange}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCloseDialog}>Cancel</Button>
+        <Button onClick={handleSave}>Save</Button>
+      </DialogActions>
+    </Dialog>
     </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -140,15 +211,26 @@ function ExpandRow({children, expandComponent, ...otherProps}){
               <Typography variant="h6" gutterBottom component="div">
                   Investor Contact Details
                 </Typography>
-                  <p>Phone Number-02222222</p>
-                  <p>Email-   
+                  <p>Phone Number: {phone}</p>
+                  <p>Email: 
                     <Tooltip title="Copy">
-                      <Link variant = "body2" underline ="hover" component ="button" onClick={handleClick}>
-                        {row.email}
-                      </Link>
+                    <Link
+                      variant="body2"
+                      underline="hover"
+                      component="button"
+                      onClick={handleClick}
+                    >
+                     {email}   
+                    </Link>
                     </Tooltip>       
-                  <Snackbar open = {openSnack} autoHideDuration={2000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    <Snackbar open = {openSnack} 
+                            autoHideDuration={2000} 
+                            onClose={handleClose}
+                    >
+                    <Alert onClose={handleClose} 
+                           severity="success" 
+                           sx={{ width: '100%' }}
+                    >
                     Copied!
                     </Alert>
                   </Snackbar>
@@ -156,28 +238,7 @@ function ExpandRow({children, expandComponent, ...otherProps}){
                   <Typography variant="h6" gutterBottom component="div">
                       History
                   </Typography>
-                  <Table size="small" aria-label="purchases">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Investor</TableCell>
-                        <TableCell align="right">Investor Amount</TableCell>
-                        <TableCell align="right">Active</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {row.history.map((historyRow) => (
-                      <TableRow key={historyRow.date}>
-                        <TableCell component="th" scope="row">
-                        {historyRow.date}
-                        </TableCell>
-                        <TableCell>{historyRow.loanId}</TableCell>
-                        <TableCell align="right">${historyRow.amount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
-                        <TableCell align="right">{historyRow.active}</TableCell>
-                      </TableRow>
-              ))}
-              </TableBody>
-              </Table>
+                  <p>{history}</p>
             </Box>
           </Collapse>
         </TableCell>
@@ -377,7 +438,8 @@ const [Country, setCountry] = useState('');
                 <StyledTableCell align="right">RWT Rate</StyledTableCell>
                 <StyledTableCell align="right">DOB</StyledTableCell>
                 <StyledTableCell align="right">Country</StyledTableCell>
-                <StyledTableCell align="right">Edit/Cancel</StyledTableCell>        
+                <StyledTableCell align="right">Edit/Cancel</StyledTableCell>
+                <StyledTableCell align="right"></StyledTableCell>        
               </TableRow>
             </TableHead>
             <TableBody>
