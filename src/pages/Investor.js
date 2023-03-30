@@ -55,14 +55,15 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function createData(borrowerID, name, loanAmount, intRate, dailyInterest, totalPrice) {
+function createData(borrowerID, ird, name, bankAccount, rwtRate, dob, country) {
   return {
     borrowerID,
+    ird,
     name,
-    loanAmount,
-    intRate,
-    dailyInterest,
-    totalPrice,
+    bankAccount,
+    rwtRate,
+    dob,
+    country,
     email: "test@test.com",
     history: [
       {
@@ -199,25 +200,24 @@ export default function CollapsibleTable() {
   const handleEditInvestorModalOpen = (index) => {
     setEditInvestorIndex(index);
     setInvestorName(rowData[index].name);
-    setInvestorAmount(rowData[index].loanAmount);
-    setInterestRate(rowData[index].intRate);
-    setInvestorDate(rowData[index].date);
+    setInterestBankAccount(rowData[index].bankAccount);
+    setRwtRate(rowData[index].rwtRate);
+    setIrdNumber(rowData[index].ird);
+    setDob(rowData[index].dob);
+    setCountry(rowData[index].country);
     setEditInvestorModal(true);
   };
 
   const handleUpdateInvestor = () => {
     
-    var resultToString = parseFloat(investorAmount) + (parseFloat(investorAmount) * parseFloat(interestRate) / 100);
-    var dailyInt = parseFloat(investorAmount) * parseFloat(interestRate) / 100
-
     const updatedInvestor = {
       ...rowData[editInvestorIndex],
       name: investorName,
-      loanAmount: parseFloat(investorAmount),
-      intRate: parseFloat(interestRate),
-      date: investorDate,
-      dailyInterest: dailyInt.toLocaleString(undefined, {maximumFractionDigits:2}),
-      totalPrice: resultToString.toLocaleString(undefined, {maximumFractionDigits:2}),
+      bankAccount: parseFloat(InterestBankAccount),
+      rwtRate: parseFloat(RwtRate),
+      ird: IrdNumber,
+      dob: Dob.toLocaleString(undefined, {maximumFractionDigits:2}),
+      country: Country.toLocaleString(undefined, {maximumFractionDigits:2}),
     };
   
     const updatedRowData = [...rowData];
@@ -239,17 +239,15 @@ export default function CollapsibleTable() {
   };
 
 const handleAddInvestor = () => {
-  const dailyInterest = investorAmount * interestRate / 100;
-  const totalPrice = parseFloat(investorAmount) + dailyInterest;
 
   const newInvestor = {
     borrowerID: rowData.length,
     name: investorName,
-    loanAmount: parseFloat(investorAmount),
-    intRate: parseFloat(interestRate),
-    date: investorDate,
-    dailyInterest: dailyInterest,
-    totalPrice: totalPrice,
+    bankAccount: parseFloat(InterestBankAccount),
+    rwtRate: parseFloat(RwtRate),
+    ird: IrdNumber,
+    dob: Dob,
+    country: Country,
     history: [],
   };
 
@@ -297,9 +295,11 @@ const handleAddInvestor = () => {
 
 
 const [investorName, setInvestorName] = useState('');
-const [investorAmount, setInvestorAmount] = useState('');
-const [interestRate, setInterestRate] = useState('');
-const [investorDate, setInvestorDate] = useState('');
+const [InterestBankAccount, setInterestBankAccount] = useState('');
+const [RwtRate, setRwtRate] = useState('');
+const [IrdNumber, setIrdNumber] = useState('');
+const [Dob, setDob] = useState('');
+const [Country, setCountry] = useState('');
 
   return (
     <div className = "tableView">
@@ -324,29 +324,42 @@ const [investorDate, setInvestorDate] = useState('');
                 <DialogTitle id="add-investor-dialog-title">Add Investor</DialogTitle>
                 <DialogContent>
                   <TextField
+                  label="IRD Number"
+                  value={IrdNumber}
+                  onChange={(e) => setIrdNumber(e.target.value)}
+                  fullWidth
+                  />
+                  <TextField
                     label="Investor"
                     value={investorName}
                     onChange={(e) => setInvestorName(e.target.value)}
                     fullWidth
                   />
                   <TextField
-                    label="Investor Amount"
-                    value={investorAmount}
-                    onChange={(e) => setInvestorAmount(e.target.value)}
+                    label="Interest Bank Account"
+                    value={InterestBankAccount}
+                    onChange={(e) => setInterestBankAccount(e.target.value)}
                     fullWidth
                   />
                   <TextField
-                    label="Interest Rate"
-                    value={interestRate}
-                    onChange={(e) => setInterestRate(e.target.value)}
+                    label="RWT Rate"
+                    value={RwtRate}
+                    onChange={(e) => setRwtRate(e.target.value)}
                     fullWidth
                   />
                   <TextField
-                  label="Date"
-                  value={investorDate}
-                  onChange={(e) => setInvestorDate(e.target.value)}
-                  fullWidth
+                    label="DOB"
+                    value={Dob}
+                    onChange={(e) => setDob(e.target.value)}
+                    fullWidth
                   />
+                  <TextField
+                    label="Country"
+                    value={Country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    fullWidth
+                  />
+
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleAddInvestorModalClose}>Cancel</Button>
@@ -358,12 +371,12 @@ const [investorDate, setInvestorDate] = useState('');
             <TableHead>
               <TableRow>
                 <StyledTableCell />
-                <StyledTableCell>Date</StyledTableCell>
+                <StyledTableCell>IRD Number</StyledTableCell>
                 <StyledTableCell>Investor</StyledTableCell>
-                <StyledTableCell align="right">Investor Amount</StyledTableCell>
-                <StyledTableCell align="right">Interest Rate</StyledTableCell>
-                <StyledTableCell align="right">Daily Interest</StyledTableCell>
-                <StyledTableCell align="right">Total Price</StyledTableCell>
+                <StyledTableCell align="right">Interest Bank Account</StyledTableCell>
+                <StyledTableCell align="right">RWT Rate</StyledTableCell>
+                <StyledTableCell align="right">DOB</StyledTableCell>
+                <StyledTableCell align="right">Country</StyledTableCell>
                 <StyledTableCell align="right">Edit/Cancel</StyledTableCell>        
               </TableRow>
             </TableHead>
@@ -373,15 +386,15 @@ const [investorDate, setInvestorDate] = useState('');
                   <ThemeProvider theme={theme}>
                     <ExpandRow row ={row}>
                     <TableCell component="th" scope="row">
-                       {row.date}
+                       {row.ird}
                   </TableCell>  
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">${row.loanAmount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
-                    <TableCell align="right">{row.intRate}%</TableCell>
-                    <TableCell align="right">${row.dailyInterest}</TableCell>
-                    <TableCell align="right">${row.totalPrice}</TableCell>
+                    <TableCell align="right">${row.bankAccount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
+                    <TableCell align="right">{row.rwtRate}%</TableCell>
+                    <TableCell align="right">{row.dob}</TableCell>
+                    <TableCell align="right">{row.country}</TableCell>
                     <TableCell align="right">
                         <Tooltip title="Edit">
                         <IconButton onClick={() => handleEditInvestorModalOpen(dataIndex)}>
@@ -397,29 +410,42 @@ const [investorDate, setInvestorDate] = useState('');
                           <DialogTitle id="edit-investor-dialog-title">Edit Investor</DialogTitle>
                           <DialogContent>
                             <TextField
+                              label="IRD Number"
+                              value={IrdNumber}
+                              onChange={(e) => setIrdNumber(e.target.value)}
+                              fullWidth
+                            />
+                            <TextField
                               label="Investor"
                               value={investorName}
                               onChange={(e) => setInvestorName(e.target.value)}
                               fullWidth
                             />
                             <TextField
-                              label="Investor Amount"
-                              value={investorAmount}
-                              onChange={(e) => setInvestorAmount(e.target.value)}
+                              label="Interest Bank Account"
+                              value={InterestBankAccount}
+                              onChange={(e) => setInterestBankAccount(e.target.value)}
                               fullWidth
                             />
                             <TextField
-                              label="Interest Rate"
-                              value={interestRate}
-                              onChange={(e) => setInterestRate(e.target.value)}
+                              label="RWT Rate"
+                              value={RwtRate}
+                              onChange={(e) => setRwtRate(e.target.value)}
                               fullWidth
                             />
                             <TextField
-                                label="Date"
-                                value={investorDate}
-                                onChange={(e) => setInvestorDate(e.target.value)}
-                                fullWidth
+                              label="DOB"
+                              value={Dob}
+                              onChange={(e) => setDob(e.target.value)}
+                              fullWidth
                             />
+                            <TextField
+                              label="Country"
+                              value={Country}
+                              onChange={(e) => setCountry(e.target.value)}
+                              fullWidth
+                            />
+
                           </DialogContent>
                           <DialogActions>
                             <Button onClick={handleEditInvestorModalClose}>Cancel</Button>
