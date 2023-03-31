@@ -1,10 +1,10 @@
 import * as React from "react";
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import NetflixSansReg from '../fonts/NetflixSans-Regular.ttf';
-import { DataGrid, GridRowsProp, GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
-
-
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 const theme = createTheme({
   typography: {
@@ -26,30 +26,22 @@ const theme = createTheme({
   },
 });
 
-const columns = [
-  { field: 'firstName', headerName: 'First name', flex: 1 },
-  { field: 'lastName', headerName: 'Last name', flex: 1 },
-  {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 90,
+const StyledDataGrid = styled(DataGrid)((theme) => ({
+  "& .MuiDataGrid-sortIcon": {
+  opacity: 1,
+  color: "white",
   },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    valueGetter: (params) =>
-      `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+  "& .MuiDataGrid-menuIconButton": {
+  opacity: 1,
+  color: "white"
   },
-];
+  }));
 
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+  
+  const rows = [
+    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
+    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
+    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
   { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
   { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
   { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
@@ -59,13 +51,35 @@ const rows = [
 ];
 
 function loanView({children, expandComponent, ...otherProps}){
-
+  
 }
 
-export default function dataTable() {
+export default function DataTable() {
+  const [dummyData, setData] = React.useState(rows);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [selectedRows, setSelectedRows] = React.useState([]);
+  
+  const columns = [
+    { field: 'firstName', headerName: 'First name', flex: 1, headerClassName: 'super-app-theme--header', },
+    { field: 'lastName', headerName: 'Last name', flex: 1, headerClassName: 'super-app-theme--header', },
+    {
+      field: 'age',
+      headerName: 'Age',
+      headerClassName: 'super-app-theme--header',
+      flex: 1,
+      type: 'number',
+      width: 90,
+    },
+  ];
+
+  const currentRows = dummyData.filter((r, ind) => {
+    return ind >= rowsPerPage * page && ind < rowsPerPage * (page + 1);
+  });
+
 
     return (
-      <div style={{ height: 500, width: 1540, alignContent: "center", margin: "auto" }}>
+      <div style={{ width: 1540, alignContent: "center", margin: "auto" }}>
         <div>
           <ThemeProvider theme  = {theme}>
             <Typography>
@@ -76,12 +90,37 @@ export default function dataTable() {
           </ThemeProvider>
         </div>
         <ThemeProvider theme={theme}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-            />
+          <Box
+          sx={{
+            width: '100%',
+            '& .super-app-theme--header': {
+              backgroundColor: 'rgba(0,0,0 )',
+              color: "white"
+            },
+          }}>
+            <StyledDataGrid
+              sx ={{color: "black"}}
+              rows={currentRows}
+              columns={columns}
+              autoHeight
+              pagination
+
+
+              // this gets the all the information of a selected row.
+              // check console for details
+              onRowSelectionModelChange={(ids) => {
+                const selectedIDS = new Set(ids);
+                const selectedRows = currentRows.filter((row) =>
+                  selectedIDS.has(row.id),
+                );
+
+                setSelectedRows(selectedRows);
+                console.log(selectedRows)
+              }}
+
+              {...currentRows}
+              />
+          </Box>
         </ThemeProvider>
       </div>
     );
