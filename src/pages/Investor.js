@@ -18,7 +18,7 @@ const theme = createTheme({
     },
     components: {
         MuiCssBaseline: {
-        styleOverrides: `
+        styleOverrides: `g
         @font-face {
           font-family: 'NetflixSans';
           font-style: normal;
@@ -237,7 +237,6 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-<<<<<<< HEAD
 function createData(InvestorID, name, loanAmount, intRate, dailyInterest, totalPrice) {
   return {
     InvestorID,
@@ -247,17 +246,6 @@ function createData(InvestorID, name, loanAmount, intRate, dailyInterest, totalP
     dailyInterest,
     totalPrice,
     //subrow data insert
-=======
-function createData(borrowerID, ird, name, bankAccount, rwtRate, dob, country) {
-  return {
-    borrowerID,
-    ird,
-    name,
-    bankAccount,
-    rwtRate,
-    dob,
-    country,
->>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
     email: "test@test.com",
     history: [
       {
@@ -327,25 +315,6 @@ function ExpandRow({children, expandComponent, ...otherProps}){
     setOpenSnack(false);
   };
 
-<<<<<<< HEAD
-=======
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePhoneChange = (event) => {
-    setPhone(event.target.value);
-  };
-
-  const handleHistoryChange = (event) => {
-    setHistory(event.target.value);
-  };
-
-  const handleSave = () => {
-    setOpenDialog(false);
-    setHistory(history);  
-  };
->>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
 
 
   return (
@@ -361,50 +330,7 @@ function ExpandRow({children, expandComponent, ...otherProps}){
           {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
         </IconButton>
       </TableCell>
-<<<<<<< HEAD
       {children}    
-=======
-      {children}
-      <TableCell>
-            <Button variant="contained" onClick={handleOpenDialog}>
-              Update (Det)
-            </Button>
-      </TableCell>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-      <DialogTitle>Update Contact Details</DialogTitle>
-      <DialogContent>
-        <TextField
-          margin="dense"
-          label="Email"
-          type="email"
-          fullWidth
-          value={email}
-          onChange={handleEmailChange}
-        />
-        <TextField
-          margin="dense"
-          label="Phone Number"
-          type="tel"
-          fullWidth
-          value={phone}
-          onChange={handlePhoneChange}
-        />
-        <TextField
-          margin="dense"
-          label="History"
-          fullWidth
-          multiline
-          rows={4}
-          value={history}
-          onChange={handleHistoryChange}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleCloseDialog}>Cancel</Button>
-        <Button onClick={handleSave}>Save</Button>
-      </DialogActions>
-    </Dialog>
->>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
     </TableRow>
 
       <TableRow>
@@ -414,14 +340,8 @@ function ExpandRow({children, expandComponent, ...otherProps}){
               <Typography variant="h6" gutterBottom component="div">
                   Investor Contact Details
                 </Typography>
-<<<<<<< HEAD
-                  <p>Phone Number-02222222</p>
-                  
-                  <p>Email-   
-=======
                   <p>Phone Number: {phone}</p>
                   <p>Email: 
->>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
                     <Tooltip title="Copy">
                     <Link
                       variant="body2"
@@ -448,7 +368,6 @@ function ExpandRow({children, expandComponent, ...otherProps}){
                   <Typography variant="h6" gutterBottom component="div">
                     More Information
                   </Typography>
-<<<<<<< HEAD
 
                   <Table size="small" aria-label="purchases">
                     <TableHead>
@@ -477,9 +396,6 @@ function ExpandRow({children, expandComponent, ...otherProps}){
                       ))}
                       </TableBody>
             </Table>
-=======
-                  <p>{history}</p>
->>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
             </Box>
           </Collapse>
         </TableCell>
@@ -649,7 +565,6 @@ const [Country, setCountry] = useState('');
                   />
                   <TextField
                     label="RWT Rate"
-<<<<<<< HEAD
                     value={interestRate}
                     onChange={(e) => setInterestRate(e.target.value)}
                     fullWidth
@@ -659,17 +574,6 @@ const [Country, setCountry] = useState('');
                   value={investorDate}
                   onChange={(e) => setInvestorDate(e.target.value)}
                   fullWidth
-=======
-                    value={RwtRate}
-                    onChange={(e) => setRwtRate(e.target.value)}
-                    fullWidth
-                  />
-                  <TextField
-                    label="DOB"
-                    value={Dob}
-                    onChange={(e) => setDob(e.target.value)}
-                    fullWidth
->>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
                   />
                   <TextField
                     label="Country"
@@ -693,7 +597,6 @@ const [Country, setCountry] = useState('');
             <TableHead>
               <TableRow>
                 <StyledTableCell />
-<<<<<<< HEAD
                 <StyledTableCell>ID</StyledTableCell>
                 <StyledTableCell>Investors Name</StyledTableCell>
                 <StyledTableCell align="right">Start Date</StyledTableCell>
@@ -701,16 +604,6 @@ const [Country, setCountry] = useState('');
                 <StyledTableCell align="right">RWT Rate</StyledTableCell>
                 <StyledTableCell align="right">Invest Count</StyledTableCell>
                 <StyledTableCell align="right">Edit/Cancel</StyledTableCell>        
-=======
-                <StyledTableCell>IRD Number</StyledTableCell>
-                <StyledTableCell>Investor</StyledTableCell>
-                <StyledTableCell align="right">Interest Bank Account</StyledTableCell>
-                <StyledTableCell align="right">RWT Rate</StyledTableCell>
-                <StyledTableCell align="right">DOB</StyledTableCell>
-                <StyledTableCell align="right">Country</StyledTableCell>
-                <StyledTableCell align="right">Edit/Cancel</StyledTableCell>
-                <StyledTableCell align="right"></StyledTableCell>        
->>>>>>> a327ae36d3656dbcb338ada18d1d447d213bbad4
               </TableRow>
             </TableHead>
             <TableBody>
