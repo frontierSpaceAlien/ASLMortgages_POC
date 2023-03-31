@@ -1,0 +1,15 @@
+Investor Name,Name,IRD Number,Interest Bank Account,Capital Bank Account,RWT Rate,DOB,Country,Address,Email,Contact Number,InvestorCount
+Investor 1,A,123-123-123,01-0190-0399949-01,,0.00%,,New Zealand,address 1,email1,number1,1
+Investor 10,B,123-123-124,01-0190-0399949-02,,33.00%,1982/2/4,New Zealand,address 2,email2,number2,19
+Investor 11,C,123-123-125,01-0190-0399949-03,,10.50%,1987/10/9,New Zealand,address 3,email3,number3,15
+Investor 12,D,123-123-126,01-0190-0399949-04,,17.50%,1962/7/17,New Zealand,address 4,email4,number4,26
+Investor 13,E,123-123-127,01-0190-0399949-05,,28.00%,1980/9/7,New Zealand,address 5,email5,number5,4
+Investor 14,F,123-123-128,01-0190-0399949-06,,33.00%,1973/5/12,New Zealand,address 6,email6,number6,29
+Investor 2,G,123-123-129,01-0190-0399949-07,,33.00%,1980/9/7,New Zealand,address 7,email7,number7,2
+Investor 3,H,123-123-130,01-0190-0399949-08,,33.00%,1982/2/4,New Zealand,address 8,email8,number8,6
+Investor 4,I,123-123-131,01-0190-0399949-09,,28.00%,1963/12/25,New Zealand,address 9,email9,number9,17
+Investor 5,J,123-123-132,01-0190-0399949-10,,17.50%,1981/11/7,New Zealand,address 10,email10,number10,3
+Investor 6,K,123-123-133,01-0190-0399949-11,,17.50%,1980/9/7,New Zealand,address 11,email11,number11,18
+Investor 7,L,123-123-134,01-0190-0399949-12,,17.50%,1967/9/2,New Zealand,address 12,email12,number12,21
+Investor 8,M,123-123-135,01-0190-0399949-13,,17.50%,1996/12/23,New Zealand,address 13,email13,number13,20
+Investor 9,N,123-123-136,01-0190-0399949-14,,10.50%,1960/5/2,New Zealand,address 14,email14,number14,24
