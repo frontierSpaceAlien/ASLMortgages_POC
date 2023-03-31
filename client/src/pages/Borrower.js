@@ -1,4 +1,5 @@
 import * as React from 'react';
+import BorrowerFinder from "../api/BorrowerFinder";
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
@@ -61,71 +62,71 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function createData(borrowerID, name, loanAmount, intRate, price) {
-  return {
-    borrowerID,
-    name,
-    loanAmount,
-    intRate,
-    price,
-    email: "test@test.com",
-    history: [
-      {
-        date: '2020-01-05',
-        loanId: 'Borrower123',
-        amount: 395632.05,
-        active: "No"
-      },
-      {
-        date: '2020-01-02',
-        loanId: 'Borrower321',
-        amount: 156798.18,
-        active: "No"
-      },
-    ],
-  };
-}
+// function createData(borrowerID, name, loanAmount, intRate, price) {
+//   return {
+//       borrowerID,
+//       name,
+//       loanAmount,
+//       intRate,
+//       price,
+//       email: "test@test.com",
+//     history: [
+//       {
+//         date: '2020-01-05',
+//         loanId: 'Borrower123',
+//         amount: 395632.05,
+//         active: "No"
+//       },
+//       {
+//         date: '2020-01-02',
+//         loanId: 'Borrower321',
+//         amount: 156798.18,
+//         active: "No"
+//       },
+//     ],
+//   };
+// }
 
 /** DUMMY DATA **/
 // Never have duplicate borrower ids. Duplicate borrower ids will cause the table to break.
-const rows = [
-  createData(0,'Borrower 1', 359066.74, 16.95),
-  createData(1,'Borrower 2', 421500.00, 15.95),
-  createData(2,'Borrower 3', 1107549.91, 16.95),
-  createData(3,'Borrower 4', 1627000.04, 14.95),
-  createData(4,'Borrower 5', 83172.63, 15.0),
-  createData(5,'Borrower 6', 363300.00, 15.0),
-  createData(6,'Borrower 7', 985263.96, 6.0),
-  createData(7,'Borrower 8', 389421.50, 9.0),
-  createData(8,'Borrower 9', 954231.17, 16.0),
-  createData(9,'Borrower 10', 305987.60, 3.7),
-  createData(10,'Borrower 11', 592953.41, 16.0),
-  createData(11,'Borrower 12', 356956.80, 16.0),
-  createData(12,'Borrower 13', 159481.40, 6.0),
-  createData(13,'Borrower 14', 237597.30, 9.0),
-  createData(14,'Borrower 15', 262956.26, 16.0),
-  createData(15,'Borrower 16', 305654.11, 3.7),
-  createData(16,'Borrower 17', 356123.95, 16.0),
-  createData(17,'Borrower 18', 356897.65, 16.0),
-  createData(18,'Borrower 19', 159463.99, 6.0),
-  createData(19,'Borrower 20', 237956.64, 9.0),
-  createData(20,'Borrower 21', 262123.00, 16.0),
-  createData(21,'Borrower 22', 305144.05, 3.7),
-  createData(22,'Borrower 23', 356789.15, 16.0),
-  createData(23,'Borrower 24', 356753.46, 16.0),
-  createData(24,'Borrower 25', 159159.05, 6.0),
-  createData(25,'Borrower 26', 237879.12, 9.0),
-  createData(26,'Borrower 27', 2621595.77, 16.0),
-  createData(27,'Borrower 28', 3056652.94, 3.7),
-  createData(28,'Borrower 29', 3565563.80, 16.0),
-  createData(29,'Borrower 30', 356957.78, 16.0),
-  createData(30,'Borrower 31', 159897.63, 6.0),
-  createData(31,'Borrower 32', 237485.99, 9.0),
-  createData(32,'Borrower 33', 26265.45, 16.0),
-  createData(33,'Borrower 34', 305323.12, 3.7),
-  createData(34,'Borrower 35', 356222.65, 16.0),
-  createData(35,'Borrower 36', 356154.00, 16.0),
-]
+// const rows = [
+//   createData(0,'Borrower 1', 359066.74, 16.95),
+//   createData(1,'Borrower 2', 421500.00, 15.95),
+//   createData(2,'Borrower 3', 1107549.91, 16.95),
+//   createData(3,'Borrower 4', 1627000.04, 14.95),
+//   createData(4,'Borrower 5', 83172.63, 15.0),
+//   createData(5,'Borrower 6', 363300.00, 15.0),
+//   createData(6,'Borrower 7', 985263.96, 6.0),
+//   createData(7,'Borrower 8', 389421.50, 9.0),
+//   createData(8,'Borrower 9', 954231.17, 16.0),
+//   createData(9,'Borrower 10', 305987.60, 3.7),
+//   createData(10,'Borrower 11', 592953.41, 16.0),
+//   createData(11,'Borrower 12', 356956.80, 16.0),
+//   createData(12,'Borrower 13', 159481.40, 6.0),
+//   createData(13,'Borrower 14', 237597.30, 9.0),
+//   createData(14,'Borrower 15', 262956.26, 16.0),
+//   createData(15,'Borrower 16', 305654.11, 3.7),
+//   createData(16,'Borrower 17', 356123.95, 16.0),
+//   createData(17,'Borrower 18', 356897.65, 16.0),
+//   createData(18,'Borrower 19', 159463.99, 6.0),
+//   createData(19,'Borrower 20', 237956.64, 9.0),
+//   createData(20,'Borrower 21', 262123.00, 16.0),
+//   createData(21,'Borrower 22', 305144.05, 3.7),
+//   createData(22,'Borrower 23', 356789.15, 16.0),
+//   createData(23,'Borrower 24', 356753.46, 16.0),
+//   createData(24,'Borrower 25', 159159.05, 6.0),
+//   createData(25,'Borrower 26', 237879.12, 9.0),
+//   createData(26,'Borrower 27', 2621595.77, 16.0),
+//   createData(27,'Borrower 28', 3056652.94, 3.7),
+//   createData(28,'Borrower 29', 3565563.80, 16.0),
+//   createData(29,'Borrower 30', 356957.78, 16.0),
+//   createData(30,'Borrower 31', 159897.63, 6.0),
+//   createData(31,'Borrower 32', 237485.99, 9.0),
+//   createData(32,'Borrower 33', 26265.45, 16.0),
+//   createData(33,'Borrower 34', 305323.12, 3.7),
+//   createData(34,'Borrower 35', 356222.65, 16.0),
+//   createData(35,'Borrower 36', 356154.00, 16.0),
+// ]
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -146,7 +147,7 @@ function ExpandRow({children, expandComponent, ...otherProps}){
   const handleClick = () => {
     setOpenSnack(true);
     console.log(openSnack);
-    navigator.clipboard.writeText(row.email)
+    navigator.clipboard.writeText(row.borroweremailaddress)
   };
 
   const handleClose = (event, reason) => {
@@ -178,11 +179,11 @@ function ExpandRow({children, expandComponent, ...otherProps}){
               <Typography variant="h6" gutterBottom component="div">
                   Borrower Contact Details
                 </Typography>
-                  <p>Phone Number-02222222</p>
-                  <p>Email-   
+                  <p>Phone Number-{row.borrowercontactnumber}</p>
+                  <p>Email- 
                     <Tooltip title="Copy">
                       <Link variant = "body2" underline ="hover" component ="button" onClick={handleClick}>
-                        {row.email}
+                        {row.borroweremailaddress}
                       </Link>
                     </Tooltip>       
                   <Snackbar open = {openSnack} autoHideDuration={2000} onClose={handleClose}>
@@ -204,7 +205,8 @@ function ExpandRow({children, expandComponent, ...otherProps}){
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                    {row.history.map((historyRow) => (
+                    {/* need to figure out how to map through the history of loans for each borrower  */}
+                    {/* {row.history.map((historyRow) => (
                       <TableRow key={historyRow.date}>
                         <TableCell component="th" scope="row">
                         {historyRow.date}
@@ -213,7 +215,7 @@ function ExpandRow({children, expandComponent, ...otherProps}){
                         <TableCell align="right">${historyRow.amount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
                         <TableCell align="right">{historyRow.active}</TableCell>
                       </TableRow>
-                  ))}
+                  ))} */}
               </TableBody>
               </Table>
             </Box>
@@ -227,20 +229,87 @@ function ExpandRow({children, expandComponent, ...otherProps}){
 
 var indexData = 0;
 
-
 export default function CollapsibleTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [rowData, setRowData] = React.useState(rows);
+  const [rowData, setRowData] = React.useState([]);
   const [modal, setModal] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
   const [openAdd, setAdd] = React.useState(false);
   const [openCheckbox, setCheckbox] = React.useState([]);
-  const [active, setActive] = React.useState('');
+  const [active, setActive] = React.useState("");
+  const [firstName, setFirstName] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [errorFirst, setErrorFirst] = React.useState(false);
+  const [errorLast, setErrorLast] = React.useState(false);
+ 
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try{
+        const response = await BorrowerFinder.get("/");
+        setRowData(response.data.data.borrower)
+      }catch (err){
+        console.error(err)
+      }
+    }
+    
+    fetchData();
+  },[]);
+  
+  const handleAddSubmit = async (e) => {
+    e.preventDefault();
+    if (firstName === "" && lastName === ""){
+      setErrorFirst(true)
+      setErrorLast(true)
+    }else if (firstName === ""){
+      setErrorFirst(true)
+    }else if (lastName === ""){
+      setErrorLast(true)
+    }else{
+      try{
+        const response = await BorrowerFinder.post("/", {
+          borrowerFirstName: firstName,
+          borrowerLastName: lastName,
+          borrowerEmailAddress: email,
+          borrowerContactNumber: phone
+        });
+        setRowData([...rowData, response.data.data.borrower])
+      }catch (err){
+        console.log(err)
+      }
+      setFirstName("")
+      setLastName("")
+      setEmail("")
+      setPhone("")
+      setAdd(false)
+    }
+  }
+
+  const handleDeletePopup = async () =>{
+    try{
+      const response = await BorrowerFinder.delete(`/${indexData}`);
+      setRowData(rowData.filter(row => {
+        return row.borrower_id !== indexData
+      }))
+    }catch (err){
+      console.error(err);
+    }
+
+    // setRowData((prevData) =>
+    //   prevData.filter((_, index) => index !== indexData)
+    // );
+    // console.log(rowData)
+    setModal(false)
+    setOpenSnack(true);
+  }
 
   const handleActiveChange = (event) => {
     setActive(event.target.value);
   };
+  
   
   const currentRows = rowData.filter((r, ind) => {
     return ind >= rowsPerPage * page && ind < rowsPerPage * (page + 1);
@@ -262,16 +331,10 @@ export default function CollapsibleTable() {
     setModal(false)
   };
 
-  const handleDeletePopup = () =>{
-    setRowData((prevData) =>
-      prevData.filter((_, index) => index !== indexData)
-    );
-    setModal(false)
-    setOpenSnack(true);
-  }
 
   const handlePopup = (dataIndex) =>{
     indexData = dataIndex
+    console.log(indexData);
     setModal(true)
   }
 
@@ -287,6 +350,10 @@ export default function CollapsibleTable() {
   }
 
   const handleAddClose = () => {
+    setFirstName("")
+    setLastName("")
+    setEmail("")
+    setPhone("")
     setAdd(false);
     setCheckbox([])
     setActive('')
@@ -299,6 +366,17 @@ export default function CollapsibleTable() {
       setCheckbox([])
     }
   }
+
+  const onChangeFirstName = (e) =>{
+    setFirstName(e.target.value)
+    setErrorFirst(false)
+  }
+
+  const onChangeLastName = (e) =>{
+    setLastName(e.target.value)
+    setErrorLast(false)
+  }
+
 
   return (
     <div className = "tableView">
@@ -318,16 +396,38 @@ export default function CollapsibleTable() {
             <Dialog open={openAdd} onClose={handleAddClose}>
               <DialogTitle>Add Borrower</DialogTitle>
               <DialogContent>
+                <Typography sx={{ color: "gray", fontSize: 15}}>
+                  * Required Fields
+                </Typography>
                   <TextField
+                    value = {firstName}
+                    error = {errorFirst}
+                    required
+                    onChange = {(e) => onChangeFirstName(e)}
                     autoFocus
                     margin="dense"
                     id="outlined-required"
-                    label="Borrower Name"
+                    label="First Name"
                     type="name"
                     fullWidth
                     variant="standard"
                   />
                   <TextField
+                    value = {lastName}
+                    error = {errorLast}
+                    required
+                    onChange = {(e) => onChangeLastName(e)}
+                    autoFocus
+                    margin="dense"
+                    id="outlined-required"
+                    label="Last Name"
+                    type="name"
+                    fullWidth
+                    variant="standard"
+                  />
+                  <TextField
+                    value = {email}
+                    onChange = {(e) => setEmail(e.target.value)}
                     autoFocus
                     margin="dense"
                     id="outlined-number"
@@ -338,6 +438,8 @@ export default function CollapsibleTable() {
                     variant="standard"
                   />
                   <TextField
+                    value = {phone}
+                    onChange = {(e) => setPhone(e.target.value)}
                     autoFocus
                     margin="dense"
                     id="outlined-number"
@@ -393,7 +495,7 @@ export default function CollapsibleTable() {
               </DialogContent>
               <DialogActions>
                 <Button sx={{ color: 'red'}} onClick={handleAddClose}>Cancel</Button>
-                <Button sx={{ color: 'black'}} onClick={handleAddClose}>Add</Button>
+                <Button sx={{ color: 'black'}} onClick={handleAddSubmit}>Add</Button>
               </DialogActions>
             </Dialog>
           <Table  aria-label="collapsible table" size='small'>
@@ -412,9 +514,9 @@ export default function CollapsibleTable() {
                   <ThemeProvider theme={theme}>
                     <ExpandRow row ={row}>
                     <TableCell component="th" scope="row">
-                      {row.name}
+                      {row.borrowerfirstname+" "+row.borrowerlastname}
                     </TableCell>
-                    <TableCell align="right">${row.loanAmount.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</TableCell>
+                    <TableCell align="right">$</TableCell>
                     <TableCell align="right">{row.intRate}%</TableCell>
                       <TableCell align="right"> 
                         <Tooltip title="Edit">
@@ -423,7 +525,7 @@ export default function CollapsibleTable() {
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Delete">
-                          <IconButton value={row.borrowerID} onClick={() => handlePopup(dataIndex)}>
+                          <IconButton value={row.borrowerID} onClick={() => handlePopup(row.borrower_id)}>
                             <DeleteIcon color = "error"/>
                           </IconButton>
                         </Tooltip>
@@ -484,3 +586,93 @@ export default function CollapsibleTable() {
   </div>
   );
 }
+
+
+// import React, {Fragment, useState} from "react";
+
+// const Borrower = () => {
+//     const [inputs, setInputs] = useState({
+//         borrowerFirstName: "",
+//         borrowerLastName: "",
+//         borrowerStreetAddress: "",
+//         borrowerContactNumber: ""
+//     })
+
+//     const { borrowerFirstName, borrowerLastName, borrowerStreetAddress, borrowerContactNumber } = inputs; 
+//     const onChange = (e) => {
+//         setInputs ({...inputs, [e.target.name] : e.target.value});
+//     }; 
+
+//     const onSubmitForm = async (e) =>{
+//         e.preventDefault();
+//         try {
+//             console.log("It made it to submit form");
+
+//             const body = {borrowerFirstName, borrowerLastName, borrowerStreetAddress, borrowerContactNumber}
+           
+//             const response = await fetch("http://localhost:3006/borrower", {
+//                 method: "POST",
+//                 headers: {"Content-Type" : "application/json"},
+//                 body: JSON.stringify(body)
+//             });
+//             console.log("It made it to here");
+
+//             const parseRes = await response.json()
+//             console.log(parseRes);
+           
+//         } catch (err) {
+//             console.error(err.message);
+//         }
+//     }
+//     return(
+//         <Fragment>
+//             <h1 className="text-centre my-5">Create a Borrower</h1>
+//             <form onSubmit={onSubmitForm}>
+//                 <input 
+//                     type="borrowerFirstName" 
+//                     name="borrowerFirstName" 
+//                     placeholder="firstName" 
+//                     className="form-control my-3"
+//                     value = {borrowerFirstName}
+//                     onChange = {e => onChange(e)}
+//                 />
+//                 <input 
+//                     type="borrowerLastName" 
+//                     name="borrowerLastName" 
+//                     placeholder="lastName"
+//                     className="form-control my-3"
+//                     value = {borrowerLastName}
+//                     onChange = {e => onChange(e)}
+//                 />
+//                 <input 
+//                     type="borrowerStreetAddress" 
+//                     name="borrowerStreetAddress" 
+//                     placeholder="streetAddress"
+//                     className="form-control my-3"
+//                     value = {borrowerStreetAddress}
+//                     onChange = {e => onChange(e)}
+//                 />
+//                 <input 
+//                     type="borrowerContactNumber" 
+//                     name="borrowerContactNumber" 
+//                     placeholder="contactNumber"
+//                     className="form-control my-3"
+//                     value = {borrowerContactNumber}
+//                     onChange = {e => onChange(e)}
+//                 />
+//                 <button className ="btn btn-success btn-block"> Submit</button>
+//             </form>
+//          </Fragment>
+
+//     );
+// };
+// export default Borrower;
+
+
+/*
+borrower_id SERIAL PRIMARY KEY,
+    borrowerFirstName VARCHAR(255),
+    borrowerLastName VARCHAR(255),
+    BorrowerStreetAddress VARCHAR(255),
+    borrowerContactNumber VARCHAR(255)
+*/
