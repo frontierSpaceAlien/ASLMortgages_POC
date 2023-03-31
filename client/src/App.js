@@ -9,11 +9,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Browse from "./pages/Browse";
 import Borrowers from "./pages/Borrower";
-import Loan from "./pages/AddLoan";
+import Loan from "./pages/Loan";
 import logo from "./assets/logo/image01.png"
-
 import Investors from "./pages/Investor";
-
 import NetflixSansReg from "./fonts/NetflixSans-Regular.ttf";
 
 const theme = createTheme({
@@ -53,7 +51,7 @@ const App = () =>  {
                       <li><NavLink to="/"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Home</Button></NavLink></li>
                       <li><NavLink to="/Investors"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Investors</Button></NavLink></li>
                       <li><NavLink to="/Borrowers"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Borrowers</Button></NavLink></li>
-                      <li><NavLink to="/Loans "><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Loans</Button></NavLink></li>
+                      <li><NavLink to="/Loan "><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Loans</Button></NavLink></li>
                       <li><NavLink to="/Schedule"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Payment Schedule</Button></NavLink></li>
                  </ThemeProvider>
               </ul>
