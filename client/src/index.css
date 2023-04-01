@@ -86,6 +86,6 @@ ul.header li a {
 .MuiDataGrid-root .MuiDataGrid-cell:focus-within {
   outline: none !important;
 }
-.MuiDataGrid-columnHeader:focus-within {
-  outline: 'none' !important;
+.MuiDataGrid-main{
+  flex-grow: 0;
 }
