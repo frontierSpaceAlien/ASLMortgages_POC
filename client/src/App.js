@@ -13,8 +13,17 @@ import Loan from "./pages/Loan";
 import logo from "./assets/logo/image01.png"
 import Investors from "./pages/Investor";
 import NetflixSansReg from "./fonts/NetflixSans-Regular.ttf";
+import { green, indigo  } from '@mui/material/colors';
 
 const theme = createTheme({
+  palette:{
+    primary:{
+      main: indigo['A700'],
+    },
+    secondary: {
+      main: green[500],
+    },
+  },
     typography: {
         fontFamily: 'NetflixSans',
     },
@@ -39,6 +48,7 @@ const App = () =>  {
   return (
         <Router>
           <div>
+            <ThemeProvider theme={theme}>
               <ul className="header">
               <li>
                   <NavLink exact to = "/">
@@ -47,13 +57,11 @@ const App = () =>  {
                     </a>
                   </NavLink>
                   </li>
-                  <ThemeProvider theme={theme}>
                       <li><NavLink to="/"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Home</Button></NavLink></li>
                       <li><NavLink to="/Investors"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Investors</Button></NavLink></li>
                       <li><NavLink to="/Borrowers"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Borrowers</Button></NavLink></li>
                       <li><NavLink to="/Loan "><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Loans</Button></NavLink></li>
                       <li><NavLink to="/Schedule"><Button sx={{ color: 'black', textTransform: 'capitalize' }}>Payment Schedule</Button></NavLink></li>
-                 </ThemeProvider>
               </ul>
               <div className="content">
                 <Routes>
@@ -63,6 +71,7 @@ const App = () =>  {
                   <Route exact path="/Investors" element={<Investors />} />
                 </Routes>
               </div>
+            </ThemeProvider>
           </div>
         </Router>
     );

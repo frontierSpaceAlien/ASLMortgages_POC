@@ -11,8 +11,18 @@ import Paper from '@mui/material/Paper';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import { green, indigo  } from '@mui/material/colors';
+import { differenceInMonths, format, parseISO  } from "date-fns";
 
 const theme = createTheme({
+  palette:{
+    primary:{
+      main: indigo['A700'],
+    },
+    secondary: {
+      main: green[500],
+    },
+  },
   typography: {
       fontFamily: 'NetflixSans',
   },
@@ -47,43 +57,59 @@ const StyledDataGrid = styled(DataGrid)((theme) => ({
   color: "white",
   },
   "& .MuiDataGrid-menuIconButton": {
-  opacity: 1,
-  color: "white"
+    opacity: 1,
+    color: "white"
   },
-  }));
+}));
 
-  
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
+
+var calculateCompoundMonthlyInterest = function(p, r, t) {
+  var convertTimeMonths = t/12;
+  var intConvertToDecimal = r/100;
+  var intRate = 1 + intConvertToDecimal/12;
+  var expo = 12*convertTimeMonths;
+  var intExpo = Math.pow(intRate, expo);
+  var result = parseFloat(p * intExpo);
+  var interest = result - p;
+
+  return interest;
+}
 
   const rows = [
-    { id: 1, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 2, startdate: '13/04/2022', enddate: '13/10/2022' ,dayintdue: 13, loan: 'Ron2022', intrate: 15.95,netadv: 400000.00 },
-    { id: 3, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 4, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 5, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 6, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 7, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 8, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 9, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 10, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 11, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 12, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 13, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 14, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 15, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 16, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 17, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 18, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 19, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
-    { id: 20, startdate: '10/03/2022', enddate: '10/09/2022' ,dayintdue: 10, loan: 'Stamos2022', intrate: 14.95,netadv: 326860.20 },
+    { 
+      id: 1, 
+      borrower: "John Stamos",
+      capitalised: 'Yes',
+      netadv: 326860.20,
+      intrate: 14.95,
+      interest: 0,
+      dailyInt: 147.07,
+      monthInt: 0.00,
+      manageFee: 7000,
+      brokerFee: 0.00,
+      legalFee: 0.00,
+      variation: 0.00,
+      totalRepay: 359066.74,
+      // for some reason, the months are -1.
+      // so if you want to set it to the 3rd month, you have to
+      // set it to 2 instead of 3.
+      startdate: format(new Date(2022, 2, 10), 'dd/M/yyyy'), 
+      enddate: format(new Date(2022, 8, 10), 'dd/M/yyyy'),
+      dayintdue: 10, 
+      loan: 'Stamos2022', 
+    },
 
 ];
+
+
 
 const customRowOverlay = () =>{
  return(
@@ -113,163 +139,12 @@ const columns = [
 ];
 
 
-function LoanView({children, component, ...otherProps}){
-  return(
-    <Box sx={{ width: '100%' }}>
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid item xs={2}>
-          <Card sx={{backgroundColor: "black"}}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Day Interest Due
-              </Typography>
-              <Typography variant="h9" component="div" color="white">
-                10
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={2}>
-          <Card sx={{backgroundColor: "black"}}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Borrower
-              </Typography>
-              <Typography variant="h9" component="div" color="white">
-                John Stamos
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={2}>
-          <Card sx={{backgroundColor: "black"}}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Capitalised
-              </Typography>
-              <Typography variant="h9" component="div" color="white">
-                Yes
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={2}>
-          <Card sx={{backgroundColor: "black"}}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Interest
-              </Typography>
-              <Typography variant="h9" component="div" color="white">
-                $25,206.54
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={2}>
-          <Card sx={{backgroundColor: "black"}}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Daily Interest
-              </Typography>
-              <Typography variant="h9" component="div" color="white">
-                $147.07
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={2}>
-          <Card sx={{backgroundColor: "black"}}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Monthly Interest
-              </Typography>
-              <Typography variant="h9" component="div" color="white">
-                $0.00
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={2}>
-          <Card sx={{backgroundColor: "black"}}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Management Fee
-              </Typography>
-              <Typography variant="h9" component="div" color="white">
-                $7,000.00
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={2}>
-          <Card sx={{backgroundColor: "black"}}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Broker Fee
-              </Typography>
-              <Typography variant="h9" component="div" color="white">
-                $0.00
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={2}>
-          <Card sx={{backgroundColor: "black"}}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Legal Fee
-              </Typography>
-              <Typography variant="h9" component="div" color="white">
-                $0.00
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={2}>
-          <Card sx={{backgroundColor: "black"}}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Variation
-              </Typography>
-              <Typography variant="h9" component="div" color="white">
-                $0.00
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={2}>
-          <Card sx={{backgroundColor: "black"}}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Total Repayable
-              </Typography>
-              <Typography variant="h9" component="div" color="white">
-                $359,066.74
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={2}>
-          <Card sx={{backgroundColor: "black"}}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Investor(s)
-              </Typography>
-              <Typography variant="h8" component="div" color="white">
-                Investors **replace later**
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </Box>
-  );
-}
-
-
 export default function DataTable() {
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [bgcolor , setBgcolor] = React.useState("black");
+
   
+
     return (
       <div style={{height: '100%',paddingLeft: 100, paddingRight:100}}>
         <div>
@@ -279,8 +154,154 @@ export default function DataTable() {
                 Loan Information
               </h2>
               {/* <Button>asd</Button> */}
-              <LoanView>
-              </LoanView>
+              <Box sx={{ width: '100%' }}>
+                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                  <Grid item xs={2}>
+                    <Card sx={{backgroundColor: bgcolor}}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
+                          Day Interest Due
+                        </Typography>
+                        <Typography variant="h9" component="div" color="white">
+                          {selectedRows[0] === undefined ? 0 : selectedRows[0].dayintdue}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Card sx={{backgroundColor: bgcolor}}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
+                          Borrower
+                        </Typography>
+                        <Typography variant="h9" component="div" color="white">
+                          John Stamos
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Card sx={{backgroundColor: bgcolor}}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
+                          Capitalised
+                        </Typography>
+                        <Typography variant="h9" component="div" color="white">
+                          Yes
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Card sx={{backgroundColor: bgcolor}}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
+                          Interest
+                        </Typography>
+                        <Typography variant="h9" component="div" color="white">
+                          {selectedRows[0] === undefined ? 0 : selectedRows[0].interest}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Card sx={{backgroundColor: bgcolor}}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
+                          Daily Interest
+                        </Typography>
+                        <Typography variant="h9" component="div" color="white">
+                          $147.07
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Card sx={{backgroundColor: bgcolor}}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
+                          Monthly Interest
+                        </Typography>
+                        <Typography variant="h9" component="div" color="white">
+                          $0.00
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Card sx={{backgroundColor: bgcolor}}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
+                          Management Fee
+                        </Typography>
+                        <Typography variant="h9" component="div" color="white">
+                          $7,000.00
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Card sx={{backgroundColor: bgcolor}}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
+                          Broker Fee
+                        </Typography>
+                        <Typography variant="h9" component="div" color="white">
+                          $0.00
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Card sx={{backgroundColor: bgcolor}}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
+                          Legal Fee
+                        </Typography>
+                        <Typography variant="h9" component="div" color="white">
+                          $0.00
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Card sx={{backgroundColor: bgcolor}}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
+                          Variation
+                        </Typography>
+                        <Typography variant="h9" component="div" color="white">
+                          $0.00
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Card sx={{backgroundColor: bgcolor}}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
+                          Total Repayable
+                        </Typography>
+                        <Typography variant="h9" component="div" color="white">
+                          $359,066.74
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Card sx={{backgroundColor: bgcolor}}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
+                          Investor(s)
+                        </Typography>
+                        <Typography variant="h8" component="div" color="white">
+                          Investors **replace later**
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+              </Box>
             </Typography>
           </ThemeProvider>
         </div>
@@ -298,7 +319,7 @@ export default function DataTable() {
             }}>
               <Grid item xs={12}>
                 <StyledDataGrid
-                  sx ={{color: "black", marginTop: 4
+                  sx ={{color: "black", marginTop: 4, height: 531.5
                 }}
                 rows={rows}
                 columns={columns}
@@ -309,7 +330,6 @@ export default function DataTable() {
                   pagination: { paginationModel: { pageSize: 20 } },
                 }}
                 pageSizeOptions={[]}
-                autoHeight
                 getRowHeight={() => 'auto'}
 
                 // this gets the all the information of a selected row.
@@ -319,10 +339,15 @@ export default function DataTable() {
                   const selectedRows = rows.filter((row) =>
                   selectedIDS.has(row.id),
                   );
-                  
-                  setSelectedRows(selectedRows);
-                    console.log(selectedRows)
-                  }}
+
+                  if (selectedRows[0] === undefined){
+                    setSelectedRows(selectedRows)
+                  }else{
+                    var result = calculateCompoundMonthlyInterest(selectedRows[0].netadv, selectedRows[0].intrate, 6)
+                    selectedRows[0].interest = result.toLocaleString(undefined, {maximumFractionDigits: 2})
+                    setSelectedRows(selectedRows)
+                  }
+                }}
                   
                   {...rows}
                   />
@@ -332,7 +357,7 @@ export default function DataTable() {
               <Paper sx={{
                 marginTop: 4.3, 
                 width: 'auto', 
-                height: '93.3%', 
+                height: '93.5%', 
                 marginLeft: 2, 
                 border: 1,
                 borderColor: 'black',
@@ -341,17 +366,8 @@ export default function DataTable() {
                 }}>
                   <Typography sx={{marginLeft: 4, color: 'white'}}>
                     <p>Loan Details</p>
+                    ASDASDASd
                   </Typography>
-                  <Card sx={{marginLeft: 3, marginRight: 3, height: '30%', marginTop: 3}}>
-                    <Typography sx={{marginLeft: 4}}>
-                      PUT STUFF HERE LIKE LOAN DETAILS AND WHAT NOT ** maybe change this tho, looks kinda ugly
-                    </Typography>
-                  </Card>
-                  <Card sx={{marginLeft: 3, marginRight: 3, height: '30%', marginTop: 3}}>
-                    <Typography sx={{marginLeft: 4}}>
-                      PUT STUFF HERE LIKE LOAN DETAILS AND WHAT NOT
-                    </Typography>
-                  </Card>
               </Paper>
             </Grid>
           </Grid>

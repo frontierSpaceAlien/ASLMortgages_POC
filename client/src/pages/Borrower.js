@@ -37,8 +37,18 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+// import { green, purple } from '@mui/material/colors';
+
 
 const theme = createTheme({
+  // palette:{
+  //   primary:{
+  //     main: purple[900],
+  //   },
+  //   secondary: {
+  //     main: green[500],
+  //   },
+  // },
     typography: {
         fontFamily: 'NetflixSans',
     },
