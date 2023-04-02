@@ -11,16 +11,28 @@ const pool = require("./db");
 app.use(cors());
 app.use(express.json()); //req.body
 
+
+{/*
+1const [investorName, setInvestorName] = useState('');
+2const [InterestBankAccount, setInterestBankAccount] = useState('');
+3const [RwtRate, setRwtRate] = useState('');
+4const [investorDate, setInvestorDate] = useState('');
+5const [IrdNumber, setIrdNumber] = useState('');
+6const [Dob, setDob] = useState('');
+7const [Country, setCountry] = useState('');
+*/}
+
+
 //ROUTES  //  
 //Create a Investor table// to use await need async
 app.post("/Investor", async (req, res) => {
     //await , wait for the system before continuing
     try {
         
-        const {description} = req.body;
+        const {investorName, InterestBankAccount, RwtRate, investorDate, IrdNumber , Dob, Country, description} = req.body;
         const newInvestor = await pool.query(
-            "INSERT INTO Investor (description) VALUES($1) RETURNING *",
-            [description]
+            "INSERT INTO Investor (description, investorName, InterestBankAccount, RwtRate, investorDate, IrdNumber , Dob, Country) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+            [description, investorName, InterestBankAccount, RwtRate, investorDate, IrdNumber , Dob, Country]
         );
 
         res.json(newInvestor.rows[0]);
@@ -59,7 +71,7 @@ app.get("/Investor/:id", async (req, res) => {
 app.put("/Investor/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const { description } = req.body;
+      const { description,  } = req.body;
       const updateInvestor = await pool.query(
         "UPDATE Investor SET description = $1 WHERE investor_id = $2",
         [description, id]
