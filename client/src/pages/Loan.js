@@ -2,17 +2,18 @@ import * as React from "react";
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import NetflixSansReg from '../fonts/NetflixSans-Regular.ttf';
 import { DataGrid, GridOverlay } from "@mui/x-data-grid";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Tooltip, Typography } from "@mui/material";
 import Box from '@mui/material/Box';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import { green, indigo  } from '@mui/material/colors';
-import { differenceInMonths, format, parseISO  } from "date-fns";
+import { differenceInMonths, parse } from "date-fns";
+import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 const theme = createTheme({
   palette:{
@@ -63,15 +64,8 @@ const StyledDataGrid = styled(DataGrid)((theme) => ({
 }));
 
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
 var calculateCompoundMonthlyInterest = function(p, r, t) {
+  // int = interest, not to be confused with integer.
   var convertTimeMonths = t/12;
   var intConvertToDecimal = r/100;
   var intRate = 1 + intConvertToDecimal/12;
@@ -83,6 +77,7 @@ var calculateCompoundMonthlyInterest = function(p, r, t) {
   return interest;
 }
 
+/** DUMMY DATA **/
   const rows = [
     { 
       id: 1, 
@@ -98,18 +93,32 @@ var calculateCompoundMonthlyInterest = function(p, r, t) {
       legalFee: 0.00,
       variation: 0.00,
       totalRepay: 359066.74,
-      // for some reason, the months are -1.
-      // so if you want to set it to the 3rd month, you have to
-      // set it to 2 instead of 3.
-      startdate: format(new Date(2022, 2, 10), 'dd/M/yyyy'), 
-      enddate: format(new Date(2022, 8, 10), 'dd/M/yyyy'),
+      startdate: '10/03/2022', 
+      enddate: '10/09/2022',
       dayintdue: 10, 
       loan: 'Stamos2022', 
+      active: 'Yes',
+      investors: [
+        "ASL Mortgages Limited_Niehaus Family Trust 2",
+        "Investor 2_Niehaus Family Trust 2",
+        "Tenki Trust_Niehaus Family Trust 2",
+        "Investor 4",
+        "Investor 5",
+        "Investor 6",
+        "Investor 7",
+        "Investor 8",
+        "Investor 9",
+        "Investor 10",
+        "Investor 11",
+        "Investor 12",
+        "Investor 13",
+        "Investor 14",
+        "Investor 15",
+      ]
     },
-
 ];
 
-
+var col1=[], col2=[];
 
 const customRowOverlay = () =>{
  return(
@@ -143,8 +152,6 @@ export default function DataTable() {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [bgcolor , setBgcolor] = React.useState("black");
 
-  
-
     return (
       <div style={{height: '100%',paddingLeft: 100, paddingRight:100}}>
         <div>
@@ -175,7 +182,7 @@ export default function DataTable() {
                           Borrower
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          John Stamos
+                          {selectedRows[0] === undefined ? "Unknown" : selectedRows[0].borrower}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -187,7 +194,7 @@ export default function DataTable() {
                           Capitalised
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          Yes
+                          {selectedRows[0] === undefined ? "Unknown" : selectedRows[0].capitalised}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -199,7 +206,7 @@ export default function DataTable() {
                           Interest
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          {selectedRows[0] === undefined ? 0 : selectedRows[0].interest}
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].interest}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -211,7 +218,7 @@ export default function DataTable() {
                           Daily Interest
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          $147.07
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].dailyInt}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -223,7 +230,7 @@ export default function DataTable() {
                           Monthly Interest
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          $0.00
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].monthInt}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -235,7 +242,7 @@ export default function DataTable() {
                           Management Fee
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          $7,000.00
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].manageFee}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -247,7 +254,7 @@ export default function DataTable() {
                           Broker Fee
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          $0.00
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].brokerFee}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -259,7 +266,7 @@ export default function DataTable() {
                           Legal Fee
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          $0.00
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].legalFee}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -271,7 +278,7 @@ export default function DataTable() {
                           Variation
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          $0.00
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].variation}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -283,7 +290,7 @@ export default function DataTable() {
                           Total Repayable
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          $359,066.74
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].totalRepay}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -292,10 +299,10 @@ export default function DataTable() {
                     <Card sx={{backgroundColor: bgcolor}}>
                       <CardContent>
                         <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                          Investor(s)
+                          Active(?)
                         </Typography>
                         <Typography variant="h8" component="div" color="white">
-                          Investors **replace later**
+                          {selectedRows[0] === undefined ? "Unknown" : selectedRows[0].active}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -343,8 +350,24 @@ export default function DataTable() {
                   if (selectedRows[0] === undefined){
                     setSelectedRows(selectedRows)
                   }else{
-                    var result = calculateCompoundMonthlyInterest(selectedRows[0].netadv, selectedRows[0].intrate, 6)
+                    col1 = [];
+                    col2 = [];
+                    const startDateFormat = parse(selectedRows[0].startdate, "dd/MM/yyyy", new Date())
+                    const endDateFormat = parse(selectedRows[0].enddate, "dd/MM/yyyy", new Date())
+                    var months = differenceInMonths(startDateFormat, endDateFormat)
+                    var result = calculateCompoundMonthlyInterest(selectedRows[0].netadv, selectedRows[0].intrate, months*-1)
                     selectedRows[0].interest = result.toLocaleString(undefined, {maximumFractionDigits: 2})
+                    for ( let i = 0; i < selectedRows[0].investors.length; ++i){
+                        if (i >= 6 ){
+                          console.log("")
+                        }else{
+                          col1.push(selectedRows[0].investors[i]);
+                        }
+                    }
+
+                    for ( let i = 0; i < selectedRows[0].investors.length; ++i){
+                        col2.push(selectedRows[0].investors[i]);
+                    }
                     setSelectedRows(selectedRows)
                   }
                 }}
@@ -364,10 +387,35 @@ export default function DataTable() {
                 borderRadius: 1,
                 backgroundColor: 'black'
                 }}>
-                  <Typography sx={{marginLeft: 4, color: 'white'}}>
-                    <p>Loan Details</p>
-                    ASDASDASd
-                  </Typography>
+                  <Box sx={{          
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    flexDirection: 'column',
+                    p: 1,
+                    m: 1,
+                    height: 190,
+                    bgcolor: 'black',
+                    borderRadius: 1,
+                    }}>
+                    <Typography sx={{marginLeft: 4, color: 'white'}}>
+                      <p>Investors</p>
+                      <Typography sx={{marginLeft: 1, color: 'white', fontSize: 14}}>
+                        <div className="contain">
+                          {selectedRows[0] === undefined ? "Investor(s) not found" : col1.map((investor) => {
+                            return <li>{investor}</li>
+                          })}
+                          {col2.length > 6 ? 
+                          <Tooltip title="See More">
+                            <IconButton sx={{color: 'white', marginBottom: 5}}>
+                                <MoreHorizIcon />
+                            </IconButton> 
+                          </Tooltip>
+                            : ""}
+                        </div>
+                      </Typography>
+                    </Typography>
+                  </Box>
+                  <Divider sx={{backgroundColor: 'white', marginTop: 4}} />
               </Paper>
             </Grid>
           </Grid>
