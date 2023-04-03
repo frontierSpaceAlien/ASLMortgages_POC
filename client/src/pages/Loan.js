@@ -77,6 +77,16 @@ var calculateCompoundMonthlyInterest = function(p, r, t) {
   return interest;
 }
 
+var calculateRepayableCap = function(variation, broker, manage, netAdv, legal, int){
+  let result = variation+broker+manage+netAdv+legal+int
+  return result;
+}
+
+var calculateRepayableNon = function(variation, broker, manage, netAdv, legal){
+  let result = variation+broker+manage+netAdv+legal
+  return result;
+}
+
 /** DUMMY DATA **/
   const rows = [
     { 
@@ -86,13 +96,13 @@ var calculateCompoundMonthlyInterest = function(p, r, t) {
       netadv: 326860.20,
       intrate: 14.95,
       interest: 0,
-      dailyInt: 147.07,
+      dailyInt: 0.00,
       monthInt: 0.00,
       manageFee: 7000,
       brokerFee: 0.00,
       legalFee: 0.00,
       variation: 0.00,
-      totalRepay: 359066.74,
+      totalRepay: 0.00,
       startdate: '10/03/2022', 
       enddate: '10/09/2022',
       dayintdue: 10, 
@@ -114,6 +124,33 @@ var calculateCompoundMonthlyInterest = function(p, r, t) {
         "Investor 13",
         "Investor 14",
         "Investor 15",
+      ]
+    },    
+    { 
+      id: 2, 
+      borrower: "Guy Pece",
+      capitalised: 'No',
+      netadv: 400000.00,
+      intrate: 15.95,
+      interest: 0,
+      dailyInt: 0.00,
+      monthInt: 0.00,
+      manageFee: 12000.00,
+      brokerFee: 6000.00,
+      legalFee: 3500.00,
+      variation: 0.00,
+      totalRepay: 0.00,
+      startdate: '13/04/2022', 
+      enddate: '13/10/2022',
+      dayintdue: 13, 
+      loan: 'Pece2022', 
+      active: 'No',
+      investors: [
+        "Investor 1",
+        "Investor 2",
+        "Investor 4",
+        "Investor 6",
+        "Investor 10",
       ]
     },
 ];
@@ -218,7 +255,7 @@ export default function DataTable() {
                           Daily Interest
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].dailyInt}
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].dailyInt.toLocaleString(undefined, {maximumFractionDigits: 2})}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -230,7 +267,7 @@ export default function DataTable() {
                           Monthly Interest
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].monthInt}
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].monthInt.toLocaleString(undefined, {maximumFractionDigits: 2})}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -242,7 +279,7 @@ export default function DataTable() {
                           Management Fee
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].manageFee}
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].manageFee.toLocaleString(undefined, {maximumFractionDigits: 2})}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -254,7 +291,7 @@ export default function DataTable() {
                           Broker Fee
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].brokerFee}
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].brokerFee.toLocaleString(undefined, {maximumFractionDigits: 2})}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -266,7 +303,7 @@ export default function DataTable() {
                           Legal Fee
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].legalFee}
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].legalFee.toLocaleString(undefined, {maximumFractionDigits: 2})}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -278,7 +315,7 @@ export default function DataTable() {
                           Variation
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].variation}
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].variation.toLocaleString(undefined, {maximumFractionDigits: 2})}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -290,7 +327,7 @@ export default function DataTable() {
                           Total Repayable
                         </Typography>
                         <Typography variant="h9" component="div" color="white">
-                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].totalRepay}
+                          ${selectedRows[0] === undefined ? "0.00" : selectedRows[0].totalRepay.toLocaleString(undefined, {maximumFractionDigits: 2})}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -350,13 +387,43 @@ export default function DataTable() {
                   if (selectedRows[0] === undefined){
                     setSelectedRows(selectedRows)
                   }else{
+                    // resets the arrays so it doesn't build up over time.
                     col1 = [];
                     col2 = [];
+
+                    // parse date to be able to get the difference between two dates
+                    // also converts the final result from a negative int to a positive int
                     const startDateFormat = parse(selectedRows[0].startdate, "dd/MM/yyyy", new Date())
                     const endDateFormat = parse(selectedRows[0].enddate, "dd/MM/yyyy", new Date())
                     var months = differenceInMonths(startDateFormat, endDateFormat)
-                    var result = calculateCompoundMonthlyInterest(selectedRows[0].netadv, selectedRows[0].intrate, months*-1)
+                    var monthsConvert = months*-1
+
+                    // calculates compound interest and saves it
+                    // monthly interest is also calculated
+                    var result = calculateCompoundMonthlyInterest(selectedRows[0].netadv, selectedRows[0].intrate, monthsConvert)
                     selectedRows[0].interest = result.toLocaleString(undefined, {maximumFractionDigits: 2})
+
+
+                    // calculates repayable on capitalised and non capitalised loans
+                    var totRepayNon = calculateRepayableNon(selectedRows[0].variation, selectedRows[0].brokerFee, selectedRows[0].manageFee,selectedRows[0].netadv,selectedRows[0].legalFee)                                                        
+                    var totRepayCap = calculateRepayableCap(selectedRows[0].variation, selectedRows[0].brokerFee, selectedRows[0].manageFee,selectedRows[0].netadv,selectedRows[0].legalFee,result)
+
+                    // checks if a loan is capitalised
+                    // tbh I still don't know how capitalised and non capitalised loans work.                          
+                    if (selectedRows[0].capitalised === 'No'){
+                      selectedRows[0].monthInt = result / monthsConvert;
+                      selectedRows[0].totalRepay = totRepayNon;
+                    }else{
+                      selectedRows[0].monthInt = 0.00
+                      selectedRows[0].totalRepay = totRepayCap;
+                    }
+
+                    // converts interest rate before calculating daily interest
+                    var intRateConvert = selectedRows[0].intrate / 100
+                    var dailyInterest = selectedRows[0].totalRepay * intRateConvert / 365
+                    selectedRows[0].dailyInt = dailyInterest
+
+                    // this just sets a max of 6 investors on the loan page at a time.
                     for ( let i = 0; i < selectedRows[0].investors.length; ++i){
                         if (i >= 6 ){
                           console.log("")
