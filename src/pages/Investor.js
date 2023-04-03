@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Typography, Button, Paper, Tooltip, Link, Snackbar, TextField } from '@mui/material';
@@ -217,6 +217,7 @@ export default function CollapsibleTable() {
   const [modal, setModal] = React.useState(false);
   const [editInvestorIndex, setEditInvestorIndex] = useState(null);
   const [editInvestorModal, setEditInvestorModal] = useState(false);
+  const [investorData, setInvestorData] = useState([]);
 
   //edit button
   const handleEditInvestorModalOpen = (index) => {
@@ -247,6 +248,8 @@ export default function CollapsibleTable() {
     setRowData(updatedRowData);
     setEditInvestorModal(false);
   };
+
+
 
   const handleEditInvestorModalClose = () => {
     setEditInvestorModal(false);
@@ -333,6 +336,21 @@ const [Country, setCountry] = useState('');
 
 
 
+React.useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/Investor');
+      setRowData(response.data.data.Investor);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  fetchData();
+}, []);
+
+
+
   return (
     <div className = "tableView">
     <ThemeProvider theme={theme}>
@@ -412,14 +430,18 @@ const [Country, setCountry] = useState('');
                 <StyledTableCell />
                 <StyledTableCell>ID</StyledTableCell>
                 <StyledTableCell>Investors Name</StyledTableCell>
-                <StyledTableCell align="right">Start Date</StyledTableCell>
                 <StyledTableCell align="right">Invest Total Amount</StyledTableCell>
                 <StyledTableCell align="right">RWT Rate</StyledTableCell>
-                <StyledTableCell align="right">Invest Count</StyledTableCell>
+                <StyledTableCell align="right">Start Date</StyledTableCell>
+                <StyledTableCell align="right">End Date</StyledTableCell>
+                <StyledTableCell align="right">Investor Count</StyledTableCell>
                 <StyledTableCell align="right">Edit/Cancel</StyledTableCell>        
               </TableRow>
             </TableHead>
             <TableBody>
+
+
+
 
 
 
@@ -428,15 +450,16 @@ const [Country, setCountry] = useState('');
                   <ThemeProvider theme={theme}>
                     <ExpandRow row ={row}>
                     <TableCell component="th" scope="row">
-                       {row.ird}
+                       {row.id}
                   </TableCell>  
                     <TableCell component="th" scope="row">
-                      {row.name}
+                      {row.investorName}
                     </TableCell>
                     <TableCell align="right">{row.bankAccount}</TableCell>
                     <TableCell align="right">{row.rwtRate}%</TableCell>
-                    <TableCell align="right">{row.dob}</TableCell>
-                    <TableCell align="right">{row.country}</TableCell>
+                    <TableCell align="right">{row.StartDate}</TableCell>
+                    <TableCell align="right">{row.EndDate}</TableCell>
+                    <TableCell align="right">{row.InvestorCount}</TableCell>
                     <TableCell align="right">
                         <Tooltip title="Edit">
                           <IconButton onClick={() => handleEditInvestorModalOpen(dataIndex)}>
@@ -450,6 +473,7 @@ const [Country, setCountry] = useState('');
                           aria-describedby="edit-investor-dialog-description"
                         >
                           <DialogTitle id="edit-investor-dialog-title">Edit Investor</DialogTitle>
+
                           <DialogContent>
                             <TextField
                               label="IRD Number"
