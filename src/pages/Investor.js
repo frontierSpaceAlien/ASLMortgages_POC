@@ -238,7 +238,7 @@ function ExpandRow({children, expandComponent, ...otherProps}){
                   <Typography variant="h6" gutterBottom component="div">
                       History
                   </Typography>
-                  <p>{history}</p>
+                  <p>Address: {history}</p>
             </Box>
           </Collapse>
         </TableCell>
