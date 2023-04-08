@@ -11,9 +11,11 @@ import CardContent from '@mui/material/CardContent';
 import { green, indigo  } from '@mui/material/colors';
 import { differenceInMonths, parse } from "date-fns";
 import Divider from '@mui/material/Divider';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const theme = createTheme({
   palette:{
@@ -194,10 +196,20 @@ export default function DataTable() {
         <div>
           <ThemeProvider theme  = {theme}>
             <Typography>
-              <h2>
+              <h2 style={{ display: "inline"}}>
                 Loan Information
+                <div style={{display: 'flex', flex: 1, justifyContent: 'flex-end'}}>
+                  <IconButton>
+                    <AddIcon/>
+                  </IconButton>
+                  <IconButton>
+                    <EditIcon/>
+                  </IconButton>
+                  <IconButton sx={{color: 'red'}}>
+                    <DeleteIcon/>
+                  </IconButton>
+                </div>
               </h2>
-              {/* <Button>asd</Button> */}
               <Box sx={{ width: '100%' }}>
                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                   <Grid item xs={2}>
