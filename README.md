@@ -1,5 +1,5 @@
 # ASLMortgages_POC
-Proof-of-concept Loan Management website made for ASL Mortgages. Repository will stay private until project handover.
+Proof-of-concept Loan Management website made for ASL Mortgages.
 
 # Get Started
 ```
