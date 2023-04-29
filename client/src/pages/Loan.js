@@ -1,4 +1,5 @@
 import * as React from "react";
+import BorrowerFinder from "../api/BorrowerFinder";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import NetflixSansReg from "../fonts/NetflixSans-Regular.ttf";
 import { DataGrid, GridOverlay } from "@mui/x-data-grid";
@@ -8,7 +9,6 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import Paper from "@mui/material/Paper";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { green, indigo } from "@mui/material/colors";
 import { differenceInMonths, parse } from "date-fns";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -23,23 +23,11 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Checkbox from "@mui/material/Checkbox";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import Autocomplete from "@mui/material/Autocomplete";
+import { DatePicker, ConfigProvider } from "antd";
+const { RangePicker } = DatePicker;
 
 const theme = createTheme({
-  palette: {
-    primary: {
-      main: indigo["A700"],
-    },
-    secondary: {
-      main: green[500],
-    },
-  },
   typography: {
     fontFamily: "NetflixSans",
   },
@@ -240,13 +228,27 @@ const columns = [
 
 export default function DataTable() {
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [rowData, setRowData] = React.useState([]);
   const [bgcolor, setBgcolor] = React.useState("black");
   const [modal, setModal] = React.useState(false);
   const [openAdd, setAdd] = React.useState(false);
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
-  const [email, setEmail] = React.useState("");
+  const [values, setValues] = React.useState("0.00");
   const [phone, setPhone] = React.useState("");
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await BorrowerFinder.get("/");
+        setRowData(response.data.data.borrower);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handlePopupClose = () => {
     setModal(false);
@@ -255,7 +257,6 @@ export default function DataTable() {
   const handleAddClose = () => {
     setFirstName("");
     setLastName("");
-    setEmail("");
     setPhone("");
     setAdd(false);
   };
@@ -263,7 +264,6 @@ export default function DataTable() {
   const handleAddSubmit = () => {
     setFirstName("");
     setLastName("");
-    setEmail("");
     setPhone("");
     setAdd(false);
   };
@@ -275,6 +275,28 @@ export default function DataTable() {
   const seeMore = () => {
     setModal(true);
   };
+
+  const handleChange = (e) => {
+    setValues({
+      ...values,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  var borrower = [];
+
+  rowData.map((data) => {
+    return borrower.push(data.borrowerfirstname + " " + data.borrowerlastname);
+  });
+
+  var tempInvestors = [
+    "Investor 1",
+    "Investor 2",
+    "Investor 3",
+    "Investor 4",
+    "Investor 5",
+    "Investor 6",
+  ];
 
   return (
     <div style={{ height: "100%", paddingLeft: 100, paddingRight: 100 }}>
@@ -292,23 +314,13 @@ export default function DataTable() {
                 <Dialog open={openAdd} onClose={handleAddClose}>
                   <DialogTitle>Add Loan</DialogTitle>
                   <DialogContent>
-                    <Typography sx={{ color: "gray", fontSize: 15 }}>
+                    <Typography
+                      sx={{ color: "gray", fontSize: 15, marginBottom: 0.5 }}
+                    >
                       * Required Fields
                     </Typography>
                     <TextField
-                      value={lastName}
-                      required
-                      autoFocus
-                      margin="dense"
-                      id="outlined-required"
-                      label="Borrower"
-                      type="name"
-                      fullWidth
-                      variant="standard"
-                    />
-                    <TextField
                       value={firstName}
-                      required
                       autoFocus
                       margin="dense"
                       id="outlined-required"
@@ -317,48 +329,62 @@ export default function DataTable() {
                       fullWidth
                       variant="standard"
                     />
-                    <TextField
-                      value={lastName}
-                      required
-                      autoFocus
-                      margin="dense"
-                      id="outlined-required"
-                      label="Start Date"
-                      type="name"
-                      fullWidth
+                    <Autocomplete
+                      options={borrower}
+                      sx={{ width: 300, marginBottom: 3 }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Borrower"
+                          variant="standard"
+                        />
+                      )}
                       variant="standard"
                     />
-                    <TextField
-                      value={lastName}
-                      required
-                      autoFocus
-                      margin="dense"
-                      id="outlined-required"
-                      label="End Date"
-                      type="name"
-                      fullWidth
-                      variant="standard"
+                    <ConfigProvider
+                      theme={{
+                        token: {
+                          colorBorder: "grey",
+                          colorPrimaryHover: "black",
+                          colorTextPlaceholder: "grey",
+                        },
+                      }}
+                    >
+                      <RangePicker
+                        getPopupContainer={(triggerNode) => {
+                          return triggerNode.parentNode;
+                        }}
+                        size={"large"}
+                        style={{
+                          colorBorder: "black",
+                          marginBottom: 10,
+                          marginTop: 10,
+                        }}
+                      />
+                    </ConfigProvider>
+                    <Autocomplete
+                      multiple
+                      id="tags-standard"
+                      sx={{ marginTop: 1 }}
+                      options={tempInvestors}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="standard"
+                          label="Investors"
+                        />
+                      )}
                     />
                     <TextField
-                      value={lastName}
-                      required
-                      autoFocus
-                      margin="dense"
-                      id="outlined-required"
-                      label="Investors"
-                      type="name"
-                      fullWidth
-                      variant="standard"
-                    />
-                    <TextField
-                      value={email}
                       autoFocus
                       margin="dense"
                       id="outlined-number"
+                      type="text"
                       label="Interest Rate"
                       sx={{
                         "& .MuiTextField-root": { m: 1, width: "25ch" },
                       }}
+                      onChange={(e) => handleChange(e)}
                       variant="standard"
                     />
                     <TextField
@@ -371,7 +397,6 @@ export default function DataTable() {
                       variant="standard"
                     />
                     <TextField
-                      value={email}
                       autoFocus
                       margin="dense"
                       id="outlined-number"
@@ -382,7 +407,6 @@ export default function DataTable() {
                       variant="standard"
                     />
                     <TextField
-                      value={email}
                       autoFocus
                       margin="dense"
                       id="outlined-number"
@@ -391,7 +415,6 @@ export default function DataTable() {
                       variant="standard"
                     />
                     <TextField
-                      value={email}
                       autoFocus
                       margin="dense"
                       id="outlined-number"
@@ -402,7 +425,6 @@ export default function DataTable() {
                       variant="standard"
                     />
                     <TextField
-                      value={email}
                       autoFocus
                       margin="dense"
                       id="outlined-number"
@@ -411,7 +433,6 @@ export default function DataTable() {
                       variant="standard"
                     />
                     <TextField
-                      value={email}
                       autoFocus
                       margin="dense"
                       id="outlined-number"
