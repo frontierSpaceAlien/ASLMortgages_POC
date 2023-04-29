@@ -25,6 +25,8 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { DatePicker, ConfigProvider } from "antd";
+import { NumericFormat } from "react-number-format";
+import InputAdornment from "@mui/material/InputAdornment";
 const { RangePicker } = DatePicker;
 
 const theme = createTheme({
@@ -226,6 +228,57 @@ const columns = [
   },
 ];
 
+const PercentageNumericFormat = React.forwardRef(function NumericFormatCustom(
+  props,
+  ref
+) {
+  const { onChange, ...other } = props;
+
+  return (
+    <NumericFormat
+      {...other}
+      getInputRef={ref}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values.value,
+          },
+        });
+      }}
+      valueIsNumericString
+      suffix="%"
+      decimalScale={2}
+    />
+  );
+});
+
+const CurrencyFormat = React.forwardRef(function NumericFormatCustom(
+  props,
+  ref
+) {
+  const { onChange, ...other } = props;
+
+  return (
+    <NumericFormat
+      {...other}
+      getInputRef={ref}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values.value,
+          },
+        });
+      }}
+      valueIsNumericString
+      thousandSeparator
+      prefix="$"
+      decimalScale={2}
+    />
+  );
+});
+
 export default function DataTable() {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [rowData, setRowData] = React.useState([]);
@@ -380,29 +433,13 @@ export default function DataTable() {
                       margin="dense"
                       id="outlined-number"
                       type="text"
-                      label="Interest Rate"
+                      label="Interest Rate %"
                       sx={{
                         "& .MuiTextField-root": { m: 1, width: "25ch" },
                       }}
                       onChange={(e) => handleChange(e)}
-                      variant="standard"
-                    />
-                    <TextField
-                      value={phone}
-                      autoFocus
-                      margin="dense"
-                      id="outlined-number"
-                      label="Net Advanced"
-                      sx={{ m: 1 }}
-                      variant="standard"
-                    />
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="outlined-number"
-                      label="Management Fee"
-                      sx={{
-                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      InputProps={{
+                        inputComponent: PercentageNumericFormat,
                       }}
                       variant="standard"
                     />
@@ -410,27 +447,70 @@ export default function DataTable() {
                       autoFocus
                       margin="dense"
                       id="outlined-number"
-                      label="Broker Fee"
+                      type="text"
+                      label="Net Advanced $"
                       sx={{ m: 1 }}
+                      onChange={(e) => handleChange(e)}
+                      InputProps={{
+                        inputComponent: CurrencyFormat,
+                      }}
                       variant="standard"
+                      startAdornment={
+                        <InputAdornment position="start">$</InputAdornment>
+                      }
+                      value="$0.00"
                     />
                     <TextField
                       autoFocus
                       margin="dense"
                       id="outlined-number"
-                      label="Legal Fee"
+                      label="Management Fee $"
                       sx={{
                         "& .MuiTextField-root": { m: 1, width: "25ch" },
                       }}
+                      InputProps={{
+                        inputComponent: CurrencyFormat,
+                      }}
+                      value="$0.00"
                       variant="standard"
                     />
                     <TextField
                       autoFocus
                       margin="dense"
                       id="outlined-number"
-                      label="Variation"
+                      label="Broker Fee $"
                       sx={{ m: 1 }}
+                      InputProps={{
+                        inputComponent: CurrencyFormat,
+                      }}
+                      value="$0.00"
                       variant="standard"
+                    />
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="outlined-number"
+                      label="Legal Fee $"
+                      sx={{
+                        "& .MuiTextField-root": { m: 1, width: "25ch" },
+                      }}
+                      InputProps={{
+                        inputComponent: CurrencyFormat,
+                      }}
+                      value="$0.00"
+                      variant="standard"
+                    />
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="outlined-number"
+                      label="Variation $"
+                      sx={{ m: 1 }}
+                      InputProps={{
+                        inputComponent: CurrencyFormat,
+                      }}
+                      variant="standard"
+                      value="$0.00"
                     />
                     <TextField
                       autoFocus
