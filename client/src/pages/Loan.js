@@ -7,8 +7,6 @@ import { Grid, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import Paper from "@mui/material/Paper";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import { differenceInMonths, parse } from "date-fns";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -22,16 +20,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import { DatePicker, ConfigProvider } from "antd";
-import { NumericFormat } from "react-number-format";
-import InputAdornment from "@mui/material/InputAdornment";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-const { RangePicker } = DatePicker;
+import Cards from "../components/Card";
+import Add from "../components/AddForm";
 
 const theme = createTheme({
   typography: {
@@ -232,68 +222,11 @@ const columns = [
   },
 ];
 
-const PercentageNumericFormat = React.forwardRef(function NumericFormatCustom(
-  props,
-  ref
-) {
-  const { onChange, ...other } = props;
-
-  return (
-    <NumericFormat
-      {...other}
-      getInputRef={ref}
-      onValueChange={(values) => {
-        onChange({
-          target: {
-            name: props.name,
-            value: values.value,
-          },
-        });
-      }}
-      valueIsNumericString
-      suffix="%"
-      decimalScale={2}
-    />
-  );
-});
-
-const CurrencyFormat = React.forwardRef(function NumericFormatCustom(
-  props,
-  ref
-) {
-  const { onChange, ...other } = props;
-
-  return (
-    <NumericFormat
-      {...other}
-      getInputRef={ref}
-      onValueChange={(values) => {
-        onChange({
-          target: {
-            name: props.name,
-            value: values.value,
-          },
-        });
-      }}
-      valueIsNumericString
-      thousandSeparator
-      prefix="$"
-      decimalScale={2}
-    />
-  );
-});
-
 export default function DataTable() {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [rowData, setRowData] = React.useState([]);
-  const [bgcolor, setBgcolor] = React.useState("black");
   const [modal, setModal] = React.useState(false);
   const [openAdd, setAdd] = React.useState(false);
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [values, setValues] = React.useState("0.00");
-  const [phone, setPhone] = React.useState("");
-  const [cap, setCap] = React.useState("");
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -313,16 +246,11 @@ export default function DataTable() {
   };
 
   const handleAddClose = () => {
-    setFirstName("");
-    setLastName("");
-    setPhone("");
     setAdd(false);
   };
 
-  const handleAddSubmit = () => {
-    setFirstName("");
-    setLastName("");
-    setPhone("");
+  const handleAddSubmit = (loanName) => {
+    console.log(loanName);
     setAdd(false);
   };
 
@@ -333,32 +261,6 @@ export default function DataTable() {
   const seeMore = () => {
     setModal(true);
   };
-
-  const handleChange = (e) => {
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleChangeCap = (event) => {
-    setCap(event.target.value);
-  };
-
-  var borrower = [];
-
-  rowData.map((data) => {
-    return borrower.push(data.borrowerfirstname + " " + data.borrowerlastname);
-  });
-
-  var tempInvestors = [
-    "Investor 1",
-    "Investor 2",
-    "Investor 3",
-    "Investor 4",
-    "Investor 5",
-    "Investor 6",
-  ];
 
   return (
     <div style={{ height: "100%", paddingLeft: 100, paddingRight: 100 }}>
@@ -373,174 +275,12 @@ export default function DataTable() {
                 <IconButton onClick={handleAdd}>
                   <AddIcon />
                 </IconButton>
-                <Dialog open={openAdd} onClose={handleAddClose}>
-                  <DialogTitle>Add Loan</DialogTitle>
-                  <DialogContent>
-                    <Typography
-                      sx={{ color: "gray", fontSize: 15, marginBottom: 0.5 }}
-                    >
-                      * Required Fields
-                    </Typography>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="outlined-required"
-                      label="Loan Name"
-                      type="name"
-                      fullWidth
-                      variant="standard"
-                    />
-                    <Autocomplete
-                      options={borrower}
-                      sx={{ width: 300, marginBottom: 3 }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Borrower"
-                          variant="standard"
-                        />
-                      )}
-                      variant="standard"
-                    />
-                    <ConfigProvider
-                      theme={{
-                        token: {
-                          colorBorder: "grey",
-                          colorPrimaryHover: "black",
-                          colorTextPlaceholder: "grey",
-                        },
-                      }}
-                    >
-                      <RangePicker
-                        getPopupContainer={(triggerNode) => {
-                          return triggerNode.parentNode;
-                        }}
-                        size={"large"}
-                        style={{
-                          colorBorder: "black",
-                          marginBottom: 10,
-                          marginTop: 10,
-                        }}
-                      />
-                    </ConfigProvider>
-                    <Autocomplete
-                      multiple
-                      id="tags-standard"
-                      sx={{ marginTop: 1 }}
-                      options={tempInvestors}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          variant="standard"
-                          label="Investor(s)"
-                        />
-                      )}
-                    />
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="outlined-number"
-                      type="text"
-                      label="Interest Rate %"
-                      sx={{
-                        "& .MuiTextField-root": { m: 1, width: "25ch" },
-                      }}
-                      onChange={(e) => handleChange(e)}
-                      InputProps={{
-                        inputComponent: PercentageNumericFormat,
-                      }}
-                      variant="standard"
-                    />
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="outlined-number"
-                      type="text"
-                      label="Net Advanced $"
-                      sx={{ m: 1 }}
-                      onChange={(e) => handleChange(e)}
-                      InputProps={{
-                        inputComponent: CurrencyFormat,
-                      }}
-                      variant="standard"
-                      startAdornment={
-                        <InputAdornment position="start">$</InputAdornment>
-                      }
-                      value="$0.00"
-                    />
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="outlined-number"
-                      label="Management Fee $"
-                      sx={{
-                        "& .MuiTextField-root": { m: 1, width: "25ch" },
-                      }}
-                      InputProps={{
-                        inputComponent: CurrencyFormat,
-                      }}
-                      value="$0.00"
-                      variant="standard"
-                    />
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="outlined-number"
-                      label="Broker Fee $"
-                      sx={{ m: 1 }}
-                      InputProps={{
-                        inputComponent: CurrencyFormat,
-                      }}
-                      value="$0.00"
-                      variant="standard"
-                    />
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="outlined-number"
-                      label="Legal Fee $"
-                      sx={{
-                        "& .MuiTextField-root": { m: 1, width: "25ch" },
-                      }}
-                      InputProps={{
-                        inputComponent: CurrencyFormat,
-                      }}
-                      value="$0.00"
-                      variant="standard"
-                    />
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="outlined-number"
-                      label="Variation $"
-                      sx={{ m: 1 }}
-                      InputProps={{
-                        inputComponent: CurrencyFormat,
-                      }}
-                      variant="standard"
-                      value="$0.00"
-                    />
-                    <FormControl variant="standard" sx={{ m: 0.49, width: 90 }}>
-                      <InputLabel>Capitilised</InputLabel>
-                      <Select
-                        value={cap}
-                        onChange={handleChangeCap}
-                        label="Capitilised"
-                      >
-                        <MenuItem value={"Yes"}>Yes</MenuItem>
-                        <MenuItem value={"No"}>No</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button sx={{ color: "red" }} onClick={handleAddClose}>
-                      Cancel
-                    </Button>
-                    <Button sx={{ color: "black" }} onClick={handleAddSubmit}>
-                      Add
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+                <Add
+                  borrowerData={rowData}
+                  addState={openAdd}
+                  closeState={handleAddClose}
+                  submitState={(e) => handleAddSubmit(e)}
+                />
                 <IconButton>
                   <EditIcon />
                 </IconButton>
@@ -549,473 +289,216 @@ export default function DataTable() {
                 </IconButton>
               </div>
             </h2>
-            <Box sx={{ width: "100%" }}>
-              <Grid
-                container
-                rowSpacing={1}
-                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-              >
-                <Grid item xs={2}>
-                  <Card sx={{ backgroundColor: bgcolor }}>
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="white"
-                        gutterBottom
-                      >
-                        Day Interest Due
-                      </Typography>
-                      <Typography variant="h9" component="div" color="white">
-                        {selectedRows[0] === undefined
-                          ? 0
-                          : selectedRows[0].dayintdue}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={2}>
-                  <Card sx={{ backgroundColor: bgcolor }}>
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="white"
-                        gutterBottom
-                      >
-                        Borrower
-                      </Typography>
-                      <Typography variant="h9" component="div" color="white">
-                        {selectedRows[0] === undefined
-                          ? "Unknown"
-                          : selectedRows[0].borrower}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={2}>
-                  <Card sx={{ backgroundColor: bgcolor }}>
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="white"
-                        gutterBottom
-                      >
-                        Capitalised
-                      </Typography>
-                      <Typography variant="h9" component="div" color="white">
-                        {selectedRows[0] === undefined
-                          ? "Unknown"
-                          : selectedRows[0].capitalised}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={2}>
-                  <Card sx={{ backgroundColor: bgcolor }}>
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="white"
-                        gutterBottom
-                      >
-                        Interest
-                      </Typography>
-                      <Typography variant="h9" component="div" color="white">
-                        $
-                        {selectedRows[0] === undefined
-                          ? "0.00"
-                          : selectedRows[0].interest}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={2}>
-                  <Card sx={{ backgroundColor: bgcolor }}>
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="white"
-                        gutterBottom
-                      >
-                        Daily Interest
-                      </Typography>
-                      <Typography variant="h9" component="div" color="white">
-                        $
-                        {selectedRows[0] === undefined
-                          ? "0.00"
-                          : selectedRows[0].dailyInt.toLocaleString(undefined, {
-                              maximumFractionDigits: 2,
-                            })}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={2}>
-                  <Card sx={{ backgroundColor: bgcolor }}>
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="white"
-                        gutterBottom
-                      >
-                        Monthly Interest
-                      </Typography>
-                      <Typography variant="h9" component="div" color="white">
-                        $
-                        {selectedRows[0] === undefined
-                          ? "0.00"
-                          : selectedRows[0].monthInt.toLocaleString(undefined, {
-                              maximumFractionDigits: 2,
-                            })}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={2}>
-                  <Card sx={{ backgroundColor: bgcolor }}>
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="white"
-                        gutterBottom
-                      >
-                        Management Fee
-                      </Typography>
-                      <Typography variant="h9" component="div" color="white">
-                        $
-                        {selectedRows[0] === undefined
-                          ? "0.00"
-                          : selectedRows[0].manageFee.toLocaleString(
-                              undefined,
-                              { maximumFractionDigits: 2 }
-                            )}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={2}>
-                  <Card sx={{ backgroundColor: bgcolor }}>
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="white"
-                        gutterBottom
-                      >
-                        Broker Fee
-                      </Typography>
-                      <Typography variant="h9" component="div" color="white">
-                        $
-                        {selectedRows[0] === undefined
-                          ? "0.00"
-                          : selectedRows[0].brokerFee.toLocaleString(
-                              undefined,
-                              { maximumFractionDigits: 2 }
-                            )}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={2}>
-                  <Card sx={{ backgroundColor: bgcolor }}>
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="white"
-                        gutterBottom
-                      >
-                        Legal Fee
-                      </Typography>
-                      <Typography variant="h9" component="div" color="white">
-                        $
-                        {selectedRows[0] === undefined
-                          ? "0.00"
-                          : selectedRows[0].legalFee.toLocaleString(undefined, {
-                              maximumFractionDigits: 2,
-                            })}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={2}>
-                  <Card sx={{ backgroundColor: bgcolor }}>
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="white"
-                        gutterBottom
-                      >
-                        Variation
-                      </Typography>
-                      <Typography variant="h9" component="div" color="white">
-                        $
-                        {selectedRows[0] === undefined
-                          ? "0.00"
-                          : selectedRows[0].variation.toLocaleString(
-                              undefined,
-                              { maximumFractionDigits: 2 }
-                            )}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={2}>
-                  <Card sx={{ backgroundColor: bgcolor }}>
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="white"
-                        gutterBottom
-                      >
-                        Total Repayable
-                      </Typography>
-                      <Typography variant="h9" component="div" color="white">
-                        $
-                        {selectedRows[0] === undefined
-                          ? "0.00"
-                          : selectedRows[0].totalRepay.toLocaleString(
-                              undefined,
-                              { maximumFractionDigits: 2 }
-                            )}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={2}>
-                  <Card sx={{ backgroundColor: bgcolor }}>
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="white"
-                        gutterBottom
-                      >
-                        Active(?)
-                      </Typography>
-                      <Typography variant="h8" component="div" color="white">
-                        {selectedRows[0] === undefined
-                          ? "Unknown"
-                          : selectedRows[0].active}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Box>
+            <Cards data={selectedRows} />
           </Typography>
         </ThemeProvider>
       </div>
-      <ThemeProvider theme={theme}>
-        <Grid container>
-          <Box
-            sx={{
-              width: "66.6%",
-              "& .super-app-theme--header": {
-                backgroundColor: "rgba(0,0,0)",
-                color: "white",
-                flex: 1,
-                flexDirection: "row",
-              },
-            }}
-          >
-            <Grid item xs={12}>
-              <StyledDataGrid
-                sx={{ color: "black", marginTop: 4, height: 531.5 }}
-                rows={rows}
-                columns={columns}
-                slots={{ noRowsOverlay: customRowOverlay }}
-                {...rows}
-                initialState={{
-                  ...rows.initialState,
-                  pagination: { paginationModel: { pageSize: 20 } },
-                }}
-                pageSizeOptions={[]}
-                getRowHeight={() => "auto"}
-                // this gets the all the information of a selected row.
-                // check console for details
-                onRowSelectionModelChange={(ids) => {
-                  const selectedIDS = new Set(ids);
-                  const selectedRows = rows.filter((row) =>
-                    selectedIDS.has(row.id)
+      <Grid container>
+        <Box
+          sx={{
+            width: "66.6%",
+            "& .super-app-theme--header": {
+              backgroundColor: "rgba(0,0,0)",
+              color: "white",
+              flex: 1,
+              flexDirection: "row",
+            },
+          }}
+        >
+          <Grid item xs={12}>
+            <StyledDataGrid
+              sx={{ color: "black", marginTop: 4, height: 531.5 }}
+              rows={rows}
+              columns={columns}
+              slots={{ noRowsOverlay: customRowOverlay }}
+              {...rows}
+              initialState={{
+                ...rows.initialState,
+                pagination: { paginationModel: { pageSize: 20 } },
+              }}
+              pageSizeOptions={[]}
+              getRowHeight={() => "auto"}
+              // this gets the all the information of a selected row.
+              // check console for details
+              onRowSelectionModelChange={(ids) => {
+                const selectedIDS = new Set(ids);
+                const selectedRows = rows.filter((row) =>
+                  selectedIDS.has(row.id)
+                );
+
+                if (selectedRows[0] === undefined) {
+                } else {
+                  // resets the arrays so it doesn't add to existing data.
+                  col1 = [];
+
+                  // parse date to be able to get the difference between two dates
+                  // also converts the final result from a negative int to a positive int
+                  const startDateFormat = parse(
+                    selectedRows[0].startdate,
+                    "dd/MM/yyyy",
+                    new Date()
+                  );
+                  const endDateFormat = parse(
+                    selectedRows[0].enddate,
+                    "dd/MM/yyyy",
+                    new Date()
+                  );
+                  var months = differenceInMonths(
+                    startDateFormat,
+                    endDateFormat
+                  );
+                  var monthsConvert = months * -1;
+
+                  // calculates compound interest and saves it
+                  // monthly interest is also calculated
+                  var result = calculateCompoundMonthlyInterest(
+                    selectedRows[0].netadv,
+                    selectedRows[0].intrate,
+                    monthsConvert
+                  );
+                  selectedRows[0].interest = result.toLocaleString(undefined, {
+                    maximumFractionDigits: 2,
+                  });
+
+                  // calculates repayable on capitalised and non capitalised loans
+                  var totRepayNon = calculateRepayableNon(
+                    selectedRows[0].variation,
+                    selectedRows[0].brokerFee,
+                    selectedRows[0].manageFee,
+                    selectedRows[0].netadv,
+                    selectedRows[0].legalFee
+                  );
+                  var totRepayCap = calculateRepayableCap(
+                    selectedRows[0].variation,
+                    selectedRows[0].brokerFee,
+                    selectedRows[0].manageFee,
+                    selectedRows[0].netadv,
+                    selectedRows[0].legalFee,
+                    result
                   );
 
-                  if (selectedRows[0] === undefined) {
+                  // checks if a loan is capitalised
+                  // tbh I still don't know how capitalised and non capitalised loans work.
+                  if (selectedRows[0].capitalised === "No") {
+                    selectedRows[0].monthInt = result / monthsConvert;
+                    selectedRows[0].totalRepay = totRepayNon;
                   } else {
-                    // resets the arrays so it doesn't add to existing data.
-                    col1 = [];
-
-                    // parse date to be able to get the difference between two dates
-                    // also converts the final result from a negative int to a positive int
-                    const startDateFormat = parse(
-                      selectedRows[0].startdate,
-                      "dd/MM/yyyy",
-                      new Date()
-                    );
-                    const endDateFormat = parse(
-                      selectedRows[0].enddate,
-                      "dd/MM/yyyy",
-                      new Date()
-                    );
-                    var months = differenceInMonths(
-                      startDateFormat,
-                      endDateFormat
-                    );
-                    var monthsConvert = months * -1;
-
-                    // calculates compound interest and saves it
-                    // monthly interest is also calculated
-                    var result = calculateCompoundMonthlyInterest(
-                      selectedRows[0].netadv,
-                      selectedRows[0].intrate,
-                      monthsConvert
-                    );
-                    selectedRows[0].interest = result.toLocaleString(
-                      undefined,
-                      { maximumFractionDigits: 2 }
-                    );
-
-                    // calculates repayable on capitalised and non capitalised loans
-                    var totRepayNon = calculateRepayableNon(
-                      selectedRows[0].variation,
-                      selectedRows[0].brokerFee,
-                      selectedRows[0].manageFee,
-                      selectedRows[0].netadv,
-                      selectedRows[0].legalFee
-                    );
-                    var totRepayCap = calculateRepayableCap(
-                      selectedRows[0].variation,
-                      selectedRows[0].brokerFee,
-                      selectedRows[0].manageFee,
-                      selectedRows[0].netadv,
-                      selectedRows[0].legalFee,
-                      result
-                    );
-
-                    // checks if a loan is capitalised
-                    // tbh I still don't know how capitalised and non capitalised loans work.
-                    if (selectedRows[0].capitalised === "No") {
-                      selectedRows[0].monthInt = result / monthsConvert;
-                      selectedRows[0].totalRepay = totRepayNon;
-                    } else {
-                      selectedRows[0].monthInt = 0.0;
-                      selectedRows[0].totalRepay = totRepayCap;
-                    }
-
-                    // converts interest rate before calculating daily interest
-                    var intRateConvert = selectedRows[0].intrate / 100;
-                    var dailyInterest =
-                      (selectedRows[0].totalRepay * intRateConvert) / 365;
-                    selectedRows[0].dailyInt = dailyInterest;
-
-                    // this just sets a max of 6 investors on the loan page at a time.
-                    for (let i = 0; i < selectedRows[0].investors.length; ++i) {
-                      if (i >= 6) {
-                        console.log("");
-                      } else {
-                        col1.push(selectedRows[0].investors[i]);
-                      }
-                    }
-                    setSelectedRows(selectedRows);
+                    selectedRows[0].monthInt = 0.0;
+                    selectedRows[0].totalRepay = totRepayCap;
                   }
-                }}
-                {...rows}
-              />
-            </Grid>
-          </Box>
-          <Grid Item xs={4}>
-            <Paper
+
+                  // converts interest rate before calculating daily interest
+                  var intRateConvert = selectedRows[0].intrate / 100;
+                  var dailyInterest =
+                    (selectedRows[0].totalRepay * intRateConvert) / 365;
+                  selectedRows[0].dailyInt = dailyInterest;
+
+                  // this just sets a max of 6 investors on the loan page at a time.
+                  for (let i = 0; i < selectedRows[0].investors.length; ++i) {
+                    if (i >= 6) {
+                      console.log("");
+                    } else {
+                      col1.push(selectedRows[0].investors[i]);
+                    }
+                  }
+                  setSelectedRows(selectedRows);
+                }
+              }}
+              {...rows}
+            />
+          </Grid>
+        </Box>
+        <Grid Item xs={4}>
+          <Paper
+            sx={{
+              marginTop: 4.3,
+              width: "auto",
+              height: "93.5%",
+              marginLeft: 2,
+              border: 1,
+              borderColor: "black",
+              borderRadius: 1,
+              backgroundColor: "black",
+            }}
+          >
+            <Box
               sx={{
-                marginTop: 4.3,
-                width: "auto",
-                height: "93.5%",
-                marginLeft: 2,
-                border: 1,
-                borderColor: "black",
+                display: "flex",
+                alignItems: "flex-start",
+                flexDirection: "column",
+                p: 1,
+                m: 1,
+                height: 190,
+                bgcolor: "black",
                 borderRadius: 1,
-                backgroundColor: "black",
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  flexDirection: "column",
-                  p: 1,
-                  m: 1,
-                  height: 190,
-                  bgcolor: "black",
-                  borderRadius: 1,
-                }}
-              >
-                <Typography sx={{ marginLeft: 4, color: "white" }}>
-                  <p>Investors</p>
-                  <Typography
-                    sx={{ marginLeft: 1, color: "white", fontSize: 14 }}
-                  >
-                    <div className="contain">
-                      {selectedRows[0] === undefined
-                        ? "Investor(s) not found"
-                        : col1.map((investor) => {
-                            return <li>{investor}</li>;
-                          })}
-                      {selectedRows[0] === undefined ? (
-                        ""
-                      ) : selectedRows[0].investors.length > 6 ? (
-                        <Tooltip title="See More">
-                          <IconButton
-                            sx={{ color: "white", marginBottom: 5 }}
-                            onClick={seeMore}
-                          >
-                            <MoreHorizIcon />
-                          </IconButton>
-                        </Tooltip>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                    <Dialog
-                      open={modal}
-                      onClose={handlePopupClose}
-                      aria-labelledby="alert-dialog-title"
-                      aria-describedby="alert-dialog-description"
-                      PaperProps={{
-                        elevation: 3,
-                      }}
-                      BackdropProps={{
-                        style: {
-                          backgroundColor: "rgba(0,0,0,0.1)",
-                          boxShadow: "none",
-                        },
-                      }}
-                    >
-                      <DialogTitle id="alert-dialog-title">
-                        {"Investors"}
-                      </DialogTitle>
-                      <DialogContent sx={{ marginLeft: 3, marginRight: 3 }}>
-                        <DialogContentText id="alert-dialog-description">
-                          {selectedRows[0] === undefined
-                            ? ""
-                            : selectedRows[0].investors.map(function (d, idx) {
-                                return (
-                                  <li>{selectedRows[0].investors[idx]}</li>
-                                );
-                              })}
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button
-                          sx={{ color: "red" }}
-                          onClick={handlePopupClose}
+              <Typography sx={{ marginLeft: 4, color: "white" }}>
+                <p>Investors</p>
+                <Typography
+                  sx={{ marginLeft: 1, color: "white", fontSize: 14 }}
+                >
+                  <div className="contain">
+                    {selectedRows[0] === undefined
+                      ? "Investor(s) not found"
+                      : col1.map((investor) => {
+                          return <li>{investor}</li>;
+                        })}
+                    {selectedRows[0] === undefined ? (
+                      ""
+                    ) : selectedRows[0].investors.length > 6 ? (
+                      <Tooltip title="See More">
+                        <IconButton
+                          sx={{ color: "white", marginBottom: 5 }}
+                          onClick={seeMore}
                         >
-                          Close
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                  </Typography>
+                          <MoreHorizIcon />
+                        </IconButton>
+                      </Tooltip>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                  <Dialog
+                    open={modal}
+                    onClose={handlePopupClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    PaperProps={{
+                      elevation: 3,
+                    }}
+                    BackdropProps={{
+                      style: {
+                        backgroundColor: "rgba(0,0,0,0.1)",
+                        boxShadow: "none",
+                      },
+                    }}
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {"Investors"}
+                    </DialogTitle>
+                    <DialogContent sx={{ marginLeft: 3, marginRight: 3 }}>
+                      <DialogContentText id="alert-dialog-description">
+                        {selectedRows[0] === undefined
+                          ? ""
+                          : selectedRows[0].investors.map(function (d, idx) {
+                              return <li>{selectedRows[0].investors[idx]}</li>;
+                            })}
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button sx={{ color: "red" }} onClick={handlePopupClose}>
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </Typography>
-              </Box>
-              <Divider sx={{ backgroundColor: "white", marginTop: 4 }} />
-            </Paper>
-          </Grid>
+              </Typography>
+            </Box>
+            <Divider sx={{ backgroundColor: "white", marginTop: 4 }} />
+          </Paper>
         </Grid>
-      </ThemeProvider>
+      </Grid>
     </div>
   );
 }
