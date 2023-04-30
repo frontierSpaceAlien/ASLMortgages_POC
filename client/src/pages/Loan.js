@@ -27,6 +27,10 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { DatePicker, ConfigProvider } from "antd";
 import { NumericFormat } from "react-number-format";
 import InputAdornment from "@mui/material/InputAdornment";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 const { RangePicker } = DatePicker;
 
 const theme = createTheme({
@@ -289,6 +293,7 @@ export default function DataTable() {
   const [lastName, setLastName] = React.useState("");
   const [values, setValues] = React.useState("0.00");
   const [phone, setPhone] = React.useState("");
+  const [cap, setCap] = React.useState("");
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -336,6 +341,10 @@ export default function DataTable() {
     });
   };
 
+  const handleChangeCap = (event) => {
+    setCap(event.target.value);
+  };
+
   var borrower = [];
 
   rowData.map((data) => {
@@ -373,7 +382,6 @@ export default function DataTable() {
                       * Required Fields
                     </Typography>
                     <TextField
-                      value={firstName}
                       autoFocus
                       margin="dense"
                       id="outlined-required"
@@ -424,7 +432,7 @@ export default function DataTable() {
                         <TextField
                           {...params}
                           variant="standard"
-                          label="Investors"
+                          label="Investor(s)"
                         />
                       )}
                     />
@@ -512,16 +520,17 @@ export default function DataTable() {
                       variant="standard"
                       value="$0.00"
                     />
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="outlined-number"
-                      label="Capitalised?"
-                      sx={{
-                        "& .MuiTextField-root": { m: 1, width: "25ch" },
-                      }}
-                      variant="standard"
-                    />
+                    <FormControl variant="standard" sx={{ m: 0.49, width: 90 }}>
+                      <InputLabel>Capitilised</InputLabel>
+                      <Select
+                        value={cap}
+                        onChange={handleChangeCap}
+                        label="Capitilised"
+                      >
+                        <MenuItem value={"Yes"}>Yes</MenuItem>
+                        <MenuItem value={"No"}>No</MenuItem>
+                      </Select>
+                    </FormControl>
                   </DialogContent>
                   <DialogActions>
                     <Button sx={{ color: "red" }} onClick={handleAddClose}>
