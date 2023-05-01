@@ -20,8 +20,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
-import Cards from "../components/Card";
-import Add from "../components/AddForm";
+import Cards from "../components/Loan/Card";
+import Add from "../components/Loan/AddForm";
 
 const theme = createTheme({
   typography: {
@@ -249,8 +249,21 @@ export default function DataTable() {
     setAdd(false);
   };
 
-  const handleAddSubmit = (loanName) => {
-    console.log(loanName);
+  const handleAddSubmit = (
+    loanName,
+    borrower,
+    startDate,
+    endDate,
+    investor,
+    interest,
+    netAdv,
+    manageFee,
+    brokerFee,
+    legalFee,
+    variation,
+    region,
+    cap
+  ) => {
     setAdd(false);
   };
 
@@ -279,7 +292,37 @@ export default function DataTable() {
                   borrowerData={rowData}
                   addState={openAdd}
                   closeState={handleAddClose}
-                  submitState={(e) => handleAddSubmit(e)}
+                  submitState={(
+                    loanName,
+                    borrower,
+                    startDate,
+                    endDate,
+                    investor,
+                    interest,
+                    netAdv,
+                    manageFee,
+                    brokerFee,
+                    legalFee,
+                    variation,
+                    region,
+                    cap
+                  ) =>
+                    handleAddSubmit(
+                      loanName,
+                      borrower,
+                      startDate,
+                      endDate,
+                      investor,
+                      interest,
+                      netAdv,
+                      manageFee,
+                      brokerFee,
+                      legalFee,
+                      variation,
+                      region,
+                      cap
+                    )
+                  }
                 />
                 <IconButton>
                   <EditIcon />
@@ -319,7 +362,6 @@ export default function DataTable() {
               pageSizeOptions={[]}
               getRowHeight={() => "auto"}
               // this gets the all the information of a selected row.
-              // check console for details
               onRowSelectionModelChange={(ids) => {
                 const selectedIDS = new Set(ids);
                 const selectedRows = rows.filter((row) =>
@@ -438,7 +480,7 @@ export default function DataTable() {
                 <Typography
                   sx={{ marginLeft: 1, color: "white", fontSize: 14 }}
                 >
-                  <div className="contain">
+                  <div>
                     {selectedRows[0] === undefined
                       ? "Investor(s) not found"
                       : col1.map((investor) => {
@@ -464,15 +506,6 @@ export default function DataTable() {
                     onClose={handlePopupClose}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
-                    PaperProps={{
-                      elevation: 3,
-                    }}
-                    BackdropProps={{
-                      style: {
-                        backgroundColor: "rgba(0,0,0,0.1)",
-                        boxShadow: "none",
-                      },
-                    }}
                   >
                     <DialogTitle id="alert-dialog-title">
                       {"Investors"}

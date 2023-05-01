@@ -9,11 +9,11 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { DatePicker, ConfigProvider } from "antd";
 import { NumericFormat } from "react-number-format";
-import InputAdornment from "@mui/material/InputAdornment";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import NZData from "../../data/nz.json";
 const { RangePicker } = DatePicker;
 
 const PercentageNumericFormat = React.forwardRef(function NumericFormatCustom(
@@ -69,40 +69,127 @@ const CurrencyFormat = React.forwardRef(function NumericFormatCustom(
 
 export default function AddForm(props) {
   const [loanName, setLoanName] = React.useState("");
-  const [values, setValues] = React.useState("0.00");
+  const [borrower, setBorrower] = React.useState("");
+  const [startDate, setStartDate] = React.useState("");
+  const [endDate, setEndDate] = React.useState("");
+  const [investor, setInvestor] = React.useState([]);
+  const [interest, setInterest] = React.useState("");
+  const [netAdv, setNetAdv] = React.useState("");
+  const [manageFee, setManageFee] = React.useState("");
+  const [brokerFee, setBrokerFee] = React.useState("");
+  const [legalFee, setLegalFee] = React.useState("");
+  const [variation, setVariation] = React.useState("");
+  const [region, setRegion] = React.useState("");
   const [cap, setCap] = React.useState("");
 
   const { borrowerData, addState, closeState, submitState } = props;
 
-  const handleChange = (e) => {
-    setValues({
-      ...values,
-      [e.target.name]: e.target.value,
-    });
+  var regions = [];
+  var borrowers = [];
+
+  /************************HANDLES ALL FORM FIELD ************************************/
+
+  const onChangeLoanName = (e) => {
+    setLoanName(e.target.value);
   };
 
-  const handleSubmitClose = () => {
-    submitState(loanName);
-    setLoanName("");
+  const onChangeBorrower = (e) => {
+    setBorrower(e);
   };
 
-  const handleClose = () => {
-    setLoanName("");
-    closeState();
+  const onChangeDate = (range) => {
+    setStartDate(range[0].format("DD/MM/YYYY"));
+    setEndDate(range[1].format("DD/MM/YYYY"));
+  };
+
+  const onChangeInvestor = (e) => {
+    setInvestor(e);
+  };
+
+  const onChangeInterest = (e) => {
+    setInterest(e.target.value);
+  };
+
+  const onChangeNet = (e) => {
+    setNetAdv(e.target.value);
+  };
+
+  const onChangeManageFee = (e) => {
+    setManageFee(e.target.value);
+  };
+
+  const onChangeBrokerFee = (e) => {
+    setBrokerFee(e.target.value);
+  };
+
+  const onChangeLegalFee = (e) => {
+    setLegalFee(e.target.value);
+  };
+
+  const onChangeVariation = (e) => {
+    setVariation(e.target.value);
   };
 
   const handleChangeCap = (event) => {
     setCap(event.target.value);
   };
 
-  const onChangeLoanName = (e) => {
-    setLoanName(e.target.value);
+  const onChangeRegion = (e) => {
+    setRegion(e);
   };
 
-  var borrower = [];
+  /********************************************************************************/
+
+  const handleSubmitClose = () => {
+    submitState(
+      loanName,
+      borrower,
+      startDate,
+      endDate,
+      investor,
+      interest,
+      netAdv,
+      manageFee,
+      brokerFee,
+      legalFee,
+      variation,
+      region,
+      cap
+    );
+    setLoanName("");
+    setBorrower("");
+    setStartDate("");
+    setEndDate("");
+    setInvestor([]);
+    setInterest("");
+    setNetAdv("");
+    setManageFee("");
+    setBrokerFee("");
+    setLegalFee("");
+    setVariation("");
+    setRegion("");
+    setCap("");
+  };
+
+  const handleClose = () => {
+    closeState();
+    setLoanName("");
+    setBorrower("");
+    setStartDate("");
+    setEndDate("");
+    setInvestor([]);
+    setInterest("");
+    setNetAdv("");
+    setManageFee("");
+    setBrokerFee("");
+    setLegalFee("");
+    setVariation("");
+    setRegion("");
+    setCap("");
+  };
 
   borrowerData.map((data) => {
-    return borrower.push(data.borrowerfirstname + " " + data.borrowerlastname);
+    return borrowers.push(data.borrowerfirstname + " " + data.borrowerlastname);
   });
 
   var tempInvestors = [
@@ -113,6 +200,14 @@ export default function AddForm(props) {
     "Investor 5",
     "Investor 6",
   ];
+
+  const newData = NZData.map((object) => ({
+    city: object.city,
+  }));
+
+  for (let i = 0; i < newData.length; ++i) {
+    regions.push(newData[i].city);
+  }
 
   return (
     <Dialog open={addState} onClose={closeState}>
@@ -133,12 +228,13 @@ export default function AddForm(props) {
           variant="standard"
         />
         <Autocomplete
-          options={borrower}
+          options={borrowers}
           sx={{ width: 300, marginBottom: 3 }}
           renderInput={(params) => (
             <TextField {...params} label="Borrower" variant="standard" />
           )}
           variant="standard"
+          onChange={(e, v) => onChangeBorrower(v)}
         />
         <ConfigProvider
           theme={{
@@ -159,6 +255,7 @@ export default function AddForm(props) {
               marginBottom: 10,
               marginTop: 10,
             }}
+            onChange={(e) => onChangeDate(e)}
           />
         </ConfigProvider>
         <Autocomplete
@@ -169,6 +266,7 @@ export default function AddForm(props) {
           renderInput={(params) => (
             <TextField {...params} variant="standard" label="Investor(s)" />
           )}
+          onChange={(e, v) => onChangeInvestor(v)}
         />
         <TextField
           autoFocus
@@ -179,7 +277,7 @@ export default function AddForm(props) {
           sx={{
             "& .MuiTextField-root": { m: 1, width: "25ch" },
           }}
-          onChange={(e) => handleChange(e)}
+          onChange={(e) => onChangeInterest(e)}
           InputProps={{
             inputComponent: PercentageNumericFormat,
           }}
@@ -192,12 +290,11 @@ export default function AddForm(props) {
           type="text"
           label="Net Advanced $"
           sx={{ m: 1 }}
-          onChange={(e) => handleChange(e)}
+          onChange={(e) => onChangeNet(e)}
           InputProps={{
             inputComponent: CurrencyFormat,
           }}
           variant="standard"
-          startAdornment={<InputAdornment position="start">$</InputAdornment>}
           value="$0.00"
         />
         <TextField
@@ -208,6 +305,7 @@ export default function AddForm(props) {
           sx={{
             "& .MuiTextField-root": { m: 1, width: "25ch" },
           }}
+          onChange={(e) => onChangeManageFee(e)}
           InputProps={{
             inputComponent: CurrencyFormat,
           }}
@@ -220,6 +318,7 @@ export default function AddForm(props) {
           id="outlined-number"
           label="Broker Fee $"
           sx={{ m: 1 }}
+          onChange={(e) => onChangeBrokerFee(e)}
           InputProps={{
             inputComponent: CurrencyFormat,
           }}
@@ -234,6 +333,7 @@ export default function AddForm(props) {
           sx={{
             "& .MuiTextField-root": { m: 1, width: "25ch" },
           }}
+          onChange={(e) => onChangeLegalFee(e)}
           InputProps={{
             inputComponent: CurrencyFormat,
           }}
@@ -246,13 +346,28 @@ export default function AddForm(props) {
           id="outlined-number"
           label="Variation $"
           sx={{ m: 1 }}
+          onChange={(e) => onChangeVariation(e)}
           InputProps={{
             inputComponent: CurrencyFormat,
           }}
           variant="standard"
           value="$0.00"
         />
-        <FormControl variant="standard" sx={{ m: 0.49, width: 90 }}>
+        <Autocomplete
+          id="tags-standard"
+          sx={{ marginTop: 1 }}
+          options={regions}
+          onChange={(event, value) => onChangeRegion(value)}
+          renderInput={(params) => (
+            <TextField {...params} variant="standard" label="Region" />
+          )}
+          ListboxProps={{
+            style: {
+              maxHeight: "150px",
+            },
+          }}
+        />
+        <FormControl variant="standard" sx={{ marginTop: 3, width: "25ch" }}>
           <InputLabel>Capitilised</InputLabel>
           <Select value={cap} onChange={handleChangeCap} label="Capitilised">
             <MenuItem value={"Yes"}>Yes</MenuItem>
