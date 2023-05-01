@@ -75,7 +75,7 @@ export default function AddForm(props) {
   const [investor, setInvestor] = React.useState([]);
   const [interest, setInterest] = React.useState("");
   const [netAdv, setNetAdv] = React.useState("");
-  const [manageFee, setManageFee] = React.useState("");
+  const [lenderFee, setLenderFee] = React.useState("");
   const [brokerFee, setBrokerFee] = React.useState("");
   const [legalFee, setLegalFee] = React.useState("");
   const [variation, setVariation] = React.useState("");
@@ -114,8 +114,8 @@ export default function AddForm(props) {
     setNetAdv(e.target.value);
   };
 
-  const onChangeManageFee = (e) => {
-    setManageFee(e.target.value);
+  const onChangeLenderFee = (e) => {
+    setLenderFee(e.target.value);
   };
 
   const onChangeBrokerFee = (e) => {
@@ -149,7 +149,7 @@ export default function AddForm(props) {
       investor,
       interest,
       netAdv,
-      manageFee,
+      lenderFee,
       brokerFee,
       legalFee,
       variation,
@@ -163,7 +163,7 @@ export default function AddForm(props) {
     setInvestor([]);
     setInterest("");
     setNetAdv("");
-    setManageFee("");
+    setLenderFee("");
     setBrokerFee("");
     setLegalFee("");
     setVariation("");
@@ -180,7 +180,7 @@ export default function AddForm(props) {
     setInvestor([]);
     setInterest("");
     setNetAdv("");
-    setManageFee("");
+    setLenderFee("");
     setBrokerFee("");
     setLegalFee("");
     setVariation("");
@@ -301,11 +301,11 @@ export default function AddForm(props) {
           autoFocus
           margin="dense"
           id="outlined-number"
-          label="Management Fee $"
+          label="Lender Fee $"
           sx={{
             "& .MuiTextField-root": { m: 1, width: "25ch" },
           }}
-          onChange={(e) => onChangeManageFee(e)}
+          onChange={(e) => onChangeLenderFee(e)}
           InputProps={{
             inputComponent: CurrencyFormat,
           }}
