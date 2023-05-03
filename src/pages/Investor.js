@@ -368,7 +368,34 @@ function ExpandRow({children, expandComponent, ...otherProps}){
                   <Typography variant="h6" gutterBottom component="div">
                     More Information
                   </Typography>
-                  <p>{history}</p>
+
+                  <Table size="small" aria-label="purchases">
+                    <TableHead>
+
+                      {/*subtable title*/}
+                      <TableRow>
+                        <TableCell>IDXXX</TableCell>
+                        <TableCell>InvestorName</TableCell>
+                        <TableCell>Date</TableCell>
+                        <TableCell>Investor</TableCell>
+                        <TableCell align="right">Investor Amount</TableCell>
+                        <TableCell align="right">Active</TableCell>
+                      </TableRow>
+
+                    </TableHead>
+                    <TableBody>
+                    {row.history.map((historyRow) => (
+                      <TableRow key={historyRow.date}>
+                        <TableCell component="th" scope="row">
+                        {historyRow.date}
+                        </TableCell>
+                        <TableCell>{historyRow.loanId}</TableCell>
+                        <TableCell align="right">${historyRow.amount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
+                        <TableCell align="right">{historyRow.active}</TableCell>
+                      </TableRow>
+                      ))}
+                      </TableBody>
+            </Table>
             </Box>
           </Collapse>
         </TableCell>
