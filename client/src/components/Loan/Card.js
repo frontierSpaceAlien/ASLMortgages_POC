@@ -97,7 +97,7 @@ export default function Cards(props) {
           <Card sx={{ backgroundColor: bgcolor }}>
             <CardContent>
               <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Management Fee
+                Lender Fee
               </Typography>
               <Typography variant="h9" component="div" color="white">
                 $

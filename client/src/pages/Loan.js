@@ -85,7 +85,13 @@ var calculateRepayableCap = function (
   legal,
   int
 ) {
-  let result = variation + broker + manage + netAdv + legal + int;
+  let result =
+    Number(variation) +
+    Number(broker) +
+    Number(manage) +
+    Number(netAdv) +
+    Number(legal) +
+    Number(int);
   return result;
 };
 
@@ -96,12 +102,17 @@ var calculateRepayableNon = function (
   netAdv,
   legal
 ) {
-  let result = variation + broker + manage + netAdv + legal;
+  let result =
+    Number(variation) +
+    Number(broker) +
+    Number(manage) +
+    Number(netAdv) +
+    Number(legal);
   return result;
 };
 
 /** DUMMY DATA **/
-const rows = [
+const rowsDummy = [
   {
     id: 1,
     borrower: "John Stamos",
@@ -224,6 +235,7 @@ const columns = [
 
 export default function DataTable() {
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const [rows, setRow] = React.useState(rowsDummy);
   const [rowData, setRowData] = React.useState([]);
   const [modal, setModal] = React.useState(false);
   const [openAdd, setAdd] = React.useState(false);
@@ -264,6 +276,28 @@ export default function DataTable() {
     region,
     cap
   ) => {
+    const addRowData = {
+      id: Math.random(3, 500),
+      borrower: borrower,
+      capitalised: cap,
+      netadv: Number(netAdv),
+      intrate: interest,
+      interest: 0,
+      dailyInt: 0.0,
+      monthInt: 0.0,
+      manageFee: Number(lenderFee),
+      brokerFee: Number(brokerFee),
+      legalFee: Number(legalFee),
+      variation: Number(variation),
+      totalRepay: 0.0,
+      startdate: startDate,
+      enddate: endDate,
+      dayintdue: 13, // make it dynamic
+      loan: loanName,
+      active: "No", // make it dynamic 
+      investors: investor,
+    };
+    setRow([...rows, addRowData]);
     setAdd(false);
   };
 
@@ -419,21 +453,24 @@ export default function DataTable() {
                     result
                   );
 
-                  // checks if a loan is capitalised
-                  // tbh I still don't know how capitalised and non capitalised loans work.
-                  if (selectedRows[0].capitalised === "No") {
-                    selectedRows[0].monthInt = result / monthsConvert;
-                    selectedRows[0].totalRepay = totRepayNon;
-                  } else {
-                    selectedRows[0].monthInt = 0.0;
-                    selectedRows[0].totalRepay = totRepayCap;
-                  }
-
                   // converts interest rate before calculating daily interest
                   var intRateConvert = selectedRows[0].intrate / 100;
                   var dailyInterest =
                     (selectedRows[0].totalRepay * intRateConvert) / 365;
                   selectedRows[0].dailyInt = dailyInterest;
+
+                  // checks if a loan is capitalised
+                  // tbh I still don't know how capitalised and non capitalised loans work.
+                  if (selectedRows[0].capitalised === "No") {
+                    selectedRows[0].monthInt = result / monthsConvert;
+                    selectedRows[0].totalRepay = totRepayNon;
+                    // selectedRows[0].interest =
+                    //   (totRepayNon * intRateConvert) / 2;
+                    // selectedRows[0].monthInt = totRepayNon * intRateConvert;
+                  } else {
+                    selectedRows[0].monthInt = 0.0;
+                    selectedRows[0].totalRepay = totRepayCap;
+                  }
 
                   // this just sets a max of 6 investors on the loan page at a time.
                   for (let i = 0; i < selectedRows[0].investors.length; ++i) {
