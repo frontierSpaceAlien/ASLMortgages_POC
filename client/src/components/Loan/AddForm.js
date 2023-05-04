@@ -262,7 +262,11 @@ export default function AddForm(props) {
   };
 
   const handleClose = () => {
-    closeState();
+    const currDate = new Date().toLocaleDateString("en-GB", {
+      month: "numeric",
+    });
+    console.log(currDate);
+    // closeState();
     setLoanNameError(false);
     setBorrowerError(false);
     setStartError(false);

@@ -22,6 +22,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import Cards from "../components/Loan/Card";
 import Add from "../components/Loan/AddForm";
+import Months from "../data/months.json";
 
 const theme = createTheme({
   typography: {
@@ -64,19 +65,6 @@ const StyledDataGrid = styled(DataGrid)((theme) => ({
   },
 }));
 
-var calculateCompoundMonthlyInterest = function (p, r, t) {
-  // int = interest, not to be confused with integer.
-  var convertTimeMonths = t / 12;
-  var intConvertToDecimal = r / 100;
-  var intRate = 1 + intConvertToDecimal / 12;
-  var expo = 12 * convertTimeMonths;
-  var intExpo = Math.pow(intRate, expo);
-  var result = parseFloat(p * intExpo);
-  var interest = result - p;
-
-  return interest;
-};
-
 var calculateRepayableCap = function (
   variation,
   broker,
@@ -108,6 +96,46 @@ var calculateRepayableNon = function (
     Number(manage) +
     Number(netAdv) +
     Number(legal);
+  return result;
+};
+
+var calculateCompoundMonthlyInterest = function (p, r, t) {
+  // int = interest, not to be confused with integer.
+  var convertTimeMonths = t / 12;
+  var intConvertToDecimal = r / 100;
+  var intRate = 1 + intConvertToDecimal / 12;
+  var expo = 12 * convertTimeMonths;
+  var intExpo = Math.pow(intRate, expo);
+  var result = parseFloat(p * intExpo);
+  var interest = result - p;
+
+  return interest;
+};
+
+var calculateMonthlyInterest = function (repay, intRate) {
+  const currDate = new Date().toLocaleDateString("en-GB", {
+    month: "numeric",
+  });
+  let daysInMonths = [];
+  let monthResult = [];
+
+  const newData = Months.map((object) => ({
+    daysInMonth: object.daysInMonth,
+    months: object.monthNum,
+  }));
+
+  for (let i = 0; i < newData.length; ++i) {
+    daysInMonths.push(newData[i].daysInMonth);
+  }
+
+  for (let i = 0; i < newData.length; ++i) {
+    monthResult = daysInMonths[currDate - 1];
+    console.log(monthResult);
+  }
+
+  var interest = intRate / 100;
+  var result = ((repay * interest) / 365) * monthResult;
+
   return result;
 };
 
@@ -294,7 +322,7 @@ export default function DataTable() {
       enddate: endDate,
       dayintdue: 13, // make it dynamic
       loan: loanName,
-      active: "No", // make it dynamic 
+      active: "No", // make it dynamic
       investors: investor,
     };
     setRow([...rows, addRowData]);
@@ -425,6 +453,7 @@ export default function DataTable() {
                   );
                   var monthsConvert = months * -1;
 
+                  console.log(monthsConvert);
                   // calculates compound interest and saves it
                   // monthly interest is also calculated
                   var result = calculateCompoundMonthlyInterest(
