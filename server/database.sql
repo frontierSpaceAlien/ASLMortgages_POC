@@ -1,0 +1,11 @@
+CREATE DATABASE ASL;
+
+CREATE TABLE Investor(
+  id SERIAL PRIMARY KEY,
+  IRD VARCHAR(50),
+  Investor VARCHAR(50),
+  BankAccount VARCHAR(50),
+  RWT INT,
+  DOB VARCHAR(50),
+  Country VARCHAR(50),
+);
