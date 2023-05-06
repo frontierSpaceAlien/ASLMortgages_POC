@@ -51,10 +51,10 @@ export default function Cards(props) {
           <Card sx={{ backgroundColor: bgcolor }}>
             <CardContent>
               <Typography sx={{ fontSize: 14 }} color="white" gutterBottom>
-                Interest
+                Region
               </Typography>
               <Typography variant="h9" component="div" color="white">
-                ${data[0] === undefined ? "0.00" : data[0].interest}
+                {data[0] === undefined ? "Unknown" : data[0].region}
               </Typography>
             </CardContent>
           </Card>

@@ -9,12 +9,13 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { DatePicker, ConfigProvider } from "antd";
 import { NumericFormat } from "react-number-format";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import NZData from "../../data/nz.json";
-const { RangePicker } = DatePicker;
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 const PercentageNumericFormat = React.forwardRef(function NumericFormatCustom(
   props,
@@ -67,11 +68,65 @@ const CurrencyFormat = React.forwardRef(function NumericFormatCustom(
   );
 });
 
+function toISOLocal(d) {
+  var z = (n) => ("0" + n).slice(-2);
+  var zz = (n) => ("00" + n).slice(-3);
+  var off = d.getTimezoneOffset();
+  var sign = off > 0 ? "-" : "+";
+  off = Math.abs(off);
+
+  return (
+    d.getFullYear() +
+    "-" +
+    z(d.getMonth() + 1) +
+    "-" +
+    z(d.getDate()) +
+    "T" +
+    z(d.getHours()) +
+    ":" +
+    z(d.getMinutes()) +
+    ":" +
+    z(d.getSeconds()) +
+    "." +
+    zz(d.getMilliseconds()) +
+    sign +
+    z((off / 60) | 0) +
+    ":" +
+    z(off % 60)
+  );
+}
+
+function addYears(date, years) {
+  const dateCopy = new Date(date);
+  dateCopy.setFullYear(dateCopy.getFullYear() + Number(years));
+  return dateCopy;
+}
+
+function addMonth(date, month) {
+  const dateCopy = new Date(date);
+  dateCopy.setMonth(dateCopy.getMonth() + Number(month));
+  return dateCopy;
+}
+
+function subtractYears(date, years) {
+  const dateCopy = new Date(date);
+  dateCopy.setFullYear(dateCopy.getFullYear() - Number(years));
+  return dateCopy;
+}
+
+function subtractMonths(date, month) {
+  const dateCopy = new Date(date);
+  dateCopy.setMonth(dateCopy.getMonth() - Number(month));
+  return dateCopy;
+}
+
 export default function AddForm(props) {
   const [loanName, setLoanName] = React.useState("");
   const [borrower, setBorrower] = React.useState("");
   const [startDate, setStartDate] = React.useState("");
   const [endDate, setEndDate] = React.useState("");
+  const [year, setYear] = React.useState("");
+  const [month, setMonth] = React.useState("");
   const [investor, setInvestor] = React.useState([]);
   const [interest, setInterest] = React.useState("");
   const [netAdv, setNetAdv] = React.useState(0);
@@ -81,11 +136,12 @@ export default function AddForm(props) {
   const [variation, setVariation] = React.useState(0);
   const [region, setRegion] = React.useState("");
   const [cap, setCap] = React.useState("");
-  const formRef = React.useRef();
   const [errorLoanName, setLoanNameError] = React.useState(false);
   const [errorBorrower, setBorrowerError] = React.useState(false);
   const [errorStart, setStartError] = React.useState(false);
   const [errorEnd, setEndError] = React.useState(false);
+  const [errorYear, setErrorYear] = React.useState(false);
+  const [errorMonth, setErrorMonth] = React.useState(false);
   const [errorInterest, setErrorInterest] = React.useState(false);
   const [errorNet, setErrorNet] = React.useState(false);
   const [errorLender, setErrorLender] = React.useState(false);
@@ -94,11 +150,17 @@ export default function AddForm(props) {
   const [errorVariation, setErrorVariation] = React.useState(false);
   const [errorRegion, setErrorRegion] = React.useState(false);
   const [errorCap, setErrorCap] = React.useState(false);
+  const [disabledField, setDisabledField] = React.useState(true);
+  const [saveDateState, setSaveDateState] = React.useState(null);
+  const [saveMonthState, setSaveMonthState] = React.useState(null);
+  const formRef = React.useRef();
 
   const { borrowerData, addState, closeState, submitState } = props;
 
   var regions = [];
   var borrowers = [];
+
+  const dateFormat = "YYYY-MM-DD";
 
   /************************HANDLES ALL FORM FIELD ************************************/
 
@@ -112,11 +174,112 @@ export default function AddForm(props) {
     setBorrowerError(false);
   };
 
-  const onChangeDate = (range) => {
-    setStartDate(range[0].format("DD/MM/YYYY"));
-    setEndDate(range[1].format("DD/MM/YYYY"));
+  const onChangeDate = (e) => {
+    setStartDate(e);
     setStartError(false);
     setEndError(false);
+    if (e === null) {
+      setDisabledField(true);
+      setMonth("");
+      console.log(e);
+      console.log(disabledField);
+    } else {
+      setDisabledField(false);
+    }
+  };
+
+  const onChangeYear = (e) => {
+    setYear(e.target.value);
+
+    if (month === "0" || month.trim().length === 0) {
+      const newDate = addYears(startDate, e.target.value);
+      const stringDate = newDate.toISOString().split("T")[0];
+      const dateNew = dayjs(stringDate, dateFormat);
+      setSaveDateState(dateNew);
+      setEndDate(dateNew);
+    } else {
+      if (e.target.value === "0" || e.target.value.trim().length === 0) {
+        const subDate = subtractYears(saveMonthState, e.target.value);
+        const stringDate = toISOLocal(subDate).split("T")[0];
+        const dateNew = dayjs(stringDate, dateFormat);
+        const startDateString = startDate.toISOString().split("T")[0];
+
+        if (startDateString.split("-")[0] < stringDate) {
+          var originalDate = startDateString.split("-")[0];
+          var modifiedDate = stringDate.split("-")[0];
+
+          const differenceBetweenYears =
+            Number(modifiedDate) - Number(originalDate);
+
+          const newModifiedDate = subtractYears(
+            stringDate,
+            differenceBetweenYears
+          );
+          const convert = toISOLocal(newModifiedDate).split("T")[0];
+          const newStuff = dayjs(convert, dateFormat);
+
+          setEndDate(newStuff);
+        } else {
+          setSaveDateState(dateNew);
+          setEndDate(dateNew);
+        }
+      } else {
+        const newDate = addYears(saveMonthState, e.target.value);
+        const stringDate = toISOLocal(newDate).split("T")[0];
+        const dateNew = dayjs(stringDate, dateFormat);
+        setSaveDateState(dateNew);
+        setEndDate(dateNew);
+      }
+    }
+
+    setErrorYear(false);
+  };
+
+  const onChangeMonth = (e) => {
+    setMonth(e);
+
+    if (year === "0" || year.trim().length === 0) {
+      const newDate = addMonth(startDate, e);
+      const stringDate = newDate.toISOString().split("T")[0];
+      const dateNew = dayjs(stringDate, dateFormat);
+      setSaveMonthState(dateNew);
+      setEndDate(dateNew);
+    } else {
+      if (e === "0" || e.trim().length === 0) {
+        const subDate = subtractYears(saveMonthState, e);
+        const stringDate = toISOLocal(subDate).split("T")[0];
+        const dateNew = dayjs(stringDate, dateFormat);
+        const startDateString = startDate.toISOString().split("T")[0];
+
+        if (startDateString.split("-")[0] < stringDate) {
+          var originalDate = startDateString.split("-")[1];
+          var modifiedDate = stringDate.split("-")[1];
+
+          const differenceBetweenMonths =
+            Number(modifiedDate) - Number(originalDate);
+
+          const newModifiedDate = subtractMonths(
+            stringDate,
+            differenceBetweenMonths
+          );
+          const convert = toISOLocal(newModifiedDate).split("T")[0];
+          const newStuff = dayjs(convert, dateFormat);
+
+          setEndDate(newStuff);
+        } else {
+          setSaveDateState(dateNew);
+          setEndDate(dateNew);
+        }
+      } else {
+        const newDate = addMonth(saveDateState, e);
+        const stringDate = toISOLocal(newDate).split("T")[0];
+        const dateNew = dayjs(stringDate, dateFormat);
+        setSaveMonthState(dateNew);
+        setEndDate(dateNew);
+      }
+    }
+
+    setErrorMonth(false);
   };
 
   const onChangeInvestor = (e) => {
@@ -202,6 +365,12 @@ export default function AddForm(props) {
     if (cap === "") {
       setErrorCap(true);
     }
+    if (year === "") {
+      setErrorYear(true);
+    }
+    if (month === "") {
+      setErrorMonth(true);
+    }
 
     if (
       loanName !== "" &&
@@ -215,7 +384,9 @@ export default function AddForm(props) {
       legalFee !== "" &&
       variation !== "" &&
       region !== "" &&
-      cap !== ""
+      cap !== "" &&
+      year !== "" &&
+      month !== ""
     ) {
       submitState(
         loanName,
@@ -236,6 +407,8 @@ export default function AddForm(props) {
       setBorrower("");
       setStartDate("");
       setEndDate("");
+      setYear("");
+      setMonth("");
       setInvestor([]);
       setInterest("");
       setNetAdv("");
@@ -249,7 +422,6 @@ export default function AddForm(props) {
       setLoanNameError(false);
       setBorrowerError(false);
       setStartError(false);
-      setEndDate(false);
       setErrorInterest(false);
       setErrorNet(false);
       setErrorLender(false);
@@ -262,15 +434,10 @@ export default function AddForm(props) {
   };
 
   const handleClose = () => {
-    const currDate = new Date().toLocaleDateString("en-GB", {
-      month: "numeric",
-    });
-    console.log(currDate);
-    // closeState();
+    closeState();
     setLoanNameError(false);
     setBorrowerError(false);
     setStartError(false);
-    setEndDate(false);
     setErrorInterest(false);
     setErrorNet(false);
     setErrorLender(false);
@@ -283,6 +450,8 @@ export default function AddForm(props) {
     setBorrower("");
     setStartDate("");
     setEndDate("");
+    setYear("");
+    setMonth("");
     setInvestor([]);
     setInterest("");
     setNetAdv("");
@@ -322,192 +491,242 @@ export default function AddForm(props) {
         <Typography sx={{ color: "gray", fontSize: 15, marginBottom: 0.5 }}>
           * Required Fields
         </Typography>
-        <form ref={formRef}>
-          <TextField
-            error={errorLoanName}
-            required
-            value={loanName}
-            onChange={(e) => onChangeLoanName(e)}
-            autoFocus
-            margin="dense"
-            id="outlined-required"
-            label="Loan Name"
-            type="name"
-            fullWidth
-            variant="standard"
-          />
-          <Autocomplete
-            required
-            options={borrowers}
-            sx={{ width: 300, marginBottom: 3 }}
-            renderInput={(params) => (
-              <TextField
-                error={errorBorrower}
-                {...params}
-                label="Borrower *"
-                variant="standard"
-              />
-            )}
-            variant="standard"
-            onChange={(e, v) => onChangeBorrower(v)}
-          />
-          <ConfigProvider
-            theme={{
-              token: {
-                colorBorder: "grey",
-                colorPrimaryHover: "black",
-                colorTextPlaceholder: "grey",
-              },
-            }}
-          >
-            <RangePicker
-              getPopupContainer={(triggerNode) => {
-                return triggerNode.parentNode;
-              }}
-              size={"large"}
-              style={{
-                colorBorder: "black",
-                marginBottom: 10,
-                marginTop: 10,
-              }}
-              onChange={(e) => onChangeDate(e)}
-            />
-          </ConfigProvider>
-          <Autocomplete
-            required
-            multiple
-            id="tags-standard"
-            sx={{ marginTop: 1 }}
-            options={tempInvestors}
-            renderInput={(params) => (
-              <TextField {...params} variant="standard" label="Investor(s)" />
-            )}
-            onChange={(e, v) => onChangeInvestor(v)}
-          />
-          <TextField
-            required
-            error={errorInterest}
-            autoFocus
-            margin="dense"
-            id="outlined-number"
-            type="text"
-            label="Interest Rate %"
-            sx={{
-              "& .MuiTextField-root": { m: 1, width: "25ch" },
-            }}
-            onChange={(e) => onChangeInterest(e)}
-            InputProps={{
-              inputComponent: PercentageNumericFormat,
-            }}
-            variant="standard"
-          />
-          <TextField
-            error={errorNet}
-            autoFocus
-            margin="dense"
-            id="outlined-number"
-            type="text"
-            label="Net Advanced $ *"
-            sx={{ m: 1 }}
-            onChange={(e) => onChangeNet(e)}
-            InputProps={{
-              inputComponent: CurrencyFormat,
-            }}
-            variant="standard"
-            value="$0.00"
-          />
-          <TextField
-            error={errorLender}
-            autoFocus
-            margin="dense"
-            id="outlined-number"
-            label="Lender Fee $ *"
-            sx={{
-              "& .MuiTextField-root": { m: 1, width: "25ch" },
-            }}
-            onChange={(e) => onChangeLenderFee(e)}
-            InputProps={{
-              inputComponent: CurrencyFormat,
-            }}
-            value="$0.00"
-            variant="standard"
-          />
-          <TextField
-            error={errorBroker}
-            autoFocus
-            margin="dense"
-            id="outlined-number"
-            label="Broker Fee $ *"
-            sx={{ m: 1 }}
-            onChange={(e) => onChangeBrokerFee(e)}
-            InputProps={{
-              inputComponent: CurrencyFormat,
-            }}
-            value="$0.00"
-            variant="standard"
-          />
-          <TextField
-            error={errorLegal}
-            autoFocus
-            margin="dense"
-            id="outlined-number"
-            label="Legal Fee $ *"
-            sx={{
-              "& .MuiTextField-root": { m: 1, width: "25ch" },
-            }}
-            onChange={(e) => onChangeLegalFee(e)}
-            InputProps={{
-              inputComponent: CurrencyFormat,
-            }}
-            value="$0.00"
-            variant="standard"
-          />
-          <TextField
-            error={errorVariation}
-            autoFocus
-            margin="dense"
-            id="outlined-number"
-            label="Variation $ *"
-            sx={{ m: 1 }}
-            onChange={(e) => onChangeVariation(e)}
-            InputProps={{
-              inputComponent: CurrencyFormat,
-            }}
-            variant="standard"
-            value="$0.00"
-          />
-          <Autocomplete
-            id="tags-standard"
-            sx={{ marginTop: 1 }}
-            options={regions}
-            onChange={(event, value) => onChangeRegion(value)}
-            renderInput={(params) => (
-              <TextField
-                error={errorRegion}
-                {...params}
-                variant="standard"
-                label="Region *"
-              />
-            )}
-            ListboxProps={{
-              style: {
-                maxHeight: "150px",
-              },
-            }}
-          />
-          <FormControl variant="standard" sx={{ marginTop: 3, width: "25ch" }}>
+        <Typography sx={{ color: "black", fontSize: 20 }}>
+          Loan Information
+        </Typography>
+        <TextField
+          error={errorLoanName}
+          required
+          value={loanName}
+          onChange={(e) => onChangeLoanName(e)}
+          autoFocus
+          margin="dense"
+          id="outlined-required"
+          label="Loan Name"
+          type="name"
+          fullWidth
+          variant="standard"
+        />
+        <Autocomplete
+          required
+          options={borrowers}
+          sx={{ width: 300 }}
+          renderInput={(params) => (
             <TextField
+              error={errorBorrower}
+              {...params}
+              label="Borrower *"
               variant="standard"
-              label="Capitalised *"
-              select
-              error={errorCap}
-              onChange={(e) => handleChangeCap(e)}
-            >
-              <MenuItem value={"Yes"}>Yes</MenuItem>
-              <MenuItem value={"No"}>No</MenuItem>
-            </TextField>
-          </FormControl>
-        </form>
+            />
+          )}
+          variant="standard"
+          onChange={(e, v) => onChangeBorrower(v)}
+        />
+        <Autocomplete
+          required
+          multiple
+          id="tags-standard"
+          sx={{ marginTop: 1 }}
+          options={tempInvestors}
+          renderInput={(params) => (
+            <TextField {...params} variant="standard" label="Investor(s)" />
+          )}
+          onChange={(e, v) => onChangeInvestor(v)}
+        />
+        <Autocomplete
+          id="tags-standard"
+          options={regions}
+          sx={{ marginTop: 1 }}
+          onChange={(event, value) => onChangeRegion(value)}
+          renderInput={(params) => (
+            <TextField
+              error={errorRegion}
+              {...params}
+              variant="standard"
+              label="Region *"
+            />
+          )}
+          ListboxProps={{
+            style: {
+              maxHeight: "150px",
+            },
+          }}
+        />
+        <FormControl
+          variant="standard"
+          sx={{ marginTop: 1, width: "25ch", marginBottom: 3 }}
+        >
+          <TextField
+            variant="standard"
+            label="Capitalised *"
+            sx={{ width: 300 }}
+            select
+            error={errorCap}
+            onChange={(e) => handleChangeCap(e)}
+          >
+            <MenuItem value={"Yes"}>Yes</MenuItem>
+            <MenuItem value={"No"}>No</MenuItem>
+          </TextField>
+        </FormControl>
+        <Typography sx={{ color: "black", fontSize: 20, marginBottom: 2 }}>
+          Loan Term
+        </Typography>
+        <ConfigProvider
+          theme={{
+            token: {
+              colorBorder: "grey",
+              colorPrimaryHover: "black",
+              colorTextPlaceholder: "grey",
+            },
+          }}
+        >
+          <DatePicker
+            getPopupContainer={(triggerNode) => {
+              return triggerNode.parentNode;
+            }}
+            size={"large"}
+            style={{
+              colorBorder: "black",
+              marginBottom: 10,
+            }}
+            onChange={(e) => onChangeDate(e)}
+            placeholder="Select start date *"
+          />
+          <DatePicker
+            disabled
+            getPopupContainer={(triggerNode) => {
+              return triggerNode.parentNode;
+            }}
+            size={"large"}
+            style={{
+              colorBorder: "black",
+              marginBottom: 10,
+            }}
+            value={endDate}
+            placeholder="End Date"
+          />
+        </ConfigProvider>
+        <TextField
+          disabled={disabledField}
+          error={errorYear}
+          value={year}
+          onChange={(e) => onChangeYear(e)}
+          autoFocus
+          sx={{ marginRight: 1, marginBottom: 4 }}
+          margin="dense"
+          id="outlined-required"
+          label="Year(s)"
+          type="name"
+          variant="standard"
+        />
+        <TextField
+          disabled={disabledField}
+          error={errorMonth}
+          required
+          value={month}
+          onChange={(e) => onChangeMonth(e.target.value)}
+          autoFocus
+          margin="dense"
+          id="outlined-required"
+          label="Month(s)"
+          type="name"
+          variant="standard"
+        />
+        <Typography sx={{ color: "black", fontSize: 20 }}>
+          Loan Details
+        </Typography>
+        <TextField
+          required
+          error={errorInterest}
+          autoFocus
+          margin="dense"
+          id="outlined-number"
+          type="text"
+          label="Interest Rate %"
+          sx={{
+            "& .MuiTextField-root": { m: 1, width: "25ch" },
+          }}
+          onChange={(e) => onChangeInterest(e)}
+          InputProps={{
+            inputComponent: PercentageNumericFormat,
+          }}
+          variant="standard"
+        />
+        <TextField
+          error={errorNet}
+          autoFocus
+          margin="dense"
+          id="outlined-number"
+          type="text"
+          label="Net Advanced $ *"
+          sx={{ m: 1 }}
+          onChange={(e) => onChangeNet(e)}
+          InputProps={{
+            inputComponent: CurrencyFormat,
+          }}
+          variant="standard"
+          value="$0.00"
+        />
+        <TextField
+          error={errorLender}
+          autoFocus
+          margin="dense"
+          id="outlined-number"
+          label="Lender Fee $ *"
+          sx={{
+            "& .MuiTextField-root": { m: 1, width: "25ch" },
+          }}
+          onChange={(e) => onChangeLenderFee(e)}
+          InputProps={{
+            inputComponent: CurrencyFormat,
+          }}
+          value="$0.00"
+          variant="standard"
+        />
+        <TextField
+          error={errorBroker}
+          autoFocus
+          margin="dense"
+          id="outlined-number"
+          label="Broker Fee $ *"
+          sx={{ m: 1 }}
+          onChange={(e) => onChangeBrokerFee(e)}
+          InputProps={{
+            inputComponent: CurrencyFormat,
+          }}
+          value="$0.00"
+          variant="standard"
+        />
+        <TextField
+          error={errorLegal}
+          autoFocus
+          margin="dense"
+          id="outlined-number"
+          label="Legal Fee $ *"
+          sx={{
+            "& .MuiTextField-root": { m: 1, width: "25ch" },
+          }}
+          onChange={(e) => onChangeLegalFee(e)}
+          InputProps={{
+            inputComponent: CurrencyFormat,
+          }}
+          value="$0.00"
+          variant="standard"
+        />
+        <TextField
+          error={errorVariation}
+          autoFocus
+          margin="dense"
+          id="outlined-number"
+          label="Variation $ *"
+          sx={{ m: 1 }}
+          onChange={(e) => onChangeVariation(e)}
+          InputProps={{
+            inputComponent: CurrencyFormat,
+          }}
+          variant="standard"
+          value="$0.00"
+        />
       </DialogContent>
       <DialogActions>
         <Button sx={{ color: "red" }} onClick={handleClose}>

@@ -177,6 +177,7 @@ const rowsDummy = [
       "Investor 14",
       "Investor 15",
     ],
+    region: "Waikato",
   },
   {
     id: 2,
@@ -204,6 +205,7 @@ const rowsDummy = [
       "Investor 6",
       "Investor 10",
     ],
+    region: "Wellington",
   },
 ];
 
@@ -304,6 +306,17 @@ export default function DataTable() {
     region,
     cap
   ) => {
+    const startMonth = new Date(startDate);
+    const endMonth = new Date(endDate);
+
+    var date = new Date();
+
+    if (startMonth.getMonth() === endMonth.getMonth()) {
+      date = endMonth.getDate();
+    } else {
+      date = startMonth.getDate();
+    }
+
     const addRowData = {
       id: Math.random(3, 500),
       borrower: borrower,
@@ -318,14 +331,16 @@ export default function DataTable() {
       legalFee: Number(legalFee),
       variation: Number(variation),
       totalRepay: 0.0,
-      startdate: startDate,
-      enddate: endDate,
-      dayintdue: 13, // make it dynamic
+      startdate: startDate.format("DD/MM/YYYY"),
+      enddate: endDate.format("DD/MM/YYYY"),
+      dayintdue: date,
       loan: loanName,
       active: "No", // make it dynamic
       investors: investor,
+      region: region,
     };
     setRow([...rows, addRowData]);
+    console.log(investor);
     setAdd(false);
   };
 
@@ -435,32 +450,33 @@ export default function DataTable() {
                   // resets the arrays so it doesn't add to existing data.
                   col1 = [];
 
-                  // parse date to be able to get the difference between two dates
-                  // also converts the final result from a negative int to a positive int
-                  const startDateFormat = parse(
-                    selectedRows[0].startdate,
-                    "dd/MM/yyyy",
-                    new Date()
-                  );
-                  const endDateFormat = parse(
-                    selectedRows[0].enddate,
-                    "dd/MM/yyyy",
-                    new Date()
-                  );
-                  var months = differenceInMonths(
-                    startDateFormat,
-                    endDateFormat
-                  );
-                  var monthsConvert = months * -1;
+                  // // parse date to be able to get the difference between two dates
+                  // // also converts the final result from a negative int to a positive int
+                  // const startDateFormat = parse(
+                  //   selectedRows[0].startdate,
+                  //   "dd/MM/yyyy",
+                  //   new Date()
+                  // );
+                  // const endDateFormat = parse(
+                  //   selectedRows[0].enddate,
+                  //   "dd/MM/yyyy",
+                  //   new Date()
+                  // );
+                  // var months = differenceInMonths(
+                  //   startDateFormat,
+                  //   endDateFormat
+                  // );
+                  // var monthsConvert = months * -1;
 
-                  console.log(monthsConvert);
+                  // console.log(monthsConvert);
+
                   // calculates compound interest and saves it
                   // monthly interest is also calculated
-                  var result = calculateCompoundMonthlyInterest(
+                  var result = calculateMonthlyInterest(
                     selectedRows[0].netadv,
-                    selectedRows[0].intrate,
-                    monthsConvert
+                    selectedRows[0].intrate
                   );
+
                   selectedRows[0].interest = result.toLocaleString(undefined, {
                     maximumFractionDigits: 2,
                   });
@@ -491,7 +507,7 @@ export default function DataTable() {
                   // checks if a loan is capitalised
                   // tbh I still don't know how capitalised and non capitalised loans work.
                   if (selectedRows[0].capitalised === "No") {
-                    selectedRows[0].monthInt = result / monthsConvert;
+                    selectedRows[0].monthInt = result;
                     selectedRows[0].totalRepay = totRepayNon;
                     // selectedRows[0].interest =
                     //   (totRepayNon * intRateConvert) / 2;
@@ -510,6 +526,7 @@ export default function DataTable() {
                     }
                   }
                   setSelectedRows(selectedRows);
+                  console.log(selectedRows[0].region);
                 }
               }}
               {...rows}
@@ -547,7 +564,8 @@ export default function DataTable() {
                   sx={{ marginLeft: 1, color: "white", fontSize: 14 }}
                 >
                   <div>
-                    {selectedRows[0] === undefined
+                    {selectedRows[0] === undefined ||
+                    selectedRows[0].investors.length === 0
                       ? "Investor(s) not found"
                       : col1.map((investor) => {
                           return <li>{investor}</li>;
