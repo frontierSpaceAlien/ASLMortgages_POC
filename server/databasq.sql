@@ -36,17 +36,17 @@ CREATE TABLE loan(
     endDate DATE,
     dayIntDue FLOAT,
     loan VARCHAR(255),
-    active BOOLEAN, 
+    active VARCHAR(255), 
     investors VARCHAR(255)[],
     region VARCHAR(255)
 );
 
-INSERT INTO loan (capitalised, netAdv, intRate, interest, dailyInt, monthInt, manageFee, brokerFee, legalFee, variation, totalRepay, startDate, endDate, dayIntDue, loan, active, investors)
-VALUES (TRUE, 326860.2, 14.95, '0', 0.0, 0.0, 7000, 0.0, 0.0, 0.0, 0.0, '2022-03-10', '2022-03-10', 10, 'Stamos2022', 'Yes', ARRAY[  
+INSERT INTO loan (id, borrower, capitalised, netAdv, intRate, interest, dailyInt, monthInt, manageFee, brokerFee, legalFee, variation, totalRepay, startDate, endDate, dayIntDue, loan, active, investors,region)
+VALUES (DEFAULT, 'John Stamos', 'Yes', 326860.2, 14.95, '0', 0.0, 0.0, 7000, 0.0, 0.0, 0.0, 0.0, '2022-03-10', '2022-03-10', 10, 'Stamos2022', 'Yes', ARRAY[  
       'ASL Mortgages Limited_Niehaus Family Trust 2',
       'Investor 2_Niehaus Family Trust 2',
       'Tenki Trust_Niehaus Family Trust 2',
       'Investor 4',
       'Investor 5',
       'Investor 6'
-]);
+], 'Wellington');

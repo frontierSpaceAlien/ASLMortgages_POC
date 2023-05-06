@@ -69,7 +69,7 @@ export default function Cards(props) {
                 $
                 {data[0] === undefined
                   ? "0.00"
-                  : data[0].dailyInt.toLocaleString(undefined, {
+                  : data[0].dailyint.toLocaleString(undefined, {
                       maximumFractionDigits: 2,
                     })}
               </Typography>
@@ -86,7 +86,7 @@ export default function Cards(props) {
                 $
                 {data[0] === undefined
                   ? "0.00"
-                  : data[0].monthInt.toLocaleString(undefined, {
+                  : data[0].monthint.toLocaleString(undefined, {
                       maximumFractionDigits: 2,
                     })}
               </Typography>
@@ -103,7 +103,7 @@ export default function Cards(props) {
                 $
                 {data[0] === undefined
                   ? "0.00"
-                  : data[0].manageFee.toLocaleString(undefined, {
+                  : data[0].managefee.toLocaleString(undefined, {
                       maximumFractionDigits: 2,
                     })}
               </Typography>
@@ -120,7 +120,7 @@ export default function Cards(props) {
                 $
                 {data[0] === undefined
                   ? "0.00"
-                  : data[0].brokerFee.toLocaleString(undefined, {
+                  : data[0].brokerfee.toLocaleString(undefined, {
                       maximumFractionDigits: 2,
                     })}
               </Typography>
@@ -137,7 +137,7 @@ export default function Cards(props) {
                 $
                 {data[0] === undefined
                   ? "0.00"
-                  : data[0].legalFee.toLocaleString(undefined, {
+                  : data[0].legalfee.toLocaleString(undefined, {
                       maximumFractionDigits: 2,
                     })}
               </Typography>
@@ -171,7 +171,7 @@ export default function Cards(props) {
                 $
                 {data[0] === undefined
                   ? "0.00"
-                  : data[0].totalRepay.toLocaleString(undefined, {
+                  : data[0].totalrepay.toLocaleString(undefined, {
                       maximumFractionDigits: 2,
                     })}
               </Typography>

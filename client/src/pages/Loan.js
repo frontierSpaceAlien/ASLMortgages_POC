@@ -264,7 +264,6 @@ const columns = [
   },
 ];
 
-
 export default function DataTable() {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [rows, setRow] = React.useState([]);
@@ -279,7 +278,7 @@ export default function DataTable() {
         setRowData(response.data.data.borrower);
 
         const responseLoan = await LoanFinder.get("/");
-        setRow(responseLoan.data.data.loan);
+        setRow(responseLoan.data.data.loan);
 
         console.log(responseLoan);
       } catch (err) {
@@ -517,37 +516,37 @@ export default function DataTable() {
                   // calculates repayable on capitalised and non capitalised loans
                   var totRepayNon = calculateRepayableNon(
                     selectedRows[0].variation,
-                    selectedRows[0].brokerFee,
-                    selectedRows[0].manageFee,
+                    selectedRows[0].brokerfee,
+                    selectedRows[0].managefee,
                     selectedRows[0].netadv,
-                    selectedRows[0].legalFee
+                    selectedRows[0].legalfee
                   );
                   var totRepayCap = calculateRepayableCap(
                     selectedRows[0].variation,
-                    selectedRows[0].brokerFee,
-                    selectedRows[0].manageFee,
+                    selectedRows[0].brokerfee,
+                    selectedRows[0].managefee,
                     selectedRows[0].netadv,
-                    selectedRows[0].legalFee,
+                    selectedRows[0].legalfee,
                     result
                   );
 
                   // converts interest rate before calculating daily interest
                   var intRateConvert = selectedRows[0].intrate / 100;
                   var dailyInterest =
-                    (selectedRows[0].totalRepay * intRateConvert) / 365;
-                  selectedRows[0].dailyInt = dailyInterest;
+                    (selectedRows[0].totalrepay * intRateConvert) / 365;
+                  selectedRows[0].dailyint = dailyInterest;
 
                   // checks if a loan is capitalised
                   // tbh I still don't know how capitalised and non capitalised loans work.
                   if (selectedRows[0].capitalised === "No") {
-                    selectedRows[0].monthInt = result;
-                    selectedRows[0].totalRepay = totRepayNon;
+                    selectedRows[0].monthint = result;
+                    selectedRows[0].totalrepay = totRepayNon;
                     // selectedRows[0].interest =
                     //   (totRepayNon * intRateConvert) / 2;
                     // selectedRows[0].monthInt = totRepayNon * intRateConvert;
                   } else {
-                    selectedRows[0].monthInt = 0.0;
-                    selectedRows[0].totalRepay = totRepayCap;
+                    selectedRows[0].monthint = 0.0;
+                    selectedRows[0].totalrepay = totRepayCap;
                   }
 
                   // this just sets a max of 6 investors on the loan page at a time.
