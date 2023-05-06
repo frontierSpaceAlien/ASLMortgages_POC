@@ -44,7 +44,6 @@ app.get("/borrower/:id", async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-
 });
 
 // create a borrower
@@ -189,6 +188,79 @@ app.delete("/investor/:id", async (req, res) => {
         res.status(204).json({
             status: "success", 
         });
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+// LOANS
+//Get all loans
+app.get("/loan", async (req, res) => {
+    try {
+        const results = await db.query("SELECT * FROM loan")
+        console.log(results);
+        res.status(200).json({
+            status: "success", 
+            data: {
+                loan: results.rows,
+            },
+        });  
+    } catch (err) {
+        console.error(err);        
+    }
+});
+
+//Get a Loan
+app.get("/loan/:id", async (req, res) => {
+    try {
+        const results = await db.query("SELECT * FROM loan WHERE investor_id = $1", [req.params.id]);
+        res.status(200).json({
+            status: "success",
+            data: {
+                loan: results.rows[0],
+            },    
+        })
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+//Create a Loan
+app.post("/loan", async(req, res) => {
+    console.log(req.body);
+
+    try {
+        const results = await db.query(
+            "INSERT INTO loan (borrower, capitalised, netAdv, intRate, interest, dailyInt, monthInt, manageFee, brokerFee, legalFee, variation, totalRepay, startDate, endDate, dayIntDue, loan, active, investors, region) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19) returning *",
+                 [
+                    req.body.borrower,
+                    req.body.capitalised, 
+                    req.body.netAdv, 
+                    req.body.intRate, 
+                    req.body.interest, 
+                    req.body.dailyInt, 
+                    req.body.monthInt, 
+                    req.body.manageFee, 
+                    req.body.brokerFee,
+                    req.body.legalFee,  
+                    req.body.variation, 
+                    req.body.totalRepay, 
+                    req.body.startDate, 
+                    req.body.endDate,
+                    req.body.dayIntDue,
+                    req.body.loan,
+                    req.body.active,
+                    req.body.investors,
+                    req.body.region
+                ]
+        );
+        console.log(results);        
+        res.status(201).json({
+            status: "success",
+            data: {
+                loan: results.rows[0],
+            },    
+        })
     } catch (err) {
         console.error(err);
     }
