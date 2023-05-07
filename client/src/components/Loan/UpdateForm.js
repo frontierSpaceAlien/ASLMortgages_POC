@@ -120,7 +120,7 @@ function subtractMonths(date, month) {
   return dateCopy;
 }
 
-export default function AddForm(props) {
+export default function UpdateForm(props) {
   const [loanName, setLoanName] = React.useState("");
   const [borrower, setBorrower] = React.useState("");
   const [startDate, setStartDate] = React.useState("");
@@ -138,7 +138,7 @@ export default function AddForm(props) {
   const [cap, setCap] = React.useState("");
   const [errorLoanName, setLoanNameError] = React.useState(false);
   const [errorBorrower, setBorrowerError] = React.useState(false);
-  const [errorStart, setStartError] = React.useState("");
+  const [errorStart, setStartError] = React.useState(false);
   const [errorEnd, setEndError] = React.useState(false);
   const [errorYear, setErrorYear] = React.useState(false);
   const [errorMonth, setErrorMonth] = React.useState(false);
@@ -155,7 +155,7 @@ export default function AddForm(props) {
   const [saveMonthState, setSaveMonthState] = React.useState(null);
   const formRef = React.useRef();
 
-  const { borrowerData, addState, closeState, submitState } = props;
+  const { borrowerData, updateState, closeUpdate, loanData } = props;
 
   var regions = [];
   var borrowers = [];
@@ -167,6 +167,7 @@ export default function AddForm(props) {
   const onChangeLoanName = (e) => {
     setLoanName(e.target.value);
     setLoanNameError(false);
+    console.log(loanData.investors);
   };
 
   const onChangeBorrower = (e) => {
@@ -176,10 +177,10 @@ export default function AddForm(props) {
 
   const onChangeDate = (e) => {
     setStartDate(e);
+    setStartError(false);
     setEndError(false);
     if (e === null) {
       setDisabledField(true);
-      setStartError("error");
       console.log(e);
       console.log(disabledField);
     } else {
@@ -344,10 +345,10 @@ export default function AddForm(props) {
     if (borrower === "") {
       setBorrowerError(true);
     }
-    if (startDate === null) {
+    if (startDate === "") {
       setStartError(true);
     }
-    if (endDate === null) {
+    if (endDate === "") {
       setEndDate(true);
     }
     if (interest === "") {
@@ -384,8 +385,8 @@ export default function AddForm(props) {
     if (
       loanName !== "" &&
       borrower !== "" &&
-      startDate !== null &&
-      endDate !== null &&
+      startDate !== "" &&
+      endDate !== "" &&
       interest !== "" &&
       netAdv !== "" &&
       lenderFee !== "" &&
@@ -397,21 +398,21 @@ export default function AddForm(props) {
       year !== "" &&
       month !== ""
     ) {
-      submitState(
-        loanName,
-        borrower,
-        startDate,
-        endDate,
-        investor,
-        interest,
-        netAdv,
-        lenderFee,
-        brokerFee,
-        legalFee,
-        variation,
-        region,
-        cap
-      );
+      // submitState(
+      //   loanName,
+      //   borrower,
+      //   startDate,
+      //   endDate,
+      //   investor,
+      //   interest,
+      //   netAdv,
+      //   lenderFee,
+      //   brokerFee,
+      //   legalFee,
+      //   variation,
+      //   region,
+      //   cap
+      // );
       setLoanName("");
       setBorrower("");
       setStartDate("");
@@ -443,7 +444,6 @@ export default function AddForm(props) {
   };
 
   const handleClose = () => {
-    closeState();
     setLoanNameError(false);
     setBorrowerError(false);
     setStartError(false);
@@ -477,12 +477,12 @@ export default function AddForm(props) {
   });
 
   var tempInvestors = [
-    "Investor 1",
-    "Investor 2",
-    "Investor 3",
-    "Investor 4",
-    "Investor 5",
-    "Investor 6",
+    { label: "Investor 1", id: 1 },
+    { label: "Investor 2", id: 2 },
+    { label: "Investor 3", id: 3 },
+    { label: "Investor 4", id: 4 },
+    { label: "Investor 5", id: 5 },
+    { label: "Investor 6", id: 6 },
   ];
 
   const newData = NZData.map((object) => ({
@@ -494,8 +494,8 @@ export default function AddForm(props) {
   }
 
   return (
-    <Dialog open={addState} onClose={closeState}>
-      <DialogTitle>Add Loan</DialogTitle>
+    <Dialog open={updateState} onClose={closeUpdate}>
+      <DialogTitle>Update Loan</DialogTitle>
       <DialogContent>
         <Typography sx={{ color: "gray", fontSize: 15, marginBottom: 0.5 }}>
           * Required Fields
@@ -506,7 +506,7 @@ export default function AddForm(props) {
         <TextField
           error={errorLoanName}
           required
-          value={loanName}
+          value={loanData.loan}
           onChange={(e) => onChangeLoanName(e)}
           autoFocus
           margin="dense"
@@ -518,6 +518,7 @@ export default function AddForm(props) {
         />
         <Autocomplete
           required
+          defaultValue={loanData.borrower}
           options={borrowers}
           sx={{ width: 300 }}
           renderInput={(params) => (
@@ -537,6 +538,7 @@ export default function AddForm(props) {
           id="tags-standard"
           sx={{ marginTop: 1 }}
           options={tempInvestors}
+          isOptionEqualToValue={(option) => option.label === loanData.investors}
           renderInput={(params) => (
             <TextField {...params} variant="standard" label="Investor(s)" />
           )}
@@ -600,7 +602,6 @@ export default function AddForm(props) {
             }}
             onChange={(e) => onChangeDate(e)}
             placeholder="Select start date *"
-            status={errorStart}
           />
           <DatePicker
             disabled
@@ -743,7 +744,7 @@ export default function AddForm(props) {
           Cancel
         </Button>
         <Button sx={{ color: "black" }} onClick={handleSubmitClose}>
-          Add
+          Update
         </Button>
       </DialogActions>
     </Dialog>

@@ -23,7 +23,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import Cards from "../components/Loan/Card";
 import Add from "../components/Loan/AddForm";
+import Update from "../components/Loan/UpdateForm";
 import Months from "../data/months.json";
+import dayjs from "dayjs";
 
 const theme = createTheme({
   typography: {
@@ -233,12 +235,14 @@ const columns = [
     headerName: "Start Date",
     flex: 1,
     headerClassName: "super-app-theme--header",
+    valueFormatter: (params) => dayjs(params.value).format("DD/MM/YYYY"),
   },
   {
     field: "enddate",
     headerName: "End Date",
     flex: 1,
     headerClassName: "super-app-theme--header",
+    valueFormatter: (params) => dayjs(params.value).format("DD/MM/YYYY"),
   },
   {
     field: "dayintdue",
@@ -251,6 +255,12 @@ const columns = [
     headerName: "Interest Rate",
     flex: 1,
     headerClassName: "super-app-theme--header",
+    valueFormatter: (params) => {
+      if (params.value == null) {
+        return "";
+      }
+      return `${params.value.toLocaleString()} %`;
+    },
   },
   {
     field: "netadv",
@@ -261,8 +271,16 @@ const columns = [
     width: 90,
     headerAlign: "left",
     align: "left",
+    valueFormatter: (params) => {
+      if (params.value == null) {
+        return "";
+      }
+      return `$ ${params.value.toLocaleString()}`;
+    },
   },
 ];
+
+var loanIndex = 0;
 
 export default function DataTable() {
   const [selectedRows, setSelectedRows] = React.useState([]);
@@ -270,6 +288,8 @@ export default function DataTable() {
   const [rowData, setRowData] = React.useState([]);
   const [modal, setModal] = React.useState(false);
   const [openAdd, setAdd] = React.useState(false);
+  const [deleteModal, setDeleteModal] = React.useState(false);
+  const [updateState, setUpdateState] = React.useState(false);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -291,10 +311,6 @@ export default function DataTable() {
 
   const handlePopupClose = () => {
     setModal(false);
-  };
-
-  const handleAddClose = () => {
-    setAdd(false);
   };
 
   const handleAddSubmit = async (
@@ -323,32 +339,6 @@ export default function DataTable() {
       date = startMonth.getDate();
     }
 
-    const addRowData = {
-      id: Math.random(3, 500),
-      borrower: borrower,
-      capitalised: cap,
-      netadv: Number(netAdv),
-      intrate: interest,
-      interest: 0,
-      dailyInt: 0.0,
-      monthInt: 0.0,
-      manageFee: Number(lenderFee),
-      brokerFee: Number(brokerFee),
-      legalFee: Number(legalFee),
-      variation: Number(variation),
-      totalRepay: 0.0,
-      startdate: startDate.format("DD/MM/YYYY"),
-      enddate: endDate.format("DD/MM/YYYY"),
-      dayintdue: date,
-      loan: loanName,
-      active: "No", // make it dynamic
-      investors: investor,
-      region: region,
-    };
-    setRow([...rows, addRowData]);
-    console.log(investor);
-    setAdd(false);
-
     try {
       const response = await LoanFinder.post("/", {
         borrower: borrower,
@@ -364,20 +354,54 @@ export default function DataTable() {
         variation: Number(variation),
         totalRepay: 0.0,
         startDate: startDate.format("DD/MM/YYYY"),
-        enDate: endDate.format("DD/MM/YYYY"),
+        endDate: endDate.format("DD/MM/YYYY"),
         dayIntDue: date,
         loan: loanName,
         active: "No", // make it dynamic
         investors: investor,
         region: region,
       });
+      setRow([...rows, response.data.data.loan]);
+      setAdd(false);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleDeleteModal = () => {
+    loanIndex = selectedRows[0].id;
+    console.log(loanIndex);
+    setDeleteModal(true);
+  };
+
+  const handleModalClose = () => {
+    setDeleteModal(false);
+  };
+
+  const handleDeletePopup = async () => {
+    // Add database stuff here for deleting
+
+    setDeleteModal(false);
+  };
+
   const handleAdd = () => {
     setAdd(true);
+  };
+
+  const handleAddClose = () => {
+    setAdd(false);
+  };
+
+  const handleUpdate = () => {
+    setUpdateState(true);
+  };
+
+  const handleUpdateClose = () => {
+    setUpdateState(false);
+  };
+
+  const handleUpdateRow = () => {
+    // add database stuff for updating here
   };
 
   const seeMore = () => {
@@ -433,12 +457,79 @@ export default function DataTable() {
                     )
                   }
                 />
-                <IconButton>
+                <IconButton onClick={handleUpdate}>
                   <EditIcon />
                 </IconButton>
-                <IconButton sx={{ color: "red" }}>
+                <Update
+                  borrowerData={rowData}
+                  loanData={
+                    selectedRows[0] === undefined ? "" : selectedRows[0]
+                  }
+                  updateState={updateState}
+                  closeUpdate={handleUpdateClose}
+                  // submitState={(
+                  //   loanName,
+                  //   borrower,
+                  //   startDate,
+                  //   endDate,
+                  //   investor,
+                  //   interest,
+                  //   netAdv,
+                  //   lenderFee,
+                  //   brokerFee,
+                  //   legalFee,
+                  //   variation,
+                  //   region,
+                  //   cap
+                  // ) =>
+                  //   handleAddSubmit(
+                  //     loanName,
+                  //     borrower,
+                  //     startDate,
+                  //     endDate,
+                  //     investor,
+                  //     interest,
+                  //     netAdv,
+                  //     lenderFee,
+                  //     brokerFee,
+                  //     legalFee,
+                  //     variation,
+                  //     region,
+                  //     cap
+                  //   )
+                  // }
+                />
+                <IconButton sx={{ color: "red" }} onClick={handleDeleteModal}>
                   <DeleteIcon />
                 </IconButton>
+                <Dialog
+                  open={deleteModal}
+                  onClose={handleModalClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                  PaperProps={{
+                    elevation: 3,
+                  }}
+                >
+                  <DialogTitle id="alert-dialog-title">{"Delete"}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      Are you sure you want delete this loan?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button sx={{ color: "red" }} onClick={handleModalClose}>
+                      Cancel
+                    </Button>
+                    <Button
+                      sx={{ color: "black" }}
+                      onClick={handleDeletePopup}
+                      autoFocus
+                    >
+                      Yes
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </div>
             </h2>
             <Cards data={selectedRows} />
@@ -558,7 +649,6 @@ export default function DataTable() {
                     }
                   }
                   setSelectedRows(selectedRows);
-                  console.log(selectedRows[0].region);
                 }
               }}
               {...rows}
