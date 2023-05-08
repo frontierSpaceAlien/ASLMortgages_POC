@@ -459,7 +459,11 @@ export default function DataTable() {
 
   const handleDeletePopup = async () => {
     // Add database stuff here for deleting
-
+    setRow(
+      rows.filter((row) => {
+        return row.id !== loanIndex;
+      })
+    );
     setDeleteModal(false);
   };
 
