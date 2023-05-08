@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -14,7 +14,7 @@ import FormControl from "@mui/material/FormControl";
 import NZData from "../../data/nz.json";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-
+import moment from "moment";
 dayjs.extend(customParseFormat);
 
 const PercentageNumericFormat = React.forwardRef(function NumericFormatCustom(
@@ -121,21 +121,44 @@ function subtractMonths(date, month) {
 }
 
 export default function UpdateForm(props) {
-  const [loanName, setLoanName] = React.useState("");
-  const [borrower, setBorrower] = React.useState("");
-  const [startDate, setStartDate] = React.useState("");
-  const [endDate, setEndDate] = React.useState("");
-  const [year, setYear] = React.useState("");
-  const [month, setMonth] = React.useState("");
-  const [investor, setInvestor] = React.useState([]);
-  const [interest, setInterest] = React.useState("");
-  const [netAdv, setNetAdv] = React.useState(0);
-  const [lenderFee, setLenderFee] = React.useState(0);
-  const [brokerFee, setBrokerFee] = React.useState(0);
-  const [legalFee, setLegalFee] = React.useState(0);
-  const [variation, setVariation] = React.useState(0);
-  const [region, setRegion] = React.useState("");
-  const [cap, setCap] = React.useState("");
+  const { borrowerData, updateState, closeUpdate, loanData, submitState } =
+    props;
+  const dateFormat = "YYYY-MM-DD";
+
+  const dateStuff = new Date(loanData.startdate);
+  const stringDate = toISOLocal(dateStuff).split("T")[0];
+  const dateNew = dayjs(stringDate, dateFormat);
+
+  const endStuff = new Date(loanData.enddate);
+  const stringEnd = toISOLocal(endStuff).split("T")[0];
+  const newEnd = dayjs(stringEnd, dateFormat);
+
+  var modifiedStartMonth = stringDate.split("-")[1];
+  var modifiedEndMonth = stringEnd.split("-")[1];
+
+  var modifiedStartYear = stringDate.split("-")[0];
+  var modifiedEndYear = stringEnd.split("-")[0];
+  const differenceInMonths =
+    Number(modifiedStartMonth) - Number(modifiedEndMonth);
+  const differenceInYears = Math.abs(
+    Number(modifiedStartYear) - Number(modifiedEndYear)
+  );
+
+  const [loanName, setLoanName] = React.useState();
+  const [borrower, setBorrower] = React.useState();
+  const [startDate, setStartDate] = React.useState();
+  const [endDate, setEndDate] = React.useState();
+  const [year, setYear] = React.useState();
+  const [month, setMonth] = React.useState();
+  const [investor, setInvestor] = React.useState();
+  const [interest, setInterest] = React.useState();
+  const [netAdv, setNetAdv] = React.useState();
+  const [lenderFee, setLenderFee] = React.useState();
+  const [brokerFee, setBrokerFee] = React.useState();
+  const [legalFee, setLegalFee] = React.useState();
+  const [variation, setVariation] = React.useState();
+  const [region, setRegion] = React.useState();
+  const [cap, setCap] = React.useState();
   const [errorLoanName, setLoanNameError] = React.useState(false);
   const [errorBorrower, setBorrowerError] = React.useState(false);
   const [errorStart, setStartError] = React.useState(false);
@@ -153,16 +176,19 @@ export default function UpdateForm(props) {
   const [disabledField, setDisabledField] = React.useState(true);
   const [saveDateState, setSaveDateState] = React.useState(null);
   const [saveMonthState, setSaveMonthState] = React.useState(null);
-  const formRef = React.useRef();
-
-  const { borrowerData, updateState, closeUpdate, loanData } = props;
-
   var regions = [];
   var borrowers = [];
 
-  const dateFormat = "YYYY-MM-DD";
-
   /************************HANDLES ALL FORM FIELD ************************************/
+
+  React.useEffect(() => {
+    setStartDate(dateNew);
+    setEndDate(newEnd);
+    setYear(String(differenceInYears));
+    setMonth(String(differenceInMonths));
+  }, [differenceInYears, differenceInMonths]);
+
+  console.log(startDate);
 
   const onChangeLoanName = (e) => {
     setLoanName(e.target.value);
@@ -398,21 +424,21 @@ export default function UpdateForm(props) {
       year !== "" &&
       month !== ""
     ) {
-      // submitState(
-      //   loanName,
-      //   borrower,
-      //   startDate,
-      //   endDate,
-      //   investor,
-      //   interest,
-      //   netAdv,
-      //   lenderFee,
-      //   brokerFee,
-      //   legalFee,
-      //   variation,
-      //   region,
-      //   cap
-      // );
+      submitState(
+        loanName,
+        borrower,
+        startDate,
+        endDate,
+        investor,
+        interest,
+        netAdv,
+        lenderFee,
+        brokerFee,
+        legalFee,
+        variation,
+        region,
+        cap
+      );
       setLoanName("");
       setBorrower("");
       setStartDate("");
@@ -506,7 +532,8 @@ export default function UpdateForm(props) {
         <TextField
           error={errorLoanName}
           required
-          value={loanData.loan}
+          value={loanName}
+          defaultValue={loanData.loan}
           onChange={(e) => onChangeLoanName(e)}
           autoFocus
           margin="dense"
@@ -518,6 +545,8 @@ export default function UpdateForm(props) {
         />
         <Autocomplete
           required
+          disabled
+          value={borrower}
           defaultValue={loanData.borrower}
           options={borrowers}
           sx={{ width: 300 }}
@@ -537,8 +566,10 @@ export default function UpdateForm(props) {
           multiple
           id="tags-standard"
           sx={{ marginTop: 1 }}
+          value={investor}
+          defaultValue={loanData.investors}
           options={tempInvestors}
-          isOptionEqualToValue={(option) => option.label === loanData.investors}
+          isOptionEqualToValue={(option, value) => option.label === value}
           renderInput={(params) => (
             <TextField {...params} variant="standard" label="Investor(s)" />
           )}
@@ -546,6 +577,8 @@ export default function UpdateForm(props) {
         />
         <Autocomplete
           id="tags-standard"
+          value={region}
+          defaultValue={loanData.region}
           options={regions}
           sx={{ marginTop: 1 }}
           onChange={(event, value) => onChangeRegion(value)}
@@ -570,6 +603,8 @@ export default function UpdateForm(props) {
           <TextField
             variant="standard"
             label="Capitalised *"
+            value={cap}
+            defaultValue={loanData.capitalised}
             sx={{ width: 300 }}
             select
             error={errorCap}
@@ -595,6 +630,9 @@ export default function UpdateForm(props) {
             getPopupContainer={(triggerNode) => {
               return triggerNode.parentNode;
             }}
+            value={startDate}
+            defaultValue={dayjs(stringDate)}
+            format={dateFormat}
             size={"large"}
             style={{
               colorBorder: "black",
@@ -605,6 +643,9 @@ export default function UpdateForm(props) {
           />
           <DatePicker
             disabled
+            value={endDate}
+            defaultValue={dayjs(stringEnd)}
+            format={dateFormat}
             getPopupContainer={(triggerNode) => {
               return triggerNode.parentNode;
             }}
@@ -613,17 +654,16 @@ export default function UpdateForm(props) {
               colorBorder: "black",
               marginBottom: 10,
             }}
-            value={endDate}
             placeholder="End Date"
           />
         </ConfigProvider>
         <TextField
-          disabled={disabledField}
           error={errorYear}
           value={year}
+          defaultValue={String(differenceInYears)}
           onChange={(e) => onChangeYear(e)}
           autoFocus
-          sx={{ marginRight: 1, marginBottom: 4 }}
+          sx={{ marginRight: 1, marginBottom: 2 }}
           margin="dense"
           id="outlined-required"
           label="Year(s)"
@@ -631,10 +671,9 @@ export default function UpdateForm(props) {
           variant="standard"
         />
         <TextField
-          disabled={disabledField}
           error={errorMonth}
-          required
           value={month}
+          defaultValue={String(differenceInMonths)}
           onChange={(e) => onChangeMonth(e.target.value)}
           autoFocus
           margin="dense"
@@ -649,6 +688,8 @@ export default function UpdateForm(props) {
         <TextField
           required
           error={errorInterest}
+          value={interest}
+          defaultValue={loanData.intrate}
           autoFocus
           margin="dense"
           id="outlined-number"
@@ -665,6 +706,8 @@ export default function UpdateForm(props) {
         />
         <TextField
           error={errorNet}
+          value={netAdv}
+          defaultValue={loanData.netadv}
           autoFocus
           margin="dense"
           id="outlined-number"
@@ -676,10 +719,11 @@ export default function UpdateForm(props) {
             inputComponent: CurrencyFormat,
           }}
           variant="standard"
-          value="$0.00"
         />
         <TextField
           error={errorLender}
+          value={lenderFee}
+          defaultValue={loanData.managefee}
           autoFocus
           margin="dense"
           id="outlined-number"
@@ -691,11 +735,12 @@ export default function UpdateForm(props) {
           InputProps={{
             inputComponent: CurrencyFormat,
           }}
-          value="$0.00"
           variant="standard"
         />
         <TextField
           error={errorBroker}
+          value={brokerFee}
+          defaultValue={loanData.brokerfee}
           autoFocus
           margin="dense"
           id="outlined-number"
@@ -705,11 +750,12 @@ export default function UpdateForm(props) {
           InputProps={{
             inputComponent: CurrencyFormat,
           }}
-          value="$0.00"
           variant="standard"
         />
         <TextField
           error={errorLegal}
+          value={legalFee}
+          defaultValue={loanData.legalfee}
           autoFocus
           margin="dense"
           id="outlined-number"
@@ -721,11 +767,12 @@ export default function UpdateForm(props) {
           InputProps={{
             inputComponent: CurrencyFormat,
           }}
-          value="$0.00"
           variant="standard"
         />
         <TextField
           error={errorVariation}
+          value={variation}
+          defaultValue={loanData.variation}
           autoFocus
           margin="dense"
           id="outlined-number"
@@ -736,7 +783,6 @@ export default function UpdateForm(props) {
             inputComponent: CurrencyFormat,
           }}
           variant="standard"
-          value="$0.00"
         />
       </DialogContent>
       <DialogActions>

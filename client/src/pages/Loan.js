@@ -368,6 +368,66 @@ export default function DataTable() {
     }
   };
 
+  const handleUpdateSubmit = (
+    loanName,
+    borrower,
+    startDate,
+    endDate,
+    investor,
+    interest,
+    netAdv,
+    lenderFee,
+    brokerFee,
+    legalFee,
+    variation,
+    region,
+    cap
+  ) => {
+    const startMonth = new Date(startDate);
+    const endMonth = new Date(endDate);
+
+    var date = new Date();
+
+    if (startMonth.getMonth() === endMonth.getMonth()) {
+      date = endMonth.getDate();
+    } else {
+      date = startMonth.getDate();
+    }
+
+    const response = {
+      borrower: borrower,
+      capitalised: cap,
+      netAdv: Number(netAdv),
+      intRate: interest,
+      interest: 0,
+      dailyInt: 0.0,
+      monthInt: 0.0,
+      manageFee: Number(lenderFee),
+      brokerFee: Number(brokerFee),
+      legalFee: Number(legalFee),
+      variation: Number(variation),
+      totalRepay: 0.0,
+      startDate: startDate.format("DD/MM/YYYY"),
+      endDate: endDate.format("DD/MM/YYYY"),
+      dayIntDue: date,
+      loan: loanName,
+      active: "No", // make it dynamic
+      investors: investor,
+      region: region,
+    };
+
+    setRow((prevRows) => {
+      return prevRows.map((row, index) =>
+        index === loanIndex ? { ...row, response } : row
+      );
+    });
+
+    loanIndex = selectedRows[0].id;
+    console.log(loanIndex);
+    console.log(response);
+    setUpdateState(false);
+  };
+
   const handleDeleteModal = () => {
     loanIndex = selectedRows[0].id;
     console.log(loanIndex);
@@ -457,7 +517,10 @@ export default function DataTable() {
                     )
                   }
                 />
-                <IconButton onClick={handleUpdate}>
+                <IconButton
+                  onClick={handleUpdate}
+                  disabled={selectedRows[0] === undefined ? true : false}
+                >
                   <EditIcon />
                 </IconButton>
                 <Update
@@ -467,37 +530,37 @@ export default function DataTable() {
                   }
                   updateState={updateState}
                   closeUpdate={handleUpdateClose}
-                  // submitState={(
-                  //   loanName,
-                  //   borrower,
-                  //   startDate,
-                  //   endDate,
-                  //   investor,
-                  //   interest,
-                  //   netAdv,
-                  //   lenderFee,
-                  //   brokerFee,
-                  //   legalFee,
-                  //   variation,
-                  //   region,
-                  //   cap
-                  // ) =>
-                  //   handleAddSubmit(
-                  //     loanName,
-                  //     borrower,
-                  //     startDate,
-                  //     endDate,
-                  //     investor,
-                  //     interest,
-                  //     netAdv,
-                  //     lenderFee,
-                  //     brokerFee,
-                  //     legalFee,
-                  //     variation,
-                  //     region,
-                  //     cap
-                  //   )
-                  // }
+                  submitState={(
+                    loanName,
+                    borrower,
+                    startDate,
+                    endDate,
+                    investor,
+                    interest,
+                    netAdv,
+                    lenderFee,
+                    brokerFee,
+                    legalFee,
+                    variation,
+                    region,
+                    cap
+                  ) =>
+                    handleUpdateSubmit(
+                      loanName,
+                      borrower,
+                      startDate,
+                      endDate,
+                      investor,
+                      interest,
+                      netAdv,
+                      lenderFee,
+                      brokerFee,
+                      legalFee,
+                      variation,
+                      region,
+                      cap
+                    )
+                  }
                 />
                 <IconButton sx={{ color: "red" }} onClick={handleDeleteModal}>
                   <DeleteIcon />

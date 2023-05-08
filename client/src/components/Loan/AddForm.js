@@ -180,8 +180,6 @@ export default function AddForm(props) {
     if (e === null) {
       setDisabledField(true);
       setStartError("error");
-      console.log(e);
-      console.log(disabledField);
     } else {
       setMonth("0");
       setYear("0");
@@ -195,7 +193,6 @@ export default function AddForm(props) {
     } else {
       setYear(e.target.value);
     }
-
     if (month === "0") {
       const newDate = addYears(startDate, e.target.value);
       const stringDate = newDate.toISOString().split("T")[0];
@@ -246,7 +243,6 @@ export default function AddForm(props) {
     } else {
       setMonth(e);
     }
-
     if (year === "0") {
       const newDate = addMonth(startDate, e);
       const stringDate = newDate.toISOString().split("T")[0];
@@ -287,7 +283,6 @@ export default function AddForm(props) {
         setEndDate(dateNew);
       }
     }
-
     setErrorMonth(false);
   };
 
@@ -622,7 +617,7 @@ export default function AddForm(props) {
           value={year}
           onChange={(e) => onChangeYear(e)}
           autoFocus
-          sx={{ marginRight: 1, marginBottom: 4 }}
+          sx={{ marginRight: 1, marginBottom: 2 }}
           margin="dense"
           id="outlined-required"
           label="Year(s)"
