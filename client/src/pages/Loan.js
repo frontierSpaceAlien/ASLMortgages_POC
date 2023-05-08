@@ -143,74 +143,74 @@ var calculateMonthlyInterest = function (repay, intRate) {
 };
 
 /** DUMMY DATA **/
-const rowsDummy = [
-  {
-    id: 0,
-    borrower: "John Stamos",
-    capitalised: "Yes",
-    netadv: 326860.2,
-    intrate: 14.95,
-    interest: 0,
-    dailyint: 0.0,
-    monthint: 0.0,
-    managefee: 7000,
-    brokerfee: 0.0,
-    legalfee: 0.0,
-    variation: 0.0,
-    totalrepay: 0.0,
-    startdate: "10/03/2022",
-    enddate: "10/09/2022",
-    dayintdue: 10,
-    loan: "Stamos2022",
-    active: "Yes",
-    investors: [
-      "ASL Mortgages Limited_Niehaus Family Trust 2",
-      "Investor 2_Niehaus Family Trust 2",
-      "Tenki Trust_Niehaus Family Trust 2",
-      "Investor 4",
-      "Investor 5",
-      "Investor 6",
-      "Investor 7",
-      "Investor 8",
-      "Investor 9",
-      "Investor 10",
-      "Investor 11",
-      "Investor 12",
-      "Investor 13",
-      "Investor 14",
-      "Investor 15",
-    ],
-    region: "Waikato",
-  },
-  {
-    id: 1,
-    borrower: "Guy Pece",
-    capitalised: "No",
-    netadv: 400000.0,
-    intrate: 15.95,
-    interest: 0,
-    dailyint: 0.0,
-    monthint: 0.0,
-    managefee: 12000.0,
-    brokerfee: 6000.0,
-    legalfee: 3500.0,
-    variation: 0.0,
-    totalrepay: 0.0,
-    startdate: "12/10/2022",
-    enddate: "12/10/2022",
-    dayintdue: 13,
-    loan: "Pece2022",
-    active: "No",
-    investors: [
-      "Investor 1",
-      "Investor 2",
-      "Investor 4",
-      "Investor 6",
-      "Investor 10",
-    ],
-    region: "Wellington",
-  },
-];
+// const rowsDummy = [
+//   {
+//     id: 0,
+//     borrower: "John Stamos",
+//     capitalised: "Yes",
+//     netadv: 326860.2,
+//     intrate: 14.95,
+//     interest: 0,
+//     dailyint: 0.0,
+//     monthint: 0.0,
+//     managefee: 7000,
+//     brokerfee: 0.0,
+//     legalfee: 0.0,
+//     variation: 0.0,
+//     totalrepay: 0.0,
+//     startdate: "10/03/2022",
+//     enddate: "10/09/2022",
+//     dayintdue: 10,
+//     loan: "Stamos2022",
+//     active: "Yes",
+//     investors: [
+//       "ASL Mortgages Limited_Niehaus Family Trust 2",
+//       "Investor 2_Niehaus Family Trust 2",
+//       "Tenki Trust_Niehaus Family Trust 2",
+//       "Investor 4",
+//       "Investor 5",
+//       "Investor 6",
+//       "Investor 7",
+//       "Investor 8",
+//       "Investor 9",
+//       "Investor 10",
+//       "Investor 11",
+//       "Investor 12",
+//       "Investor 13",
+//       "Investor 14",
+//       "Investor 15",
+//     ],
+//     region: "Waikato",
+//   },
+//   {
+//     id: 1,
+//     borrower: "Guy Pece",
+//     capitalised: "No",
+//     netadv: 400000.0,
+//     intrate: 15.95,
+//     interest: 0,
+//     dailyint: 0.0,
+//     monthint: 0.0,
+//     managefee: 12000.0,
+//     brokerfee: 6000.0,
+//     legalfee: 3500.0,
+//     variation: 0.0,
+//     totalrepay: 0.0,
+//     startdate: "12/10/2022",
+//     enddate: "12/10/2022",
+//     dayintdue: 13,
+//     loan: "Pece2022",
+//     active: "No",
+//     investors: [
+//       "Investor 1",
+//       "Investor 2",
+//       "Investor 4",
+//       "Investor 6",
+//       "Investor 10",
+//     ],
+//     region: "Wellington",
+//   },
+// ];
 
 var col1 = [];
 
@@ -284,7 +284,7 @@ var loanIndex = 0;
 
 export default function DataTable() {
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [rows, setRow] = React.useState(rowsDummy);
+  const [rows, setRow] = React.useState([]);
   const [rowData, setRowData] = React.useState([]);
   const [modal, setModal] = React.useState(false);
   const [openAdd, setAdd] = React.useState(false);
@@ -297,8 +297,8 @@ export default function DataTable() {
         const response = await BorrowerFinder.get("/");
         setRowData(response.data.data.borrower);
 
-        // const responseLoan = await LoanFinder.get("/");
-        // setRow(responseLoan.data.data.loan);
+        const responseLoan = await LoanFinder.get("/");
+        setRow(responseLoan.data.data.loan);
 
         // console.log(responseLoan);
       } catch (err) {
