@@ -143,74 +143,74 @@ var calculateMonthlyInterest = function (repay, intRate) {
 };
 
 /** DUMMY DATA **/
-// const rowsDummy = [
-//   {
-//     id: 1,
-//     borrower: "John Stamos",
-//     capitalised: "Yes",
-//     netadv: 326860.2,
-//     intrate: 14.95,
-//     interest: 0,
-//     dailyInt: 0.0,
-//     monthInt: 0.0,
-//     manageFee: 7000,
-//     brokerFee: 0.0,
-//     legalFee: 0.0,
-//     variation: 0.0,
-//     totalRepay: 0.0,
-//     startdate: "10/03/2022",
-//     enddate: "10/09/2022",
-//     dayintdue: 10,
-//     loan: "Stamos2022",
-//     active: "Yes",
-//     investors: [
-//       "ASL Mortgages Limited_Niehaus Family Trust 2",
-//       "Investor 2_Niehaus Family Trust 2",
-//       "Tenki Trust_Niehaus Family Trust 2",
-//       "Investor 4",
-//       "Investor 5",
-//       "Investor 6",
-//       "Investor 7",
-//       "Investor 8",
-//       "Investor 9",
-//       "Investor 10",
-//       "Investor 11",
-//       "Investor 12",
-//       "Investor 13",
-//       "Investor 14",
-//       "Investor 15",
-//     ],
-//     region: "Waikato",
-//   },
-//   {
-//     id: 2,
-//     borrower: "Guy Pece",
-//     capitalised: "No",
-//     netadv: 400000.0,
-//     intrate: 15.95,
-//     interest: 0,
-//     dailyInt: 0.0,
-//     monthInt: 0.0,
-//     manageFee: 12000.0,
-//     brokerFee: 6000.0,
-//     legalFee: 3500.0,
-//     variation: 0.0,
-//     totalRepay: 0.0,
-//     startdate: "13/04/2022",
-//     enddate: "13/10/2022",
-//     dayintdue: 13,
-//     loan: "Pece2022",
-//     active: "No",
-//     investors: [
-//       "Investor 1",
-//       "Investor 2",
-//       "Investor 4",
-//       "Investor 6",
-//       "Investor 10",
-//     ],
-//     region: "Wellington",
-//   },
-// ];
+const rowsDummy = [
+  {
+    id: 0,
+    borrower: "John Stamos",
+    capitalised: "Yes",
+    netadv: 326860.2,
+    intrate: 14.95,
+    interest: 0,
+    dailyint: 0.0,
+    monthint: 0.0,
+    managefee: 7000,
+    brokerfee: 0.0,
+    legalfee: 0.0,
+    variation: 0.0,
+    totalrepay: 0.0,
+    startdate: "10/03/2022",
+    enddate: "10/09/2022",
+    dayintdue: 10,
+    loan: "Stamos2022",
+    active: "Yes",
+    investors: [
+      "ASL Mortgages Limited_Niehaus Family Trust 2",
+      "Investor 2_Niehaus Family Trust 2",
+      "Tenki Trust_Niehaus Family Trust 2",
+      "Investor 4",
+      "Investor 5",
+      "Investor 6",
+      "Investor 7",
+      "Investor 8",
+      "Investor 9",
+      "Investor 10",
+      "Investor 11",
+      "Investor 12",
+      "Investor 13",
+      "Investor 14",
+      "Investor 15",
+    ],
+    region: "Waikato",
+  },
+  {
+    id: 1,
+    borrower: "Guy Pece",
+    capitalised: "No",
+    netadv: 400000.0,
+    intrate: 15.95,
+    interest: 0,
+    dailyint: 0.0,
+    monthint: 0.0,
+    managefee: 12000.0,
+    brokerfee: 6000.0,
+    legalfee: 3500.0,
+    variation: 0.0,
+    totalrepay: 0.0,
+    startdate: "12/10/2022",
+    enddate: "12/10/2022",
+    dayintdue: 13,
+    loan: "Pece2022",
+    active: "No",
+    investors: [
+      "Investor 1",
+      "Investor 2",
+      "Investor 4",
+      "Investor 6",
+      "Investor 10",
+    ],
+    region: "Wellington",
+  },
+];
 
 var col1 = [];
 
@@ -284,7 +284,7 @@ var loanIndex = 0;
 
 export default function DataTable() {
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [rows, setRow] = React.useState([]);
+  const [rows, setRow] = React.useState(rowsDummy);
   const [rowData, setRowData] = React.useState([]);
   const [modal, setModal] = React.useState(false);
   const [openAdd, setAdd] = React.useState(false);
@@ -297,10 +297,10 @@ export default function DataTable() {
         const response = await BorrowerFinder.get("/");
         setRowData(response.data.data.borrower);
 
-        const responseLoan = await LoanFinder.get("/");
-        setRow(responseLoan.data.data.loan);
+        // const responseLoan = await LoanFinder.get("/");
+        // setRow(responseLoan.data.data.loan);
 
-        console.log(responseLoan);
+        // console.log(responseLoan);
       } catch (err) {
         console.error(err);
       }
@@ -369,6 +369,7 @@ export default function DataTable() {
   };
 
   const handleUpdateSubmit = (
+    id,
     loanName,
     borrower,
     startDate,
@@ -395,6 +396,7 @@ export default function DataTable() {
     }
 
     const response = {
+      id: id,
       borrower: borrower,
       capitalised: cap,
       netAdv: Number(netAdv),
@@ -415,16 +417,33 @@ export default function DataTable() {
       investors: investor,
       region: region,
     };
+    loanIndex = selectedRows[0].id;
 
     setRow((prevRows) => {
       return prevRows.map((row, index) =>
-        index === loanIndex ? { ...row, response } : row
+        index === loanIndex
+          ? {
+              ...row,
+              loan: response.loan,
+              investor: response.investors,
+              region: response.region,
+              capitalised: response.capitalised,
+              startdate: response.startDate,
+              enddate: response.endDate,
+              intrate: response.intRate,
+              netadv: response.netAdv,
+              managefee: response.manageFee, // remmeber to change when in db
+              brokerfee: response.brokerFee,
+              legalfee: response.legalFee,
+              variation: response.variation,
+            }
+          : row
       );
     });
 
-    loanIndex = selectedRows[0].id;
     console.log(loanIndex);
     console.log(response);
+    console.log(cap);
     setUpdateState(false);
   };
 
@@ -453,6 +472,7 @@ export default function DataTable() {
   };
 
   const handleUpdate = () => {
+    loanIndex = selectedRows[0].id;
     setUpdateState(true);
   };
 
@@ -531,6 +551,7 @@ export default function DataTable() {
                   updateState={updateState}
                   closeUpdate={handleUpdateClose}
                   submitState={(
+                    id,
                     loanName,
                     borrower,
                     startDate,
@@ -546,6 +567,7 @@ export default function DataTable() {
                     cap
                   ) =>
                     handleUpdateSubmit(
+                      id,
                       loanName,
                       borrower,
                       startDate,

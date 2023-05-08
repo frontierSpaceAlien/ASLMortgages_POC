@@ -144,6 +144,7 @@ export default function UpdateForm(props) {
     Number(modifiedStartYear) - Number(modifiedEndYear)
   );
 
+  const [loanID, setLoanID] = React.useState();
   const [loanName, setLoanName] = React.useState();
   const [borrower, setBorrower] = React.useState();
   const [startDate, setStartDate] = React.useState();
@@ -182,18 +183,30 @@ export default function UpdateForm(props) {
   /************************HANDLES ALL FORM FIELD ************************************/
 
   React.useEffect(() => {
+    setLoanID(loanData.id);
+    setLoanName(loanData.loan);
+    setBorrower(loanData.borrower);
+    setInvestor(loanData.investors);
+    setRegion(loanData.region);
+    setCap(loanData.capitalised);
     setStartDate(dateNew);
     setEndDate(newEnd);
     setYear(String(differenceInYears));
     setMonth(String(differenceInMonths));
+    setInterest(loanData.intrate);
+    setNetAdv(loanData.netadv);
+    setLenderFee(loanData.managefee);
+    setBrokerFee(loanData.brokerfee);
+    setLegalFee(loanData.legalfee);
+    setVariation(loanData.variation);
   }, [differenceInYears, differenceInMonths]);
 
-  console.log(startDate);
+  console.log(loanData.capitalised);
 
   const onChangeLoanName = (e) => {
     setLoanName(e.target.value);
     setLoanNameError(false);
-    console.log(loanData.investors);
+    // console.log(loanData.investors);
   };
 
   const onChangeBorrower = (e) => {
@@ -207,8 +220,8 @@ export default function UpdateForm(props) {
     setEndError(false);
     if (e === null) {
       setDisabledField(true);
-      console.log(e);
-      console.log(disabledField);
+      // console.log(e);
+      // console.log(disabledField);
     } else {
       setMonth("0");
       setYear("0");
@@ -425,6 +438,7 @@ export default function UpdateForm(props) {
       month !== ""
     ) {
       submitState(
+        loanID,
         loanName,
         borrower,
         startDate,
@@ -439,21 +453,6 @@ export default function UpdateForm(props) {
         region,
         cap
       );
-      setLoanName("");
-      setBorrower("");
-      setStartDate("");
-      setEndDate("");
-      setYear("");
-      setMonth("");
-      setInvestor([]);
-      setInterest("");
-      setNetAdv("");
-      setLenderFee("");
-      setBrokerFee("");
-      setLegalFee("");
-      setVariation("");
-      setRegion("");
-      setCap("");
 
       setLoanNameError(false);
       setBorrowerError(false);
