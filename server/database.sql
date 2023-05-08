@@ -7,5 +7,5 @@ CREATE TABLE Investor(
   BankAccount VARCHAR(50),
   RWT INT,
   DOB VARCHAR(50),
-  Country VARCHAR(50),
+  Country VARCHAR(50)
 );

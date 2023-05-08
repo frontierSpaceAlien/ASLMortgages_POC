@@ -32,207 +32,6 @@ const theme = createTheme({
     },
 });
 
-//insert SampleData from Client
-const SampleData =[
-  {
-    'Investor Name': 'Investor 1',
-    Name: 'A',
-    'IRD Number': '123-123-123',
-    'Interest Bank Account': '01-0190-0399949-01',
-    'Capital Bank Account': '',
-    'RWT Rate': '0.00%',
-    DOB: '',
-    Country: 'New Zealand',
-    Address: 'address 1',
-    Email: 'email1',
-    'Contact Number': 'number1',
-    InvestorCount: '1'
-  },
-  {
-    'Investor Name': 'Investor 10',
-    Name: 'B',
-    'IRD Number': '123-123-124',
-    'Interest Bank Account': '01-0190-0399949-02',
-    'Capital Bank Account': '',
-    'RWT Rate': '33.00%',
-    DOB: '1982/2/4',
-    Country: 'New Zealand',
-    Address: 'address 2',
-    Email: 'email2',
-    'Contact Number': 'number2',
-    InvestorCount: '19'
-  },
-  {
-    'Investor Name': 'Investor 11',
-    Name: 'C',
-    'IRD Number': '123-123-125',
-    'Interest Bank Account': '01-0190-0399949-03',
-    'Capital Bank Account': '',
-    'RWT Rate': '10.50%',
-    DOB: '1987/10/9',
-    Country: 'New Zealand',
-    Address: 'address 3',
-    Email: 'email3',
-    'Contact Number': 'number3',
-    InvestorCount: '15'
-  },
-  {
-    'Investor Name': 'Investor 12',
-    Name: 'D',
-    'IRD Number': '123-123-126',
-    'Interest Bank Account': '01-0190-0399949-04',
-    'Capital Bank Account': '',
-    'RWT Rate': '17.50%',
-    DOB: '1962/7/17',
-    Country: 'New Zealand',
-    Address: 'address 4',
-    Email: 'email4',
-    'Contact Number': 'number4',
-    InvestorCount: '26'
-  },
-  {
-    'Investor Name': 'Investor 13',
-    Name: 'E',
-    'IRD Number': '123-123-127',
-    'Interest Bank Account': '01-0190-0399949-05',
-    'Capital Bank Account': '',
-    'RWT Rate': '28.00%',
-    DOB: '1980/9/7',
-    Country: 'New Zealand',
-    Address: 'address 5',
-    Email: 'email5',
-    'Contact Number': 'number5',
-    InvestorCount: '4'
-  },
-  {
-    'Investor Name': 'Investor 14',
-    Name: 'F',
-    'IRD Number': '123-123-128',
-    'Interest Bank Account': '01-0190-0399949-06',
-    'Capital Bank Account': '',
-    'RWT Rate': '33.00%',
-    DOB: '1973/5/12',
-    Country: 'New Zealand',
-    Address: 'address 6',
-    Email: 'email6',
-    'Contact Number': 'number6',
-    InvestorCount: '29'
-  },
-  {
-    'Investor Name': 'Investor 2',
-    Name: 'G',
-    'IRD Number': '123-123-129',
-    'Interest Bank Account': '01-0190-0399949-07',
-    'Capital Bank Account': '',
-    'RWT Rate': '33.00%',
-    DOB: '1980/9/7',
-    Country: 'New Zealand',
-    Address: 'address 7',
-    Email: 'email7',
-    'Contact Number': 'number7',
-    InvestorCount: '2'
-  },
-  {
-    'Investor Name': 'Investor 3',
-    Name: 'H',
-    'IRD Number': '123-123-130',
-    'Interest Bank Account': '01-0190-0399949-08',
-    'Capital Bank Account': '',
-    'RWT Rate': '33.00%',
-    DOB: '1982/2/4',
-    Country: 'New Zealand',
-    Address: 'address 8',
-    Email: 'email8',
-    'Contact Number': 'number8',
-    InvestorCount: '6'
-  },
-  {
-    'Investor Name': 'Investor 4',
-    Name: 'I',
-    'IRD Number': '123-123-131',
-    'Interest Bank Account': '01-0190-0399949-09',
-    'Capital Bank Account': '',
-    'RWT Rate': '28.00%',
-    DOB: '1963/12/25',
-    Country: 'New Zealand',
-    Address: 'address 9',
-    Email: 'email9',
-    'Contact Number': 'number9',
-    InvestorCount: '17'
-  },
-  {
-    'Investor Name': 'Investor 5',
-    Name: 'J',
-    'IRD Number': '123-123-132',
-    'Interest Bank Account': '01-0190-0399949-10',
-    'Capital Bank Account': '',
-    'RWT Rate': '17.50%',
-    DOB: '1981/11/7',
-    Country: 'New Zealand',
-    Address: 'address 10',
-    Email: 'email10',
-    'Contact Number': 'number10',
-    InvestorCount: '3'
-  },
-  {
-    'Investor Name': 'Investor 6',
-    Name: 'K',
-    'IRD Number': '123-123-133',
-    'Interest Bank Account': '01-0190-0399949-11',
-    'Capital Bank Account': '',
-    'RWT Rate': '17.50%',
-    DOB: '1980/9/7',
-    Country: 'New Zealand',
-    Address: 'address 11',
-    Email: 'email11',
-    'Contact Number': 'number11',
-    InvestorCount: '18'
-  },
-  {
-    'Investor Name': 'Investor 7',
-    Name: 'L',
-    'IRD Number': '123-123-134',
-    'Interest Bank Account': '01-0190-0399949-12',
-    'Capital Bank Account': '',
-    'RWT Rate': '17.50%',
-    DOB: '1967/9/2',
-    Country: 'New Zealand',
-    Address: 'address 12',
-    Email: 'email12',
-    'Contact Number': 'number12',
-    InvestorCount: '21'
-  },
-  {
-    'Investor Name': 'Investor 8',
-    Name: 'M',
-    'IRD Number': '123-123-135',
-    'Interest Bank Account': '01-0190-0399949-13',
-    'Capital Bank Account': '',
-    'RWT Rate': '17.50%',
-    DOB: '1996/12/23',
-    Country: 'New Zealand',
-    Address: 'address 13',
-    Email: 'email13',
-    'Contact Number': 'number13',
-    InvestorCount: '20'
-  },
-  {
-    'Investor Name': 'Investor 9',
-    Name: 'N',
-    'IRD Number': '123-123-136',
-    'Interest Bank Account': '01-0190-0399949-14',
-    'Capital Bank Account': '',
-    'RWT Rate': '10.50%',
-    DOB: '1960/5/2',
-    Country: 'New Zealand',
-    Address: 'address 14',
-    Email: 'email14',
-    'Contact Number': 'number14',
-    InvestorCount: '24'
-  },
-
-]
-
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -420,9 +219,9 @@ export default function CollapsibleTable() {
   //edit button
   const handleEditInvestorModalOpen = (index) => {
     setEditInvestorIndex(index);
-    setInvestorName(rowData[index].name);
-    setInterestBankAccount(rowData[index].bankAccount);
-    setRwtRate(rowData[index].rwtRate);
+    setInvestorName(rowData[index].investor);
+    setInterestBankAccount(rowData[index].bankaccount);
+    setRwtRate(rowData[index].rwt);
     setIrdNumber(rowData[index].ird);
     setDob(rowData[index].dob);
     setCountry(rowData[index].country);
@@ -433,18 +232,37 @@ export default function CollapsibleTable() {
     
     const updatedInvestor = {
       ...rowData[editInvestorIndex],
-      name: investorName,
-      bankAccount: parseFloat(InterestBankAccount),
-      rwtRate: parseFloat(RwtRate),
+      investor: investorName,
+      bankaccount: InterestBankAccount,
+      rwt: parseFloat(RwtRate),
       ird: IrdNumber,
-      dob: Dob.toLocaleString(undefined, {maximumFractionDigits:2}),
-      country: Country.toLocaleString(undefined, {maximumFractionDigits:2}),
+      dob: Dob,
+      country: Country,
     };
-  
+      
     const updatedRowData = [...rowData];
     updatedRowData[editInvestorIndex] = updatedInvestor;
     setRowData(updatedRowData);
     setEditInvestorModal(false);
+  
+    const requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedInvestor)
+    };
+      
+    fetch(`http://localhost:5000/investor/${updatedInvestor.id}`, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        const updatedRowData = [...rowData];
+        updatedRowData[editInvestorIndex] = updatedInvestor;
+        setRowData(updatedRowData);
+        setEditInvestorModal(false);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   };
 
   const handleEditInvestorModalClose = () => {
@@ -462,19 +280,35 @@ export default function CollapsibleTable() {
 const handleAddInvestor = () => {
 
   const newInvestor = {
-    InvestorID: rowData.length,
-    name: investorName,
-    bankAccount: InterestBankAccount,
-    rwtRate: parseFloat(RwtRate),
+    id: rowData.length,
+    investor: investorName,
+    bankaccount: InterestBankAccount,
+    rwt: parseFloat(RwtRate),
     ird: IrdNumber,
     dob: Dob,
     country: Country,
     history: [],
   };
 
-  // Add the new investor object to your data source (e.g., rowData)
-  setRowData([...rowData, newInvestor]);
-  setAddInvestorModal(false);
+    // Send a POST request to the server to store the new investor data
+    fetch('http://localhost:5000/investor', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newInvestor),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        // Add the new investor object to your data source (e.g., rowData)
+        setRowData([...rowData, newInvestor]);
+        setAddInvestorModal(false);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
 };
   //filter
   const currentRows = rowData.filter((r, ind) => {
@@ -498,16 +332,31 @@ const handleAddInvestor = () => {
   };
 
   //delect button
-  const handleDeletePopup = () =>{
-    setRowData((prevData) =>
-      prevData.filter((_, index) => index !== indexData)
-    );
-    setModal(false)
-  }
+  const handleDeletePopup = () => {
+    // Get the ID of the investor to delete
+    const investorId = rowData[deleteInvestorIndex].id;
+  
+    // Send a DELETE request to the server to delete the investor data
+    fetch(`http://localhost:5000/investor/${investorId}`, {
+      method: 'DELETE',
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        // Remove the investor object from your data source (e.g., rowData)
+        const updatedRowData = rowData.filter((_, index) => index !== deleteInvestorIndex);
+        setRowData(updatedRowData);
+        setModal(false);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
 
   const handlePopup = (dataIndex) =>{
-    indexData = dataIndex
+    
     setModal(true)
+    setDeleteInvestorIndex(dataIndex);
   }
   
   const [addInvestorModal, setAddInvestorModal] = useState(false);
@@ -521,8 +370,7 @@ const [RwtRate, setRwtRate] = useState('');
 const [IrdNumber, setIrdNumber] = useState('');
 const [Dob, setDob] = useState('');
 const [Country, setCountry] = useState('');
-const [interestRate, setInterestRate] = useState('');
-const [investorDate, setInvestorDate] = useState('');
+const [deleteInvestorIndex, setDeleteInvestorIndex] = useState(null);
 
   return (
     <div className = "tableView">
@@ -567,14 +415,14 @@ const [investorDate, setInvestorDate] = useState('');
                   />
                   <TextField
                     label="RWT Rate"
-                    value={interestRate}
-                    onChange={(e) => setInterestRate(e.target.value)}
+                    value={RwtRate}
+                    onChange={(e) => setRwtRate(e.target.value)}
                     fullWidth
                   />
                   <TextField
-                  label="Start Date"
-                  value={investorDate}
-                  onChange={(e) => setInvestorDate(e.target.value)}
+                  label="DOB"
+                  value={Dob}
+                  onChange={(e) => setDob(e.target.value)}
                   fullWidth
                   />
                   <TextField
@@ -599,12 +447,12 @@ const [investorDate, setInvestorDate] = useState('');
             <TableHead>
               <TableRow>
                 <StyledTableCell />
-                <StyledTableCell>ID</StyledTableCell>
+                <StyledTableCell>IRD</StyledTableCell>
                 <StyledTableCell>Investors Name</StyledTableCell>
-                <StyledTableCell align="right">Start Date</StyledTableCell>
-                <StyledTableCell align="right">Invest Total Amount</StyledTableCell>
+                <StyledTableCell align="right">Bank Account</StyledTableCell>
                 <StyledTableCell align="right">RWT Rate</StyledTableCell>
-                <StyledTableCell align="right">Invest Count</StyledTableCell>
+                <StyledTableCell align="right">DOB</StyledTableCell>
+                <StyledTableCell align="right">Country</StyledTableCell>
                 <StyledTableCell align="right">Edit/Cancel</StyledTableCell>        
               </TableRow>
             </TableHead>
@@ -620,10 +468,10 @@ const [investorDate, setInvestorDate] = useState('');
                        {row.ird}
                   </TableCell>  
                     <TableCell component="th" scope="row">
-                      {row.name}
+                      {row.investor}
                     </TableCell>
-                    <TableCell align="right">{row.bankAccount}</TableCell>
-                    <TableCell align="right">{row.rwtRate}%</TableCell>
+                    <TableCell align="right">{row.bankaccount}</TableCell>
+                    <TableCell align="right">{row.rwt}%</TableCell>
                     <TableCell align="right">{row.dob}</TableCell>
                     <TableCell align="right">{row.country}</TableCell>
                     <TableCell align="right">
@@ -684,7 +532,7 @@ const [investorDate, setInvestorDate] = useState('');
                           </DialogActions>
                         </Dialog>
                         <Tooltip title="Delete">
-                          <IconButton value={row.InvestorID} onClick={() => handlePopup(dataIndex)}>
+                          <IconButton value={row.id} onClick={() => handlePopup(dataIndex)}>
                             <DeleteIcon color = "error"/>
                           </IconButton>
                         </Tooltip>
