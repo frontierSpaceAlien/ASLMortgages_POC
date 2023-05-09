@@ -210,7 +210,6 @@ export default function CollapsibleTable() {
         console.error(err);
       }
     };
-
     fetchData();
   }, []);
 

@@ -191,6 +191,8 @@ export default function UpdateForm(props) {
     setCap(loanData.capitalised);
     setStartDate(dateNew);
     setEndDate(newEnd);
+    setSaveDateState(newEnd);
+    setSaveMonthState(newEnd);
     setYear(String(differenceInYears));
     setMonth(String(differenceInMonths));
     setInterest(loanData.intrate);
@@ -200,8 +202,6 @@ export default function UpdateForm(props) {
     setLegalFee(loanData.legalfee);
     setVariation(loanData.variation);
   }, [differenceInYears, differenceInMonths]);
-
-  console.log(loanData.capitalised);
 
   const onChangeLoanName = (e) => {
     setLoanName(e.target.value);
@@ -293,11 +293,13 @@ export default function UpdateForm(props) {
       const dateNew = dayjs(stringDate, dateFormat);
       setSaveMonthState(dateNew);
       setEndDate(dateNew);
+      console.log("hello first loop");
     } else {
-      if (e === "0") {
-        const subDate = subtractYears(saveMonthState, e);
-        const stringDate = toISOLocal(subDate).split("T")[0];
-        const dateNew = dayjs(stringDate, dateFormat);
+      if (e === "0" && month === "0") {
+        // const subDate = subtractYears(saveMonthState, e);
+        // const stringDate = toISOLocal(subDate).split("T")[0];
+        // const dateNew = dayjs(stringDate, dateFormat);
+        console.log("second loop");
         const startDateString = startDate.toISOString().split("T")[0];
 
         if (startDateString.split("-")[0] < stringDate) {
@@ -325,6 +327,7 @@ export default function UpdateForm(props) {
         const dateNew = dayjs(stringDate, dateFormat);
         setSaveMonthState(dateNew);
         setEndDate(dateNew);
+        console.log("third else");
       }
     }
 
@@ -630,7 +633,6 @@ export default function UpdateForm(props) {
               return triggerNode.parentNode;
             }}
             value={startDate}
-            defaultValue={dayjs(stringDate)}
             format={dateFormat}
             size={"large"}
             style={{
@@ -643,7 +645,6 @@ export default function UpdateForm(props) {
           <DatePicker
             disabled
             value={endDate}
-            defaultValue={dayjs(stringEnd)}
             format={dateFormat}
             getPopupContainer={(triggerNode) => {
               return triggerNode.parentNode;
