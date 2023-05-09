@@ -310,6 +310,7 @@ export default function DataTable() {
   }, []);
 
   const handlePopupClose = () => {
+    
     setModal(false);
   };
 
@@ -368,7 +369,7 @@ export default function DataTable() {
     }
   };
 
-  const handleUpdateSubmit = (
+  const handleUpdateSubmit = async (
     id,
     loanName,
     borrower,
@@ -386,7 +387,7 @@ export default function DataTable() {
   ) => {
     const startMonth = new Date(startDate);
     const endMonth = new Date(endDate);
-
+    
     var date = new Date();
 
     if (startMonth.getMonth() === endMonth.getMonth()) {
@@ -401,9 +402,6 @@ export default function DataTable() {
       capitalised: cap,
       netAdv: Number(netAdv),
       intRate: interest,
-      interest: 0,
-      dailyInt: 0.0,
-      monthInt: 0.0,
       manageFee: Number(lenderFee),
       brokerFee: Number(brokerFee),
       legalFee: Number(legalFee),
@@ -418,28 +416,48 @@ export default function DataTable() {
       region: region,
     };
     loanIndex = selectedRows[0].id;
-
-    setRow((prevRows) => {
-      return prevRows.map((row, index) =>
-        index === loanIndex
-          ? {
-              ...row,
-              loan: response.loan,
-              investor: response.investors,
-              region: response.region,
-              capitalised: response.capitalised,
-              startdate: response.startDate,
-              enddate: response.endDate,
-              intrate: response.intRate,
-              netadv: response.netAdv,
-              managefee: response.manageFee, // remmeber to change when in db
-              brokerfee: response.brokerFee,
-              legalfee: response.legalFee,
-              variation: response.variation,
-            }
-          : row
-      );
-    });
+    
+    try {
+      const res = await LoanFinder.put(`/${loanIndex}`, {
+        loan: loanName,
+        investors: investor,
+        region: region,
+        capitalised: cap,
+        startDate: startDate,
+        endDate: endDate,
+        intRate: interest,
+        netAdv: netAdv,
+        manageFee: lenderFee,
+        brokerFee: brokerFee,
+        legalFee: legalFee,
+        variation: variation,
+      });
+      
+      setRow((prevRows) => {
+        return prevRows.map((row, index) =>
+          index === loanIndex
+            ? {
+                ...row,
+                loan: response.loan,
+                investor: response.investors,
+                region: response.region,
+                capitalised: response.capitalised,
+                startdate: response.startDate,
+                enddate: response.endDate,
+                intrate: response.intRate,
+                netadv: response.netAdv,
+                managefee: response.manageFee, // remmeber to change when in db
+                brokerfee: response.brokerFee,
+                legalfee: response.legalFee,
+                variation: response.variation,
+              }
+            : row
+        );
+      });
+      
+    } catch (error) {
+      console.log(error);
+    }
 
     console.log(loanIndex);
     console.log(response);
@@ -464,6 +482,12 @@ export default function DataTable() {
         return row.id !== loanIndex;
       })
     );
+
+    try{
+      const response = await LoanFinder.delete(`/${loanIndex}`);
+    } catch (err) {
+      console.error(err);
+    }
     setDeleteModal(false);
   };
 

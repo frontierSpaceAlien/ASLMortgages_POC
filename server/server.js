@@ -292,6 +292,55 @@ app.post("/loan", async (req, res) => {
   }
 });
 
+// Delete a Loan
+app.delete("/loan/:id", async (req, res) => {
+  try {
+    const result = db.query("DELETE FROM loan WHERE id = $1", [
+      req.params.id,
+    ]);
+    res.status(204).json({
+      status: "success",
+    });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// Update a loan 
+app.put("/loan/:id", async (req, res) => {
+  try {
+    const results = await db.query(
+      "UPDATE loan SET capitalised = $1, netAdv = $2, intRate = $3, investors = $4, manageFee = $5, brokerFee = $6, legalFee = $7, variation = $8, startDate = $9, endDate = $10, loan = $11, region = $12 where id = $13 returning *",
+      [
+        req.body.capitalised,
+        req.body.netAdv,
+        req.body.intRate,
+        req.body.investors,
+        req.body.manageFee,
+        req.body.brokerFee,
+        req.body.legalFee,
+        req.body.variation,
+        req.body.startDate,
+        req.body.endDate,
+        req.body.loan, 
+        req.body.region, 
+
+        req.params.id,
+
+      ]
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        borrower: results.rows[0],
+      },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 const port = process.env.PORT || 3008;
 app.listen(port, () => {
   console.log(`Server has started on ${port}`);
