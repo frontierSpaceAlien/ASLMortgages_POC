@@ -138,8 +138,9 @@ export default function UpdateForm(props) {
 
   var modifiedStartYear = stringDate.split("-")[0];
   var modifiedEndYear = stringEnd.split("-")[0];
-  const differenceInMonths =
-    Number(modifiedStartMonth) - Number(modifiedEndMonth);
+  const differenceInMonths = Math.abs(
+    Number(modifiedStartMonth) - Number(modifiedEndMonth)
+  );
   const differenceInYears = Math.abs(
     Number(modifiedStartYear) - Number(modifiedEndYear)
   );
