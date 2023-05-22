@@ -473,32 +473,7 @@ export default function UpdateForm(props) {
   };
 
   const handleClose = () => {
-    setLoanNameError(false);
-    setBorrowerError(false);
-    setStartError(false);
-    setErrorInterest(false);
-    setErrorNet(false);
-    setErrorLender(false);
-    setErrorBroker(false);
-    setErrorLegal(false);
-    setErrorVariation(false);
-    setErrorRegion(false);
-    setErrorCap(false);
-    setLoanName("");
-    setBorrower("");
-    setStartDate("");
-    setEndDate("");
-    setYear("");
-    setMonth("");
-    setInvestor([]);
-    setInterest("");
-    setNetAdv("");
-    setLenderFee("");
-    setBrokerFee("");
-    setLegalFee("");
-    setVariation("");
-    setRegion("");
-    setCap("");
+    closeUpdate();
   };
 
   borrowerData.map((data) => {
