@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Typography, Button, Paper, Tooltip, Link, Snackbar, TextField } from '@mui/material';
@@ -8,7 +8,7 @@ import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/ico
 import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
 import { Alert as MuiAlert } from '@mui/material';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-
+import axios from 'axios';
 
 
 //website Format&stylings
@@ -207,6 +207,25 @@ function ExpandRow({children, expandComponent, ...otherProps}){
 
 var indexData = 0;
 
+function Investor() {
+  const [rowData, setRowData] = useState(rows); 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/investor');
+        const data = await response.json();
+        setRowData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Rest of the component code...
+}
 
 export default function CollapsibleTable() {
   const [page, setPage] = React.useState(0);
@@ -215,6 +234,7 @@ export default function CollapsibleTable() {
   const [modal, setModal] = React.useState(false);
   const [editInvestorIndex, setEditInvestorIndex] = useState(null);
   const [editInvestorModal, setEditInvestorModal] = useState(false);
+
 
   //edit button
   const handleEditInvestorModalOpen = (index) => {
@@ -239,7 +259,7 @@ export default function CollapsibleTable() {
       dob: Dob,
       country: Country,
     };
-      
+
     const updatedRowData = [...rowData];
     updatedRowData[editInvestorIndex] = updatedInvestor;
     setRowData(updatedRowData);
@@ -250,8 +270,8 @@ export default function CollapsibleTable() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedInvestor)
     };
-      
-    fetch(`http://localhost:5000/investor/${updatedInvestor.id}`, requestOptions)
+    
+    fetch(`http://localhost:5000/investor/${rowData[editInvestorIndex].id}`, requestOptions)
       .then(response => response.json())
       .then(data => {
         console.log('Success:', data);
@@ -292,22 +312,22 @@ const handleAddInvestor = () => {
 
     // Send a POST request to the server to store the new investor data
     fetch('http://localhost:5000/investor', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newInvestor),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-        // Add the new investor object to your data source (e.g., rowData)
-        setRowData([...rowData, newInvestor]);
-        setAddInvestorModal(false);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(newInvestor),
+})
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+    // Add the new investor object to your data source (e.g., rowData)
+    setRowData([...rowData, newInvestor]);
+    setAddInvestorModal(false);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 
 };
   //filter
@@ -371,6 +391,21 @@ const [IrdNumber, setIrdNumber] = useState('');
 const [Dob, setDob] = useState('');
 const [Country, setCountry] = useState('');
 const [deleteInvestorIndex, setDeleteInvestorIndex] = useState(null);
+
+
+/*useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/investor');
+      const data = await response.json();
+      setRowData(data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+}, []);*/
 
   return (
     <div className = "tableView">
@@ -584,8 +619,3 @@ const [deleteInvestorIndex, setDeleteInvestorIndex] = useState(null);
   </div>
   );
 }
-
-
-
-
-
