@@ -68,6 +68,7 @@ const StyledDataGrid = styled(DataGrid)((theme) => ({
   },
 }));
 
+// Caluclates repayable if the loan is capitalised
 var calculateRepayableCap = function (
   variation,
   broker,
@@ -86,6 +87,7 @@ var calculateRepayableCap = function (
   return result;
 };
 
+// Caluclates repayable if the loan is not capitalised
 var calculateRepayableNon = function (
   variation,
   broker,
@@ -102,6 +104,8 @@ var calculateRepayableNon = function (
   return result;
 };
 
+// Old interest calculation, probably do not need it anymore.
+// Should refer to client about interest caluclation.
 var calculateCompoundMonthlyInterest = function (p, r, t) {
   // int = interest, not to be confused with integer.
   var convertTimeMonths = t / 12;
@@ -115,6 +119,8 @@ var calculateCompoundMonthlyInterest = function (p, r, t) {
   return interest;
 };
 
+// Calculates the monthy interest
+// Refer to client on calculation on interest
 var calculateMonthlyInterest = function (repay, intRate) {
   const currDate = new Date().toLocaleDateString("en-GB", {
     month: "numeric",
@@ -144,6 +150,7 @@ var calculateMonthlyInterest = function (repay, intRate) {
 
 var col1 = [];
 
+// Just displays a message when there are no rows in the table
 const customRowOverlay = () => {
   return (
     <GridOverlay>
@@ -153,6 +160,7 @@ const customRowOverlay = () => {
   );
 };
 
+// This is responsible for the column headers and formatting
 const columns = [
   {
     field: "loan",
@@ -212,6 +220,7 @@ const columns = [
 
 var loanIndex = 0;
 
+// This function is responsible for the whole datagrid table on the loan page.
 export default function DataTable() {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [rows, setRow] = React.useState([]);
@@ -221,6 +230,8 @@ export default function DataTable() {
   const [deleteModal, setDeleteModal] = React.useState(false);
   const [updateState, setUpdateState] = React.useState(false);
 
+  // Gets the borrower data from backend.
+  // The borrower data is used for adding a new loan.
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -239,10 +250,12 @@ export default function DataTable() {
     fetchData();
   }, []);
 
+  // handles the closing of the 'see more' modal
   const handlePopupClose = () => {
     setModal(false);
   };
 
+  // Handles when adding a new loan to the database
   const handleAddSubmit = async (
     loanName,
     borrower,
@@ -298,6 +311,7 @@ export default function DataTable() {
     }
   };
 
+  // Much like handleAddSubmit, this handles updating the loan
   const handleUpdateSubmit = async (
     id,
     loanName,
@@ -393,19 +407,21 @@ export default function DataTable() {
     setUpdateState(false);
   };
 
+  // Handles the opening of the loan delete modal
   const handleDeleteModal = () => {
     loanIndex = selectedRows[0].id;
     console.log(loanIndex);
     setDeleteModal(true);
   };
 
+  // Handles the closing of the delete modal
   const handleModalClose = () => {
     setDeleteModal(false);
   };
 
+  // When the 'Yes' button is clicked in the modal, this deletes the
+  // selected loan from the database.
   const handleDeletePopup = async () => {
-    // Add database stuff here for deleting
-
     try {
       const response = await LoanFinder.delete(`/${loanIndex}`);
       setRow(
@@ -419,27 +435,29 @@ export default function DataTable() {
     setDeleteModal(false);
   };
 
+  // handles the opening of the add loan modal
   const handleAdd = () => {
     setAdd(true);
   };
 
+  // handles the closing of the add loan modal
   const handleAddClose = () => {
     setAdd(false);
   };
 
+  // handles the opening of the update modal.
   const handleUpdate = () => {
     loanIndex = selectedRows[0].id;
     setUpdateState(true);
   };
 
+  // handles the closing of the update modal.
   const handleUpdateClose = () => {
     setUpdateState(false);
   };
 
-  const handleUpdateRow = () => {
-    // add database stuff for updating here
-  };
-
+  // When there are more than 6 investors for a loan, then this is responsible for
+  // opening a modal that contains all investors.
   const seeMore = () => {
     setModal(true);
   };
@@ -609,6 +627,7 @@ export default function DataTable() {
                   selectedIDS.has(row.id)
                 );
 
+                // This whole 'if' section is important as it gets the selected row data in the datagrid
                 if (selectedRows[0] === undefined) {
                 } else {
                   // resets the arrays so it doesn't add to existing data.
@@ -632,8 +651,6 @@ export default function DataTable() {
                   // );
                   // var monthsConvert = months * -1;
 
-                  // console.log(monthsConvert);
-
                   // calculates compound interest and saves it
                   // monthly interest is also calculated
                   var result = calculateMonthlyInterest(
@@ -641,6 +658,7 @@ export default function DataTable() {
                     selectedRows[0].intrate
                   );
 
+                  // formats the interest to two decimal places.
                   selectedRows[0].interest = result.toLocaleString(undefined, {
                     maximumFractionDigits: 2,
                   });
@@ -669,7 +687,7 @@ export default function DataTable() {
                   selectedRows[0].dailyint = dailyInterest;
 
                   // checks if a loan is capitalised
-                  // tbh I still don't know how capitalised and non capitalised loans work.
+                  // refer to client about capitalised loans
                   if (selectedRows[0].capitalised === "No") {
                     selectedRows[0].monthint = result;
                     selectedRows[0].totalrepay = totRepayNon;

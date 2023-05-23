@@ -43,6 +43,7 @@ const theme = createTheme({
   },
 });
 
+/**************************** Handles the navbar on the page  ****************************/
 const App = () => {
   return (
     <Router>

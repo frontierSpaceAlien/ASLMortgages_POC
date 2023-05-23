@@ -8,6 +8,8 @@ export default function Cards(props) {
   const [bgcolor] = React.useState("black");
   const { data } = props;
 
+  // Creates the card display on the page.
+  // Also pulls data from the Loan.js page using props.
   return (
     <Box sx={{ width: "100%" }}>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>

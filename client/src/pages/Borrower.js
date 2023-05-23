@@ -39,6 +39,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 // import { green, purple } from '@mui/material/colors';
 
+/******************** Theme for whole table **********************************/
 const theme = createTheme({
   // palette:{
   //   primary:{
@@ -71,6 +72,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
+/************************* Creates a styled table look ************************/
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -81,17 +83,21 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
+/***************** This function is responsible for the expanded row  **************/
 function ExpandRow({ children, expandComponent, ...otherProps }) {
   const { row } = otherProps;
   const [open, setOpen] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
 
+  /**************** When clicking on the email hyperlink, this function opens a snack popup **********/
+  /**************** This also saves the email hyperlink into clipboard *******************************/
   const handleClick = () => {
     setOpenSnack(true);
     console.log(openSnack);
     navigator.clipboard.writeText(row.borroweremailaddress);
   };
 
+  /***************** Handles closing of snackbar *****************************************************/
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -99,6 +105,7 @@ function ExpandRow({ children, expandComponent, ...otherProps }) {
     setOpenSnack(false);
   };
 
+  /****************** Return renders whole table ******************************************************/
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>
@@ -201,6 +208,7 @@ export default function CollapsibleTable() {
   const [errorFirst, setErrorFirst] = React.useState(false);
   const [errorLast, setErrorLast] = React.useState(false);
 
+  /****************Gathers data from the backend database*******************/
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -212,6 +220,9 @@ export default function CollapsibleTable() {
     };
     fetchData();
   }, []);
+
+  /*When a new borrower is created, handleAddSubmit adds new borrower to db*/
+  /*and it also resets the form data ***************************************/
 
   const handleAddSubmit = async (e) => {
     e.preventDefault();
@@ -242,6 +253,7 @@ export default function CollapsibleTable() {
     }
   };
 
+  /*********************** Handles the deletion of a borrower ***************/
   const handleDeletePopup = async () => {
     try {
       const response = await BorrowerFinder.delete(`/${indexData}`);
@@ -262,36 +274,44 @@ export default function CollapsibleTable() {
     setOpenSnack(true);
   };
 
+  /*************** Handles 'active' field display ******************************/
   const handleActiveChange = (event) => {
     setActive(event.target.value);
   };
 
+  /************* Calculates how many rows to display per page ******************/
   const currentRows = rowData.filter((r, ind) => {
     return ind >= rowsPerPage * page && ind < rowsPerPage * (page + 1);
   });
 
+  /************** Calculates the table height in relation to the empty rows ****/
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowData.length) : 0;
 
+  /******************* Handles the table pagination. **************************/
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
+  /******************* Handles how many rows are displayed per page ***********/
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
+  /******************** Handles the pop when deleting a borrower **************/
   const handlePopupClose = () => {
     setModal(false);
   };
 
+  /****************** When clicking on a borrower, this gets the ID of a borrower and sets the modal to true */
   const handlePopup = (dataIndex) => {
     indexData = dataIndex;
     console.log(indexData);
     setModal(true);
   };
 
+  /************* Handles the snackbar popup **********************************/
   const handleSnackClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -299,10 +319,13 @@ export default function CollapsibleTable() {
     setOpenSnack(false);
   };
 
+  /************** Handles the add button popup ********************************/
   const handleAdd = () => {
     setAdd(true);
   };
 
+  /*************** Handles the 'Cancel' button in the popup  ******************/
+  /*************** Also clears the form fields ********************************/
   const handleAddClose = () => {
     setFirstName("");
     setLastName("");
@@ -313,6 +336,7 @@ export default function CollapsibleTable() {
     setActive("");
   };
 
+  /**************** Handles the checkbox in the add borrower modal ************/
   const handleCheckboxClick = (event) => {
     if (event.target.checked === true) {
       setCheckbox([...openCheckbox, ""]);
@@ -321,16 +345,19 @@ export default function CollapsibleTable() {
     }
   };
 
+  /**************** Saves the first name field into a state *******************/
   const onChangeFirstName = (e) => {
     setFirstName(e.target.value);
     setErrorFirst(false);
   };
 
+  /**************** Saves the last name field into a state *******************/
   const onChangeLastName = (e) => {
     setLastName(e.target.value);
     setErrorLast(false);
   };
 
+  /**************** Return renders whole table *******************************/
   return (
     <div className="tableView">
       <ThemeProvider theme={theme}>

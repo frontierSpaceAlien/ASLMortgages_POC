@@ -183,6 +183,8 @@ export default function UpdateForm(props) {
 
   /************************HANDLES ALL FORM FIELD ************************************/
 
+  // This useEffect is responsible for setting all fields with the selected row data.
+  // This allows the user to modify the details of a loan.
   React.useEffect(() => {
     setLoanID(loanData.id);
     setLoanName(loanData.loan);
@@ -230,6 +232,8 @@ export default function UpdateForm(props) {
     }
   };
 
+  // This works exactly like the onChangeYear from the AddForm.js file
+  // Refer to onChangeYear in AddForm.js for more details on this function.
   const onChangeYear = (e) => {
     if (e.target.value.trim().length === 0) {
       setYear("0");
@@ -281,6 +285,8 @@ export default function UpdateForm(props) {
     setErrorYear(false);
   };
 
+  // This works exactly like the onChangeMonth from the AddForm.js file
+  // Refer to onChangeYear in AddForm.js for more details on this function.
   const onChangeMonth = (e) => {
     if (e.trim().length === 0) {
       setMonth("0");
@@ -294,13 +300,11 @@ export default function UpdateForm(props) {
       const dateNew = dayjs(stringDate, dateFormat);
       setSaveMonthState(dateNew);
       setEndDate(dateNew);
-      console.log("hello first loop");
     } else {
       if (e === "0" && month === "0") {
         // const subDate = subtractYears(saveMonthState, e);
         // const stringDate = toISOLocal(subDate).split("T")[0];
         // const dateNew = dayjs(stringDate, dateFormat);
-        console.log("second loop");
         const startDateString = startDate.toISOString().split("T")[0];
 
         if (startDateString.split("-")[0] < stringDate) {
@@ -328,7 +332,6 @@ export default function UpdateForm(props) {
         const dateNew = dayjs(stringDate, dateFormat);
         setSaveMonthState(dateNew);
         setEndDate(dateNew);
-        console.log("third else");
       }
     }
 
@@ -381,6 +384,7 @@ export default function UpdateForm(props) {
 
   /********************************************************************************/
 
+  // Much like add form, this handles when submitting the updated loan data.
   const handleSubmitClose = () => {
     if (loanName === "") {
       setLoanNameError(true);
@@ -472,14 +476,17 @@ export default function UpdateForm(props) {
     }
   };
 
+  // Handles the closure of the edit modal
   const handleClose = () => {
     closeUpdate();
   };
 
+  // Maps the borrower data and saves to array.
   borrowerData.map((data) => {
     return borrowers.push(data.borrowerfirstname + " " + data.borrowerlastname);
   });
 
+  // Temp investors.
   var tempInvestors = [
     { label: "Investor 1", id: 1 },
     { label: "Investor 2", id: 2 },
@@ -489,14 +496,17 @@ export default function UpdateForm(props) {
     { label: "Investor 6", id: 6 },
   ];
 
+  // Gets all nz cities.
   const newData = NZData.map((object) => ({
     city: object.city,
   }));
 
+  // Saves it all to an array.
   for (let i = 0; i < newData.length; ++i) {
     regions.push(newData[i].city);
   }
 
+  // renders the whole edit form.
   return (
     <Dialog open={updateState} onClose={closeUpdate}>
       <DialogTitle>Update Loan</DialogTitle>

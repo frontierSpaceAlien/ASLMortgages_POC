@@ -17,6 +17,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 
 dayjs.extend(customParseFormat);
 
+// Percentage format in the form
 const PercentageNumericFormat = React.forwardRef(function NumericFormatCustom(
   props,
   ref
@@ -42,6 +43,7 @@ const PercentageNumericFormat = React.forwardRef(function NumericFormatCustom(
   );
 });
 
+// Currency format in the form
 const CurrencyFormat = React.forwardRef(function NumericFormatCustom(
   props,
   ref
@@ -68,6 +70,8 @@ const CurrencyFormat = React.forwardRef(function NumericFormatCustom(
   );
 });
 
+// Gets the local time.
+// Note: toISOString only gets the UTC timezone.
 function toISOLocal(d) {
   var z = (n) => ("0" + n).slice(-2);
   var zz = (n) => ("00" + n).slice(-3);
@@ -96,24 +100,28 @@ function toISOLocal(d) {
   );
 }
 
+// Calculates how many years to add
 function addYears(date, years) {
   const dateCopy = new Date(date);
   dateCopy.setFullYear(dateCopy.getFullYear() + Number(years));
   return dateCopy;
 }
 
+// Calculates how many months to add
 function addMonth(date, month) {
   const dateCopy = new Date(date);
   dateCopy.setMonth(dateCopy.getMonth() + Number(month));
   return dateCopy;
 }
 
+// Calculates how many years to subtract
 function subtractYears(date, years) {
   const dateCopy = new Date(date);
   dateCopy.setFullYear(dateCopy.getFullYear() - Number(years));
   return dateCopy;
 }
 
+// Calculates how many months to subtract
 function subtractMonths(date, month) {
   const dateCopy = new Date(date);
   dateCopy.setMonth(dateCopy.getMonth() - Number(month));
@@ -187,19 +195,36 @@ export default function AddForm(props) {
     }
   };
 
+  // This function is quite confusing because it needs to calculate
+  // the amount of years to add to the date.
+  // This will then display the new end date.
+
+  // I will try my best to explain this function because this also
+  // confused me when I created it.
   const onChangeYear = (e) => {
+    // This if statement sets a default value of 0 in the field when
+    // year field is empty.
     if (e.target.value.trim().length === 0) {
       setYear("0");
     } else {
       setYear(e.target.value);
     }
+
+    // First this looks at month and checks if there is a value in there.
+    // If the month is equal to zero then we can add years to the date.
     if (month === "0") {
       const newDate = addYears(startDate, e.target.value);
       const stringDate = newDate.toISOString().split("T")[0];
       const dateNew = dayjs(stringDate, dateFormat);
+      // Here we are saving the date into 2 states.
+      // This is so we have a copy of the date.
       setSaveDateState(dateNew);
       setEndDate(dateNew);
     } else {
+      // This checks 'if' the Year field is equal to zero
+      // At this point in the loop, we know that month is not zero and if
+      // the Year field is set to 0, then we can calculate the new end date
+      // based on the amount of months in the Months field.
       if (e.target.value === "0") {
         const subDate = subtractYears(saveMonthState, e.target.value);
         const stringDate = toISOLocal(subDate).split("T")[0];
@@ -237,6 +262,8 @@ export default function AddForm(props) {
     setErrorYear(false);
   };
 
+  // This function works exactly like onChangeYear
+  // But it calculates the month instead of year.
   const onChangeMonth = (e) => {
     if (e.trim().length === 0) {
       setMonth("0");
@@ -332,6 +359,9 @@ export default function AddForm(props) {
 
   /********************************************************************************/
 
+  // When the user hits submit then this function sends back the form data back to
+  // the Loan.js file.
+  // This also handles validation.
   const handleSubmitClose = () => {
     if (loanName === "") {
       setLoanNameError(true);
@@ -437,6 +467,7 @@ export default function AddForm(props) {
     }
   };
 
+  // Closes the update form modal and resets the form fields.
   const handleClose = () => {
     closeState();
     setLoanNameError(false);
@@ -467,10 +498,12 @@ export default function AddForm(props) {
     setCap("");
   };
 
+  // Saves the borrower data to an array.
   borrowerData.map((data) => {
     return borrowers.push(data.borrowerfirstname + " " + data.borrowerlastname);
   });
 
+  // Temporary investor data. This should later be pulled from the database.
   var tempInvestors = [
     "Investor 1",
     "Investor 2",
@@ -480,14 +513,18 @@ export default function AddForm(props) {
     "Investor 6",
   ];
 
+  // Maps all cities in New Zealand. This is coming from the nz.json file
+  // This is found in the data folder.
   const newData = NZData.map((object) => ({
     city: object.city,
   }));
 
+  // Saves all cities to an array.
   for (let i = 0; i < newData.length; ++i) {
     regions.push(newData[i].city);
   }
 
+  // Return renders whole form.
   return (
     <Dialog open={addState} onClose={closeState}>
       <DialogTitle>Add Loan</DialogTitle>
