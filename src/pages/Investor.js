@@ -1,24 +1,21 @@
-import { useEffect, useState } from 'react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Typography, Button, Paper, Tooltip, Link, Snackbar, TextField } from '@mui/material';
+import { Box, Collapse, IconButton, TableCell, TableRow, Typography, Button, Paper, Tooltip, Link, Snackbar, TextField, TableContainer, Table, TableHead, TableBody, TablePagination } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
-import NetflixSansReg from '../fonts/NetflixSans-Regular.ttf';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
 import { Alert as MuiAlert } from '@mui/material';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import axios from 'axios';
+import NetflixSansReg from '../fonts/NetflixSans-Regular.ttf';
 
-
-//website Format&stylings
+// Website Format & Stylings
 const theme = createTheme({
-    typography: {
-        fontFamily: 'NetflixSans',
-    },
-    components: {
-        MuiCssBaseline: {
-        styleOverrides: `g
+  typography: {
+    fontFamily: 'NetflixSans',
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: `
         @font-face {
           font-family: 'NetflixSans';
           font-style: normal;
@@ -28,15 +25,15 @@ const theme = createTheme({
           unicodeRange: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF;
         }
       `,
-        },
     },
+  },
 });
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function createData(InvestorID, name, loanAmount, intRate, dailyInterest, totalPrice) {
+function createData(InvestorID, name, loanAmount, intRate, dailyInterest, totalPrice, active) {
   return {
     InvestorID,
     name,
@@ -44,32 +41,18 @@ function createData(InvestorID, name, loanAmount, intRate, dailyInterest, totalP
     intRate,
     dailyInterest,
     totalPrice,
-    //subrow data insert
+    // subrow data insert
     email: "test@test.com",
-    history: [
-      {
-        date: '2020-01-05',
-        loanId: 'Investor1',
-        amount: 395632.05,
-        active: "No"
-      },
-      {
-        date: '2020-01-02',
-        loanId: 'Investor',
-        amount: 156798.18,
-        active: "No"
-      },
-    ],
+    history: [],
+    active,
   };
 }
 
 /** DUMMY DATA **/
 // Never have duplicate borrower ids. Duplicate borrower ids will cause the table to break.
 const rows = [
-  createData(0,'Investor 1', 0, 0, 0, 0),
-  
-
-]
+  createData(0, 'Investor 1', 0, 0, 0, 0, true),
+];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -81,22 +64,20 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-
-function ExpandRow({children, expandComponent, ...otherProps}){
+function ExpandRow({ children, expandComponent, ...otherProps }) {
   const { row } = otherProps;
   const [open, setOpen] = React.useState(false);
   const [openSnack, setOpenSnack] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [email, setEmail] = React.useState(row.email);
   const [phone, setPhone] = React.useState('02222222');
-  const [history, setHistory] = React.useState(JSON.stringify(row.history));
+  const [historyText, setHistoryText] = React.useState(JSON.stringify(row.history));
+  const [active, setActive] = React.useState(row.active);
 
-  // open dialog function
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
 
-  // close dialog function
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
@@ -104,7 +85,7 @@ function ExpandRow({children, expandComponent, ...otherProps}){
   const handleClick = () => {
     setOpenSnack(true);
     console.log(openSnack);
-    navigator.clipboard.writeText(row.email)
+    navigator.clipboard.writeText(row.email);
   };
 
   const handleClose = (event, reason) => {
@@ -114,95 +95,124 @@ function ExpandRow({children, expandComponent, ...otherProps}){
     setOpenSnack(false);
   };
 
+  const handleStoreData = () => {
+    // Perform the necessary logic to store the email, phone, and history data
+    console.log('Email:', email);
+    console.log('Phone:', phone);
+    console.log('History:', JSON.parse(historyText));
 
+    // Update the active state
+    setActive(!active);
+  };
 
   return (
     <React.Fragment>
-    <ThemeProvider theme={theme}>
-    <TableRow key={row.InvestorID}  {...otherProps}>
-      <TableCell>
-        <IconButton
-          aria-label="expand row"
-          size="small"
-          onClick={() => setOpen(!open)}
-          >
-          {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-        </IconButton>
-      </TableCell>
-      {children}    
-    </TableRow>
+      <ThemeProvider theme={theme}>
+        <TableRow key={row.InvestorID} {...otherProps}>
+          <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          {children}
+        </TableRow>
 
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout= {"auto"} unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box sx={{ margin: 1 }}>
+                <Typography variant="h6" gutterBottom component="div">
                   Investor Contact Details
                 </Typography>
-                  <p>Phone Number: {phone}</p>
-                  <p>Email: 
-                    <Tooltip title="Copy">
+                <p>Phone Number: {phone}</p>
+                <p>
+                  Email:
+                  <Tooltip title="Copy">
                     <Link
                       variant="body2"
                       underline="hover"
                       component="button"
                       onClick={handleClick}
                     >
-                     {email}   
+                      {email}
                     </Link>
-                    </Tooltip>       
-                    <Snackbar open = {openSnack} 
-                            autoHideDuration={2000} 
-                            onClose={handleClose}
+                  </Tooltip>
+                  <Snackbar
+                    open={openSnack}
+                    autoHideDuration={2000}
+                    onClose={handleClose}
+                  >
+                    <Alert
+                      onClose={handleClose}
+                      severity="success"
+                      sx={{ width: '100%' }}
                     >
-                    <Alert onClose={handleClose} 
-                           severity="success" 
-                           sx={{ width: '100%' }}
-                    >
-                    Copied!
+                      Copied!
                     </Alert>
                   </Snackbar>
-                  </p>
+                </p>
 
-                  <Typography variant="h6" gutterBottom component="div">
-                    More Information
-                  </Typography>
+                <Typography variant="h6" gutterBottom component="div">
+                  More Information
+                </Typography>
 
-                  <Table size="small" aria-label="purchases">
-                    <TableHead>
+                <TextField
+                  label="History"
+                  value={historyText}
+                  onChange={(e) => setHistoryText(e.target.value)}
+                  multiline
+                  rows={4}
+                  fullWidth
+                  margin="normal"
+                />
 
-                      {/*subtable title*/}
-                      <TableRow>
-                        <TableCell>IDXXX</TableCell>
-                        <TableCell>InvestorName</TableCell>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Investor</TableCell>
-                        <TableCell align="right">Investor Amount</TableCell>
-                        <TableCell align="right">Active</TableCell>
-                      </TableRow>
+                <Button variant="contained" onClick={handleOpenDialog}>
+                  Store Data
+                </Button>
 
-                    </TableHead>
-                    <TableBody>
-                    {row.history.map((historyRow) => (
-                      <TableRow key={historyRow.date}>
-                        <TableCell component="th" scope="row">
-                        {historyRow.date}
-                        </TableCell>
-                        <TableCell>{historyRow.loanId}</TableCell>
-                        <TableCell align="right">${historyRow.amount.toLocaleString(undefined, {maximumFractionDigits:2})}</TableCell>
-                        <TableCell align="right">{historyRow.active}</TableCell>
-                      </TableRow>
-                      ))}
-                      </TableBody>
-            </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-
-    </ThemeProvider>
+                <Dialog open={openDialog} onClose={handleCloseDialog}>
+                  <DialogTitle>Store Data</DialogTitle>
+                  <DialogContent>
+                    <TextField
+                      label="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      fullWidth
+                      margin="normal"
+                    />
+                    <TextField
+                      label="Phone"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      fullWidth
+                      margin="normal"
+                    />
+                    <TextField
+                      label="History"
+                      value={historyText}
+                      onChange={(e) => setHistoryText(e.target.value)}
+                      multiline
+                      rows={4}
+                      fullWidth
+                      margin="normal"
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseDialog}>Cancel</Button>
+                    <Button onClick={handleStoreData}>Save</Button>
+                  </DialogActions>
+                </Dialog>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </ThemeProvider>
     </React.Fragment>
-  )
+  );
 }
 
 var indexData = 0;
