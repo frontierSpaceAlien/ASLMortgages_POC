@@ -1,9 +1,6 @@
 # ASLMortgages_POC
 Proof-of-concept Loan Management website made for ASL Mortgages.
 
-# Get Started
-Make a copy of this repository into your own repository.
-
 # Requirements
 This project must be compiled with VS Code. 
 
